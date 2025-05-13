@@ -12,6 +12,8 @@ interface TimeSession {
   duration: number | null;
 }
 
+
+
 export default function Home() {
   const { user, isLoading, signOut } = useAuth();
   
