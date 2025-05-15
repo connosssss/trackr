@@ -3,85 +3,116 @@
 import { useAuth } from "@/context/AuthContext";
 import Login from "@/components/Login";
 import { useState, useEffect } from "react";
+import { fetchTimeSessions, createTimeSession, updateTimeSession } from "@/utils/timeSessionsDB";
 
 // Define the TimeSession type
 interface TimeSession {
   id: string;
-  startTime: Date;
-  endTime: Date | null;
+  user_id?: string;
+  start_time: Date;
+  end_time: Date | null;
   duration: number | null;
 }
 
 
 
 export default function Home() {
+
+
   const { user, isLoading, signOut } = useAuth();
   
+
   
   const [isTracking, setIsTracking] = useState(false);
   const [currentSession, setCurrentSession] = useState<TimeSession | null>(null);
   const [sessions, setSessions] = useState<TimeSession[]>([]);
   const [timer, setTimer] = useState(0);
   const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null);
+  const [isLoadingSessions, setIsLoadingSessions] = useState(false);
 
-  
   useEffect(() => {
     if (user) {
-      const savedSessions = localStorage.getItem(`timeSessions_${user.email}`);
-      if (savedSessions) {
-        const parsedSessions = JSON.parse(savedSessions).map((session: any) => ({
-          ...session,
-          startTime: new Date(session.startTime),
-          endTime: session.endTime ? new Date(session.endTime) : null
-        }));
-        setSessions(parsedSessions);
-      }
+      const loadSessions = async () => {
+        setIsLoadingSessions(true);
+        try {
+          const data = await fetchTimeSessions(user);
+          setSessions(data);
+        } catch (error) {
+          console.error("Error loading sessions:", error);
+        } finally {
+          setIsLoadingSessions(false);
+        }
+      };
+      
+      loadSessions();
     }
   }, [user]);
 
-  const startTracking = () => {
-    const newSession: TimeSession = {
-      id: Date.now().toString(),
-      startTime: new Date(),
-      endTime: null,
-      duration: null
-    };
+  const startTracking = async () => {
+    if (!user) return;
     
-    setCurrentSession(newSession);
-    setIsTracking(true);
-    setTimer(0);
+    try {
+      const tempSession: TimeSession = {
+        id: Date.now().toString(), 
+        start_time: new Date(),
+        end_time: null,
+        duration: null
+      };
+      
+      setCurrentSession(tempSession);
+      setIsTracking(true);
+      setTimer(0);
+      
+      const interval = setInterval(() => {
+        setTimer(prev => prev + 1);
+      }, 1000);
+      
+      setTimerInterval(interval);
+      
+      const newSession = await createTimeSession({
+        user_id: user.id,
+        start_time: tempSession.start_time,
+        end_time: null,
+        duration: null
+      });
     
-    const interval = setInterval(() => {
-      setTimer(prev => prev + 1);
-    }, 1000);
-    
-    setTimerInterval(interval);
+      setCurrentSession(newSession);
+    } catch (error) {
+      console.error("Error starting tracking:", error);
+      setIsTracking(false);
+      if (timerInterval) clearInterval(timerInterval);
+    }
   };
 
-  const stopTracking = () => {
-
+  const stopTracking = async () => {
+    if (!currentSession || !timerInterval || !user) return;
     
-    if (currentSession && timerInterval) {
-
+    try {
       clearInterval(timerInterval);
       setTimerInterval(null);
       
       const endTime = new Date();
-      const duration = Math.floor((endTime.getTime() - currentSession.startTime.getTime()) / 1000);
+      const duration = Math.floor((endTime.getTime() - currentSession.start_time.getTime()) / 1000);
       
       const completedSession: TimeSession = {
         ...currentSession,
-        endTime,
+        end_time: endTime,
         duration
       };
       
-      const updatedSessions = [...sessions, completedSession];
+      await updateTimeSession({
+        ...completedSession,
+        user_id: user.id
+      }
+    
+    );
+      
+      const updatedSessions = await fetchTimeSessions(user);
       setSessions(updatedSessions);
       setIsTracking(false);
-      
-      if (user) {
-        localStorage.setItem(`timeSessions_${user.email}`, JSON.stringify(updatedSessions));
-      }
+    } 
+    catch (error) {
+      console.error("Error stopping tracking:", error);
     }
   };
 
@@ -138,8 +169,15 @@ export default function Home() {
               
               <div>
                 <h3 className="text-xl font-semibold mb-3">Session History</h3>
-                {sessions.length === 0 ? (
+
+                {isLoadingSessions ? (
+
+                  <p>Loading sessions...</p>
+
+                ) : sessions.length === 0 ? (
+
                   <p className="">No sessions recorded yet.</p>
+
                 ) : (
 
                   <div className="overflow-auto max-h-80">
@@ -159,16 +197,16 @@ export default function Home() {
                       </thead>
                       <tbody className="divide-y divide-gray-200">
 
-                        {sessions.slice().reverse().map((session) => (
+                        {sessions.map((session) => (
                           <tr key={session.id}>
                             <td className="">
-                              {session.startTime.toLocaleDateString()}
+                              {session.start_time.toLocaleDateString()}
                             </td>
                             <td className="">
-                              {session.startTime.toLocaleTimeString()}
+                              {session.start_time.toLocaleTimeString()}
                             </td>
                             <td className="">
-                              {session.endTime ? session.endTime.toLocaleTimeString() : '-'}
+                              {session.end_time ? session.end_time.toLocaleTimeString() : '-'}
                             </td>
                             <td className="">
                               {session.duration ? formatTime(session.duration) : '-'}
