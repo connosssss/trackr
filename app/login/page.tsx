@@ -42,8 +42,9 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex flex-col bg-gray-800 w-1/4 items-center rounded-lg py-5">
-    <h2 className="text-2xl font-semibold">{isLogin ? 'Login' : 'Create Account'}</h2>
+    <div className="flex  bg-gray-800 w-full items-center justify-center h-screen ">
+   <div className='flex flex-col w-1/3  bg-gray-700/70 filter  rounded-lg items-center py-14 '>
+     <h2 className="text-4xl font-semibold  ">{isLogin ? 'Login' : 'Create Account'}</h2>
     
     {error && (
       <div className="mb-4 ">
@@ -51,7 +52,7 @@ export default function LoginPage() {
       </div>
     )}
     
-    <form onSubmit={handleSubmit} className='w-2/3 flex flex-col justify-center items-center p-5 mt-5'>
+    <form onSubmit={handleSubmit} className='w-3/4 flex flex-col justify-center items-center p-5 mt-5'>
       <input
         id="email"
         type="email"
@@ -72,27 +73,29 @@ export default function LoginPage() {
         required
       />
       
-      <button
+      
+      
+      <div className="text-center  flex flex-col mt-8 w-full ">
+        <button
         type="submit"
-        className="bg-white/30 hover:bg-white/20 p-2 rounded"
+        className="bg-white/30 hover:bg-white/20 p-4 rounded w-full transition-all duration-300"
       >
         {isLogin ? 'Sign In' : 'Sign Up'}
       </button>
-      
-      <div className="text-center mt-16">
         <button 
           type="button" 
           onClick={() => {
             setIsLogin(!isLogin);
             setError(null);
           }}
-          className="hover:underline"
+          className="text-md hover:text-blue-200 text-blue-300 underline mt-3 transition-all duration-300"
         >
           {isLogin ? 'Sign up' : 'Sign in'}
         </button>
       </div>
       
     </form>
+   </div>
   </div>
   );
 }
