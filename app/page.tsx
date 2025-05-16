@@ -1,9 +1,9 @@
 'use client';
 
 import { useAuth } from "@/context/AuthContext";
-import Login from "@/components/Login";
 import { useState, useEffect } from "react";
 import { fetchTimeSessions, createTimeSession, updateTimeSession } from "@/utils/timeSessionsDB";
+import { useRouter } from "next/navigation";
 
 // Define the TimeSession type
 interface TimeSession {
@@ -21,7 +21,7 @@ export default function Home() {
 
   const { user, isLoading, signOut } = useAuth();
   
-
+  const router = useRouter();
   
   const [isTracking, setIsTracking] = useState(false);
   const [currentSession, setCurrentSession] = useState<TimeSession | null>(null);
@@ -29,6 +29,12 @@ export default function Home() {
   const [timer, setTimer] = useState(0);
   const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null);
   const [isLoadingSessions, setIsLoadingSessions] = useState(false);
+
+  useEffect(() => {
+    if (!isLoading && !user) {
+      router.push('/login');
+    }
+  }, [user, isLoading, router]);
 
   useEffect(() => {
     if (user) {
@@ -222,12 +228,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-        ) : (
-          <div className=" w-screen flex items-center justify-center">
-
-            <Login />
-          </div>
-        )}
+        ) : null}
     </div>
   );
 }
