@@ -132,7 +132,7 @@ export default function Home() {
   };
 
   return (
-    <div className="">
+    <div className="bg-gray-800 h-screen">
         
         {isLoading ? (
           <p>Loading...</p>
@@ -172,8 +172,12 @@ export default function Home() {
                   )}
                 </div>
               </div>
+
+
+
+
               
-              <div>
+              <div className=" bg-gray-700 w-1/2 h-96 rounded-2xl" >
                 <h3 className="text-xl font-semibold mb-3">Session History</h3>
 
                 {isLoadingSessions ? (
@@ -186,7 +190,7 @@ export default function Home() {
 
                 ) : (
 
-                  <div className="overflow-auto max-h-80">
+                  <div className=" max-h-80 flex flex-col items-center">
                     <table className="w-full divide-y divide-gray-200">
                       <thead className="">
                         <tr>
@@ -201,34 +205,43 @@ export default function Home() {
 
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-gray-200">
+                      <tbody className="divide-y divide-gray-200 overflow-hidden max-h-52 bg-amber-400">
 
-                        {sessions.map((session) => (
+                        {
+                        sessions.map((session) => (
                           <tr key={session.id}>
-                            <td className="">
+                            <td className="text-center">
                               {session.start_time.toLocaleDateString()}
                             </td>
-                            <td className="">
+                            <td className="text-center">
                               {session.start_time.toLocaleTimeString()}
                             </td>
-                            <td className="">
+                            <td className="text-center">
                               {session.end_time ? session.end_time.toLocaleTimeString() : '-'}
                             </td>
-                            <td className="">
+                            <td className="text-center">
                               {session.duration ? formatTime(session.duration) : '-'}
                             </td>
 
                           </tr>
-                        ))}
+                        ))
+                        
+                        }
                       </tbody>
 
                     </table>
+                    <button  onClick={() => {router.push('/history');}}className='w-1/2 text-white font-semibold text-md text-center'>
+                          See all
+                    </button>
                   </div>
                 )}
               </div>
+
+
+
+
             </div>
           </div>
         ) : null}
-    </div>
-  );
+    </div>);
 }
