@@ -47,9 +47,9 @@ export default function HistoryPage() {
         return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         };
 
-  return (
-<div className=" bg-gray-800 h-screen" >
-
+  return ( 
+<div className=" bg-gray-800 h-full pb-20" >
+<h1 className='text-xl font-semibold w-full py-5 text-center'> History</h1>
                 {isLoadingSessions ? (
 
                   <p>Loading sessions...</p>
@@ -59,40 +59,41 @@ export default function HistoryPage() {
                   <p className="">No sessions recorded yet.</p>
 
                 ) : (
+                  <div>
+                    
                     
 
-
-                  <div className=" flex flex-col items-center ">
-                    <h1 className='text-xl font-semibold'> History</h1>
+                  <div className=" w-11/12 mx-auto rounded-md shadow-lg bg-amber-100 overflow-hidden ">
+                    
                     <table className="w-full divide-y divide-gray-200 text-md ">
-                      <thead className="">
+                      <thead className="bg-gray-600 rounded-t-2xl">
                         <tr>
 
-                          <th className="">Date</th>
+                        <th scope="col" className="py-4 ">Date</th>
 
-                          <th className="">Start Time</th>
+                          <th scope="col" className="py-4 ">Start Time</th>
 
-                          <th className="">End Time</th>
+                          <th scope="col" className="py-4 ">End Time</th>
 
-                          <th className="">Duration</th>
+                          <th scope="col" className="py-4 ">Duration</th>
 
                         </tr>
                       </thead>
-                      <tbody className="divide-y  divide-gray-200">
+                      <tbody className="bg-gray-700 divide-y divide-gray-600">
 
                         {
                         sessions.map((session) => (
-                          <tr key={session.id} className="py-5">
-                            <td className="text-center">
+                          <tr key={session.id} className="hover:bg-gray-600 transition duration-300">
+                            <td className="text-center py-5 text-gray-300">
                               {session.start_time.toLocaleDateString()}
                             </td>
-                            <td className="text-center">
+                            <td className="text-center py-5 text-gray-300">
                               {session.start_time.toLocaleTimeString()}
                             </td>
-                            <td className="text-center">
+                            <td className="text-center py-5 text-gray-300">
                               {session.end_time ? session.end_time.toLocaleTimeString() : '-'}
                             </td>
-                            <td className="text-center">
+                            <td className="text-center py-5 text-gray-300">
                               {session.duration ? formatTime(session.duration) : '-'}
                             </td>
 
@@ -105,8 +106,9 @@ export default function HistoryPage() {
                     </table>
                     
                   </div>
-                )}
+                </div>)}
               </div> 
+            
  
   );
 }
