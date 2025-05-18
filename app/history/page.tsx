@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/context/AuthContext";
 import { useState, useEffect } from "react";
-import { fetchTimeSessions, createTimeSession, updateTimeSession } from "@/utils/timeSessionsDB";
+import { fetchTimeSessions, deleteTimeSession } from "@/utils/timeSessionsDB";
 
 
 interface TimeSession {
@@ -45,7 +45,20 @@ export default function HistoryPage() {
         const minutes = Math.floor((seconds % 3600) / 60);
         const secs = seconds % 60;
         return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-        };
+      };
+      
+      const handleDelete = async (sessionId: string) => {
+        if (!user) return;
+        
+        try {
+          await deleteTimeSession(sessionId);
+          const updatedSessions = sessions.filter(session => session.id !== sessionId);
+          setSessions(updatedSessions);
+        } 
+        catch (error) {
+          console.error("Error deleting session:", error);
+        }
+      };
 
   return ( 
 <div className=" bg-gray-800 h-full pb-20" >
@@ -76,6 +89,8 @@ export default function HistoryPage() {
                           <th scope="col" className="py-4 ">End Time</th>
 
                           <th scope="col" className="py-4 ">Duration</th>
+                          
+                          <th scope="col" className="py-4 ">Delete</th>
 
                         </tr>
                       </thead>
@@ -96,7 +111,15 @@ export default function HistoryPage() {
                             <td className="text-center py-5 text-gray-300">
                               {session.duration ? formatTime(session.duration) : '-'}
                             </td>
-
+                            <td className="text-center py-5 text-gray-300">
+                              <button 
+                                onClick={() => handleDelete(session.id)}
+                                className="bg-red-400/70 text-red-200 hover:text-red-50 hover:scale-115 py-1 px-6
+                                rounded transition duration-300"
+                              >
+                                X
+                              </button>
+                            </td>
                           </tr>
                         ))
                         
