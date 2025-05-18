@@ -177,8 +177,8 @@ export default function Home() {
 
 
               
-              <div className=" bg-gray-700 w-1/2 h-96 rounded-2xl" >
-                <h3 className="text-xl font-semibold mb-3">Session History</h3>
+              <div className=" bg-gray-700 w-1/3 h-96 rounded-2xl pt-2" >
+                <h3 className="text-xl text-center font-semibold mb-3">Session History</h3>
 
                 {isLoadingSessions ? (
 
@@ -191,7 +191,7 @@ export default function Home() {
                 ) : (
 
                   <div className=" max-h-80 flex flex-col items-center">
-                    <table className="w-full divide-y divide-gray-200">
+                    <table className="w-full divide-y divide-gray-200 text-md ">
                       <thead className="">
                         <tr>
 
@@ -205,10 +205,10 @@ export default function Home() {
 
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-gray-200 overflow-hidden max-h-52 bg-amber-400">
+                      <tbody className="divide-y  divide-gray-200 overflow-hidden max-h-52">
 
                         {
-                        sessions.map((session) => (
+                        sessions.slice(0,10).map((session) => (
                           <tr key={session.id}>
                             <td className="text-center">
                               {session.start_time.toLocaleDateString()}
@@ -230,7 +230,9 @@ export default function Home() {
                       </tbody>
 
                     </table>
-                    <button  onClick={() => {router.push('/history');}}className='w-1/2 text-white font-semibold text-md text-center'>
+                    
+                    <button  onClick={() => {router.push('/history');}}className='w-1/2 text-white font-semibold text-md text-center
+                    mt-2 bg-white/30 hover:bg-white/20 w-1/2 rounded-sm'>
                           See all
                     </button>
                   </div>
