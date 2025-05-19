@@ -76,21 +76,21 @@ export default function HistoryPage() {
                     
                     
 
-                  <div className=" w-11/12 mx-auto rounded-md shadow-lg bg-amber-100 overflow-hidden ">
+                  <div className=" w-11/12 mx-auto rounded-lg shadow-lg overflow-hidden ">
                     
-                    <table className="w-full divide-y divide-gray-200 text-md ">
-                      <thead className="bg-gray-600 rounded-t-2xl">
+                    <table className="w-full divide-y-2 divide-gray-200  text-md ">
+                      <thead className="bg-gray-600 rounded-t-2xl ">
                         <tr>
 
-                        <th scope="col" className="py-4 ">Date</th>
+                        <th scope="col" className="py-8 text-lg text-shadow-md ">Date</th>
 
-                          <th scope="col" className="py-4 ">Start Time</th>
+                          <th scope="col" className="py-8 text-lg text-shadow-md ">Start Time</th>
 
-                          <th scope="col" className="py-4 ">End Time</th>
+                          <th scope="col" className="py-8 text-lg text-shadow-md ">End Time</th>
 
-                          <th scope="col" className="py-4 ">Duration</th>
+                          <th scope="col" className="py-8 text-lg text-shadow-md ">Duration</th>
                           
-                          <th scope="col" className="py-4 ">Delete</th>
+                          <th scope="col" className="py-8 text-lg text-shadow-md ">Delete</th>
 
                         </tr>
                       </thead>
