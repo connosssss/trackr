@@ -65,25 +65,23 @@ export default function Home() {
   }, [user]);
 
   useEffect(() => {
-    /*
-    if(!isPaused){
-      const interval = setInterval(() => {
-        
+    
+    let interval: NodeJS.Timeout | null = null;
+    
+    if (isTracking && !isPaused) {
+
+      interval = setInterval(() => {
+
         setTimer(prev => prev + 1);
-        
       }, 1000);
-      setTimerInterval(interval);
     }
-    else{
-      const interval = setInterval(() => {
-        
-        setTimer(prev => prev );
-        
-      }, 1000);
-      setTimerInterval(interval);
-    }
-       */
-  },[]);
+    
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+
+    
+  }, [isTracking, isPaused]);
 
 
 
@@ -133,11 +131,10 @@ export default function Home() {
   
 
   const stopTracking = async () => {
-    if (!currentSession || !timerInterval || !user) return;
+    if (!currentSession || !user) return;
     
     try {
-      clearInterval(timerInterval);
-      setTimerInterval(null);
+
       
       const endTime = new Date();
       const duration = Math.floor((endTime.getTime() - currentSession.start_time.getTime()) / 1000);
@@ -158,6 +155,7 @@ export default function Home() {
       const updatedSessions = await fetchTimeSessions(user);
       setSessions(updatedSessions);
       setIsTracking(false);
+      setIsPaused(false);
     } 
     catch (error) {
       console.error("Error stopping tracking:", error);
