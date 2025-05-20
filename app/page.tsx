@@ -1,9 +1,12 @@
-'use client';
+nges'use client';
 
 import { useAuth } from "@/context/AuthContext";
 import { useState, useEffect } from "react";
 import { fetchTimeSessions, createTimeSession, updateTimeSession } from "@/utils/timeSessionsDB";
 import { useRouter } from "next/navigation";
+
+
+import Sessions from "@/components/Sessions";
 
 // Define the TimeSession type
 interface TimeSession {
@@ -30,6 +33,8 @@ export default function Home() {
   const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null);
   const [isLoadingSessions, setIsLoadingSessions] = useState(false);
 
+  const[hasLoaded, setHasLoaded] = useState(false);
+
   useEffect(() => {
     if (!isLoading && !user) {
       router.push('/login');
@@ -43,7 +48,9 @@ export default function Home() {
         try {
           const data = await fetchTimeSessions(user);
           setSessions(data);
-        } catch (error) {
+        } 
+        
+        catch (error) {
           console.error("Error loading sessions:", error);
         } finally {
           setIsLoadingSessions(false);
@@ -57,6 +64,7 @@ export default function Home() {
   const startTracking = async () => {
     if (!user) return;
     
+    if(!hasLoaded) setHasLoaded(true);
     try {
       const tempSession: TimeSession = {
         id: Date.now().toString(), 
@@ -138,110 +146,61 @@ export default function Home() {
           <p>Loading...</p>
         ) : user ? (
 
-          <div className="space-y-6">
-            <div className="flex justify-between items-center">
-              <p className="text-lg">Logged in as: <span className="font-bold">{user.email}</span></p>
-
-              <button onClick={() => signOut()} className="bg-red-500">
-                Sign Out
-              </button>
-            </div>
+          <div className="">
             
-            <div className="">
+            
+            
               
-              <div className="mb-6">
-                <div className="text-4xl font-mono mb-4">
+              <div className="text-4xl font-mono  flex h-24 items-center transition duration-300 border-b-2 border-gray-500
+              ">
+                
+                <div className="ml-5">
                   {formatTime(timer)}
                 </div>
-                
-                <div className="flex space-x-4">
+                {isTracking ? (<></>) : hasLoaded ? (<div className=' z-10 fixed w-screen top-0 h-24 bg-red-500/20'></div>) : null }
+                </div>
+
+                <div className="flex space-x-4  py-3 border-b-2 border-gray-500">
                   {!isTracking ? (
                     <button 
                       onClick={startTracking}
-                      className=" text-white "
+                      className=" text-white bg-gray-700 ml-5 p-2 rounded-md
+                       active:bg-gray-500"
                     >
                       Start Tracking
                     </button>
                   ) : (
                     <button 
                       onClick={stopTracking}
-                      className=" text-white "
+                      className=" text-white bg-gray-700 ml-5 p-2 rounded-md
+                       active:bg-gray-500"
                     >
                       Stop Tracking
                     </button>
                   )}
                 </div>
-              </div>
-
-
-
-
               
-              <div className=" bg-gray-700 w-1/3 h-96 rounded-2xl pt-2" >
-                <h3 className="text-xl text-center font-semibold mb-3">Session History</h3>
+            
 
-                {isLoadingSessions ? (
 
-                  <p>Loading sessions...</p>
-
-                ) : sessions.length === 0 ? (
-
-                  <p className="">No sessions recorded yet.</p>
-
-                ) : (
-
-                  <div className=" max-h-80 flex flex-col items-center">
-                    <table className="w-full divide-y divide-gray-200 text-md ">
-                      <thead className="">
-                        <tr>
-
-                          <th className="">Date</th>
-
-                          <th className="">Start Time</th>
-
-                          <th className="">End Time</th>
-
-                          <th className="">Duration</th>
-
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y  divide-gray-200 overflow-hidden max-h-52">
-
-                        {
-                        sessions.slice(0,10).map((session) => (
-                          <tr key={session.id}>
-                            <td className="text-center">
-                              {session.start_time.toLocaleDateString()}
-                            </td>
-                            <td className="text-center">
-                              {session.start_time.toLocaleTimeString()}
-                            </td>
-                            <td className="text-center">
-                              {session.end_time ? session.end_time.toLocaleTimeString() : '-'}
-                            </td>
-                            <td className="text-center">
-                              {session.duration ? formatTime(session.duration) : '-'}
-                            </td>
-
-                          </tr>
-                        ))
-                        
-                        }
-                      </tbody>
-
-                    </table>
-                    
-                    <button  onClick={() => {router.push('/history');}}className='w-1/2 text-white font-semibold text-md text-center
-                    mt-2 bg-white/30 hover:bg-white/20 w-1/2 rounded-sm'>
-                          See all
-                    </button>
-                  </div>
-                )}
-              </div>
+            <div className='h-[34rem] flex items-center justify-center'>
+              <Sessions />
+               </div>
+            
+              
+              
 
 
 
 
+            
+
+            <div className="flex justify-between items-center">
+              <p className="text-lg">Logged in as: <span className="font-bold">{user.email}</span></p>
+
+              <button onClick={() => signOut()} className="bg-red-500">
+                Sign Out
+              </button>
             </div>
           </div>
         ) : null}
