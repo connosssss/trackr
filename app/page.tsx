@@ -1,4 +1,4 @@
-nges'use client';
+'use client';
 
 import { useAuth } from "@/context/AuthContext";
 import { useState, useEffect } from "react";
@@ -61,6 +61,8 @@ export default function Home() {
     }
   }, [user]);
 
+
+
   const startTracking = async () => {
     if (!user) return;
     
@@ -97,6 +99,7 @@ export default function Home() {
       if (timerInterval) clearInterval(timerInterval);
     }
   };
+  
 
   const stopTracking = async () => {
     if (!currentSession || !timerInterval || !user) return;

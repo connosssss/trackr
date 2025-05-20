@@ -53,10 +53,7 @@ export async function createTimeSession(session: Omit<TimeSession, 'id'>): Promi
 export async function updateTimeSession(session: TimeSession): Promise<TimeSession> {
   const { data, error } = await supabase
     .from('time_sessions')
-    .update({
-      end_time: session.end_time,
-      duration: session.duration
-    })
+    .update({end_time: session.end_time, duration: session.duration})
     .eq('id', session.id)
     .select()
     .single();
@@ -73,4 +70,13 @@ export async function updateTimeSession(session: TimeSession): Promise<TimeSessi
     end_time: data.end_time ? new Date(data.end_time) : null
 
   };
+}
+
+export async function deleteTimeSession(sessionId: string): Promise<void> {
+  const { error } = await supabase.from('time_sessions').delete().eq('id', sessionId);
+  
+  if (error) {
+    console.error('Error deleting time session:', error);
+    throw error;
+  }
 }

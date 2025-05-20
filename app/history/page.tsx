@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/context/AuthContext";
 import { useState, useEffect } from "react";
-import { fetchTimeSessions, createTimeSession, updateTimeSession } from "@/utils/timeSessionsDB";
+import { fetchTimeSessions, deleteTimeSession } from "@/utils/timeSessionsDB";
 
 
 interface TimeSession {
@@ -45,11 +45,24 @@ export default function HistoryPage() {
         const minutes = Math.floor((seconds % 3600) / 60);
         const secs = seconds % 60;
         return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-        };
+      };
+      
+      const handleDelete = async (sessionId: string) => {
+        if (!user) return;
+        
+        try {
+          await deleteTimeSession(sessionId);
+          const updatedSessions = sessions.filter(session => session.id !== sessionId);
+          setSessions(updatedSessions);
+        } 
+        catch (error) {
+          console.error("Error deleting session:", error);
+        }
+      };
 
-  return (
-<div className=" bg-gray-800 h-screen" >
-
+  return ( 
+<div className=" bg-gray-800 h-full pb-20" >
+<h1 className='text-xl font-semibold w-full py-5 text-center'> History</h1>
                 {isLoadingSessions ? (
 
                   <p>Loading sessions...</p>
@@ -59,43 +72,54 @@ export default function HistoryPage() {
                   <p className="">No sessions recorded yet.</p>
 
                 ) : (
+                  <div>
+                    
                     
 
-
-                  <div className=" flex flex-col items-center ">
-                    <h1 className='text-xl font-semibold'> History</h1>
-                    <table className="w-full divide-y divide-gray-200 text-md ">
-                      <thead className="">
+                  <div className=" w-11/12 mx-auto rounded-lg shadow-lg overflow-hidden ">
+                    
+                    <table className="w-full divide-y-2 divide-gray-200  text-md ">
+                      <thead className="bg-gray-600 rounded-t-2xl ">
                         <tr>
 
-                          <th className="">Date</th>
+                        <th scope="col" className="py-8 text-lg text-shadow-md ">Date</th>
 
-                          <th className="">Start Time</th>
+                          <th scope="col" className="py-8 text-lg text-shadow-md ">Start Time</th>
 
-                          <th className="">End Time</th>
+                          <th scope="col" className="py-8 text-lg text-shadow-md ">End Time</th>
 
-                          <th className="">Duration</th>
+                          <th scope="col" className="py-8 text-lg text-shadow-md ">Duration</th>
+                          
+                          <th scope="col" className="py-8 text-lg text-shadow-md ">Delete</th>
 
                         </tr>
                       </thead>
-                      <tbody className="divide-y  divide-gray-200">
+                      <tbody className="bg-gray-700 divide-y divide-gray-600">
 
                         {
                         sessions.map((session) => (
-                          <tr key={session.id} className="py-5">
-                            <td className="text-center">
+                          <tr key={session.id} className="hover:bg-gray-600 transition duration-300">
+                            <td className="text-center py-5 text-gray-300">
                               {session.start_time.toLocaleDateString()}
                             </td>
-                            <td className="text-center">
+                            <td className="text-center py-5 text-gray-300">
                               {session.start_time.toLocaleTimeString()}
                             </td>
-                            <td className="text-center">
+                            <td className="text-center py-5 text-gray-300">
                               {session.end_time ? session.end_time.toLocaleTimeString() : '-'}
                             </td>
-                            <td className="text-center">
+                            <td className="text-center py-5 text-gray-300">
                               {session.duration ? formatTime(session.duration) : '-'}
                             </td>
-
+                            <td className="text-center py-5 text-gray-300">
+                              <button 
+                                onClick={() => handleDelete(session.id)}
+                                className="bg-red-400/70 text-red-200 hover:text-red-50 hover:scale-115 py-1 px-6
+                                rounded transition duration-300"
+                              >
+                                X
+                              </button>
+                            </td>
                           </tr>
                         ))
                         
@@ -105,8 +129,9 @@ export default function HistoryPage() {
                     </table>
                     
                   </div>
-                )}
+                </div>)}
               </div> 
+            
  
   );
 }
