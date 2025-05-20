@@ -31,9 +31,12 @@ export default function Home() {
   const [sessions, setSessions] = useState<TimeSession[]>([]);
   const [timer, setTimer] = useState(0);
   const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null);
-  const [isLoadingSessions, setIsLoadingSessions] = useState(false);
 
+
+  const [isLoadingSessions, setIsLoadingSessions] = useState(false);
   const[hasLoaded, setHasLoaded] = useState(false);
+  const[isPaused, setIsPaused] = useState(true);
+
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -61,6 +64,27 @@ export default function Home() {
     }
   }, [user]);
 
+  useEffect(() => {
+    /*
+    if(!isPaused){
+      const interval = setInterval(() => {
+        
+        setTimer(prev => prev + 1);
+        
+      }, 1000);
+      setTimerInterval(interval);
+    }
+    else{
+      const interval = setInterval(() => {
+        
+        setTimer(prev => prev );
+        
+      }, 1000);
+      setTimerInterval(interval);
+    }
+       */
+  },[]);
+
 
 
   const startTracking = async () => {
@@ -79,11 +103,15 @@ export default function Home() {
       setIsTracking(true);
       setTimer(0);
       
-      const interval = setInterval(() => {
+     /* const interval = setInterval(() => {
+        
         setTimer(prev => prev + 1);
+        
       }, 1000);
       
+      
       setTimerInterval(interval);
+      console.log(interval); */
       
       const newSession = await createTimeSession({
         user_id: user.id,
@@ -98,6 +126,9 @@ export default function Home() {
       setIsTracking(false);
       if (timerInterval) clearInterval(timerInterval);
     }
+
+
+    setIsPaused(false);
   };
   
 
@@ -132,6 +163,23 @@ export default function Home() {
       console.error("Error stopping tracking:", error);
     }
   };
+/*
+  const pauseTracking = async () => {
+    const interval = setInterval(() => {
+        setTimer(prev => prev + 1);
+      }, 0);
+    setTimerInterval(interval);
+    setIsPaused(true);
+    
+  }
+  const unpauseTracking = async () => {
+    const interval = setInterval(() => {
+        setTimer(prev => prev + 1);
+      }, 1000);
+    setTimerInterval(interval);
+    setIsPaused(false);
+    
+  } */
 
 
   const formatTime = (seconds: number) => {
@@ -163,7 +211,7 @@ export default function Home() {
                 {isTracking ? (<></>) : hasLoaded ? (<div className=' z-10 fixed w-screen top-0 h-24 bg-red-500/20'></div>) : null }
                 </div>
 
-                <div className="flex space-x-4  py-3 border-b-2 border-gray-500">
+                <div className="flex space-x-4  py-3 border-b-2 border-gray-500 flex-row">
                   {!isTracking ? (
                     <button 
                       onClick={startTracking}
@@ -179,6 +227,24 @@ export default function Home() {
                        active:bg-gray-500"
                     >
                       Stop Tracking
+                    </button>
+                  )}
+
+                  {!isPaused ? (
+                    <button 
+                      onClick={() => {setIsPaused(true);}}
+                      className=" text-white bg-gray-700 ml-5 p-2 rounded-md
+                       active:bg-gray-500"
+                    >
+                        Pause
+                    </button>
+                  ) : (
+                    <button 
+                      onClick={() => {setIsPaused(false);}}
+                      className=" text-white bg-gray-700 ml-5 p-2 rounded-md
+                       active:bg-gray-500"
+                    >
+                      Unpause
                     </button>
                   )}
                 </div>
