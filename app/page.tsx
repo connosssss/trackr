@@ -35,7 +35,7 @@ export default function Home() {
 
   const [isLoadingSessions, setIsLoadingSessions] = useState(false);
   const[hasLoaded, setHasLoaded] = useState(false);
-  const[isPaused, setIsPaused] = useState(true);
+  const[isPaused, setIsPaused] = useState(false);
 
 
   useEffect(() => {
@@ -126,7 +126,7 @@ export default function Home() {
     }
 
 
-    setIsPaused(false);
+    
   };
   
 
@@ -206,11 +206,12 @@ export default function Home() {
                 <div className="ml-5">
                   {formatTime(timer)}
                 </div>
-                {isTracking ? (<></>) : hasLoaded ? (<div className=' z-10 fixed w-screen top-0 h-24 bg-red-500/20'></div>) : null }
+                {hasLoaded ? <div className={` z-10 fixed w-screen top-0 h-24 bg-red-500/20 ${isTracking ? 'opacity-0' : 'opacity-100'} transition ease-in-out duration-300`}/> : null}
+                {hasLoaded ? <div className={` z-10 fixed w-screen top-0 h-24 bg-amber-400/30 ${!isPaused ? 'opacity-0' : 'opacity-100'} transition ease-in-out duration-300`}/> : null}
                 </div>
 
-                <div className="flex space-x-4  py-3 border-b-2 border-gray-500 flex-row">
-                  {!isTracking ? (
+                <div className="flex  py-3 border-b-2 border-gray-500 flex-row gap-2 ">
+                  {!isTracking ? ( 
                     <button 
                       onClick={startTracking}
                       className=" text-white bg-gray-700 ml-5 p-2 rounded-md
@@ -231,7 +232,7 @@ export default function Home() {
                   {!isPaused ? (
                     <button 
                       onClick={() => {setIsPaused(true);}}
-                      className=" text-white bg-gray-700 ml-5 p-2 rounded-md
+                      className=" text-white bg-gray-700 p-2 rounded-md
                        active:bg-gray-500"
                     >
                         Pause
@@ -239,10 +240,10 @@ export default function Home() {
                   ) : (
                     <button 
                       onClick={() => {setIsPaused(false);}}
-                      className=" text-white bg-gray-700 ml-5 p-2 rounded-md
+                      className=" text-white bg-gray-700 p-2 rounded-md
                        active:bg-gray-500"
                     >
-                      Unpause
+                      {hasLoaded ? "Unpause" : "Pause"}
                     </button>
                   )}
                 </div>
