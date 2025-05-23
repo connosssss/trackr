@@ -1,3 +1,3 @@
 Time tracker
-
-more tk
+---
+A simple time tracker meant to be lightweight 
