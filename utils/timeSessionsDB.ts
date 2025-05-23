@@ -7,6 +7,7 @@ export interface TimeSession {
   start_time: Date;
   end_time: Date | null;
   duration: number | null;
+  group: string | null;
 }
 
 export async function fetchTimeSessions(user: User): Promise<TimeSession[]> {

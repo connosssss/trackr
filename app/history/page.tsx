@@ -11,6 +11,7 @@ interface TimeSession {
   start_time: Date;
   end_time: Date | null;
   duration: number | null;
+  group: string | null;
 }
 
 
@@ -97,6 +98,8 @@ export default function HistoryPage() {
                       <tbody className="bg-gray-700 divide-y divide-gray-600">
 
                         {
+
+                          
                         sessions.map((session) => (
                           <tr key={session.id} className="hover:bg-gray-600 transition duration-300">
                             <td className="text-center py-5 text-gray-300">
@@ -110,6 +113,9 @@ export default function HistoryPage() {
                             </td>
                             <td className="text-center py-5 text-gray-300">
                               {session.duration ? formatTime(session.duration) : '-'}
+                            </td>
+                            <td className="text-center py-5 text-gray-300">
+                              {session.group}
                             </td>
                             <td className="text-center py-5 text-gray-300">
                               <button 

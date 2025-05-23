@@ -15,6 +15,7 @@ interface TimeSession {
   start_time: Date;
   end_time: Date | null;
   duration: number | null;
+  group: string | null;
 }
 
 
@@ -36,6 +37,8 @@ export default function Home() {
   const [isLoadingSessions, setIsLoadingSessions] = useState(false);
   const[hasLoaded, setHasLoaded] = useState(false);
   const[isPaused, setIsPaused] = useState(false);
+
+  const [tempGroupState, setTempGroupState] = useState<string | null>(null);
 
 
   useEffect(() => {
@@ -94,7 +97,8 @@ export default function Home() {
         id: Date.now().toString(), 
         start_time: new Date(),
         end_time: null,
-        duration: null
+        duration: null,
+        group: tempGroupState
       };
       
       setCurrentSession(tempSession);
@@ -115,7 +119,8 @@ export default function Home() {
         user_id: user.id,
         start_time: tempSession.start_time,
         end_time: null,
-        duration: null
+        duration: null,
+        group: tempSession.group
       });
     
       setCurrentSession(newSession);
@@ -229,7 +234,12 @@ export default function Home() {
                     </button>
                   )}
 
-                  {!isPaused ? (
+                  {
+                  
+                  // Need to make form so clear on start and update historypg
+                  
+                  
+                  !isPaused ? (
                     <button 
                       onClick={() => {setIsPaused(true);}}
                       className=" text-white bg-gray-700 p-2 rounded-md
@@ -246,6 +256,14 @@ export default function Home() {
                       {hasLoaded ? "Unpause" : "Pause"}
                     </button>
                   )}
+
+                  <textarea className="bg-gray-700 text-white p-2 rounded-md ml-5"
+                  value={tempGroupState || ''}
+                  onChange={(e) => setTempGroupState(e.target.value)}
+                  placeholder="timetracking group">
+
+
+                    </textarea>
                 </div>
               
             
