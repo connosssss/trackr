@@ -90,6 +90,8 @@ export default function HistoryPage() {
                           <th scope="col" className="py-8 text-lg text-shadow-md ">End Time</th>
 
                           <th scope="col" className="py-8 text-lg text-shadow-md ">Duration</th>
+
+                          <th scope="col" className="py-8 text-lg text-shadow-md ">Group Name</th>
                           
                           <th scope="col" className="py-8 text-lg text-shadow-md ">Delete</th>
 
