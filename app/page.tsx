@@ -198,7 +198,7 @@ export default function Home() {
   };
 
   return (
-    <div className="bg-gray-800 h-screen">
+    <div className="bg-gray-800 min-h-screen h-full">
         
         {isLoading ? (
           <p>Loading...</p>
@@ -285,7 +285,7 @@ export default function Home() {
             
 
 
-            <div className='h-[34rem] flex items-center justify-center'>
+            <div className='h-[34rem] flex items-center mx-5'>
               <Sessions />
                </div>
             
