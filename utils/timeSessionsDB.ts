@@ -74,10 +74,15 @@ export async function updateTimeSession(session: TimeSession): Promise<TimeSessi
 }
 
 export async function deleteTimeSession(sessionId: string): Promise<void> {
-  const { error } = await supabase.from('time_sessions').delete().eq('id', sessionId);
+  const { data, error } = await supabase.from('time_sessions').delete().eq('id', sessionId).select();
   
   if (error) {
     console.error('Error deleting time session:', error);
     throw error;
+  }
+
+  if (!data || data.length === 0) {
+    console.error('No session found with ID:', sessionId);
+    throw new Error(`No session found with ID: ${sessionId}`);
   }
 }

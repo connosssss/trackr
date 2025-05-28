@@ -38,7 +38,7 @@ export default function Home() {
   const[hasLoaded, setHasLoaded] = useState(false);
   const[isPaused, setIsPaused] = useState(false);
 
-  const [tempGroupState, setTempGroupState] = useState<string | null>(null);
+  const [groupInput, setGroupInput] = useState<string>('');
 
 
   useEffect(() => {
@@ -86,7 +86,9 @@ export default function Home() {
     
   }, [isTracking, isPaused]);
 
-
+  const handleGroupSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+  };
 
   const startTracking = async () => {
     if (!user) return;
@@ -98,12 +100,13 @@ export default function Home() {
         start_time: new Date(),
         end_time: null,
         duration: null,
-        group: tempGroupState
+        group: groupInput || null
       };
       
       setCurrentSession(tempSession);
       setIsTracking(true);
       setTimer(0);
+      setGroupInput('');
       
      /* const interval = setInterval(() => {
         
@@ -210,12 +213,23 @@ export default function Home() {
                 
                 <div className="ml-5">
                   {formatTime(timer)}
+
                 </div>
+                {groupInput ? (
+                    <div className="text-white text-sm opacity-70 ml-6">
+                      <span className="font-bold">{groupInput}</span>
+                    </div>
+                  ) : currentSession && currentSession.group ? (
+                  <div className="text-white text-sm opacity-70 ml-6">
+                      <span className="font-bold">{currentSession.group}</span>
+                    </div>) : null}
+
+
                 {hasLoaded ? <div className={` z-10 fixed w-screen top-0 h-24 bg-red-500/20 ${isTracking ? 'opacity-0' : 'opacity-100'} transition ease-in-out duration-300`}/> : null}
                 {hasLoaded ? <div className={` z-10 fixed w-screen top-0 h-24 bg-amber-400/30 ${!isPaused ? 'opacity-0' : 'opacity-100'} transition ease-in-out duration-300`}/> : null}
                 </div>
 
-                <div className="flex  py-3 border-b-2 border-gray-500 flex-row gap-2 ">
+                <div className="flex  py-3 border-b-2 border-gray-500 flex-row gap-2 items-center">
                   {!isTracking ? ( 
                     <button 
                       onClick={startTracking}
@@ -257,13 +271,14 @@ export default function Home() {
                     </button>
                   )}
 
-                  <textarea className="bg-gray-700 text-white p-2 rounded-md ml-5"
-                  value={tempGroupState || ''}
-                  onChange={(e) => setTempGroupState(e.target.value)}
-                  placeholder="timetracking group">
-
-
-                    </textarea>
+                  <form onSubmit={handleGroupSubmit} className="flex gap-2 ml-5">
+                    <textarea 
+                      className="bg-gray-700 text-white p-2 rounded-md h-10 resize-none"
+                      value={groupInput}
+                      onChange={(e) => setGroupInput(e.target.value)}
+                      placeholder="timetracking group"
+                    />
+                  </form>
                 </div>
               
             
