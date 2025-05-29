@@ -64,7 +64,7 @@ export default function Sessions() {
 
                 ) : (
 
-                  <div className=" max-h-80 flex flex-col items-center">
+                  <div className="flex flex-col items-center gap-20">
                     <table className="w-full divide-y divide-gray-200 text-md ">
                       <thead className="">
                         <tr>
@@ -105,8 +105,10 @@ export default function Sessions() {
 
                     </table>
                     
-                    <button  onClick={() => {router.push('/history');}}className='w-1/2 text-white font-semibold text-md text-center
-                    mt-2 bg-white/30 hover:bg-white/20 w-1/2 rounded-sm'>
+                    <button  onClick={() => {router.push('/history');}}
+                    className='w-1/2 text-white font-semibold text-md text-center
+                    mt-2 bg-white/30 hover:bg-white/20 w-1/2 rounded-sm
+                    mb-0'>
                           See all
                     </button>
                   </div>
