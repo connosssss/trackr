@@ -199,6 +199,11 @@ export default function Home() {
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
+  
+  const handleGroupSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+  };
+
   return (
     <div className="bg-gray-800 min-h-screen h-full">
         
@@ -211,20 +216,30 @@ export default function Home() {
             
             
               
-              <div className="text-4xl font-mono  flex h-24 items-center transition duration-300 border-b-2 border-gray-500
+              <div className=" font-mono  flex h-24 items-center transition duration-300 border-b-2 border-gray-500
               ">
                 
-                <div className="ml-5">
+                <div className="ml-5 text-4xl">
                   {formatTime(timer)}
 
 
                 </div>
                 {groupInput ? (
-                    <div className="text-white text-sm opacity-70 ml-6">
+                    <div className="text-white text-lg opacity-70 ml-6 ">
                       <span className="font-bold">{groupInput}</span>
                     </div>
                   ) : currentSession && currentSession.group ? (
-                  <div className="text-white text-sm opacity-70 ml-6">
+                  <div className="text-white text-lg opacity-70 ml-6 ">
+                      <span className="font-bold">{currentSession.group}</span>
+                    </div>) : null}
+
+
+                {groupInput ? (
+                    <div className="text-white text-lg opacity-70 ml-6 ">
+                      <span className="font-bold">{groupInput}</span>
+                    </div>
+                  ) : currentSession && currentSession.group ? (
+                  <div className="text-white text-lg opacity-70 ml-6 ">
                       <span className="font-bold">{currentSession.group}</span>
                     </div>) : null}
 

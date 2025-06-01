@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "tickr",
+  title: "trackr",
   description: "A simple time tracking app",
 };
 
