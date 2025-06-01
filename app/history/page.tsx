@@ -3,6 +3,8 @@
 import { useAuth } from "@/context/AuthContext";
 import { useState, useEffect } from "react";
 import { fetchTimeSessions, deleteTimeSession } from "@/utils/timeSessionsDB";
+import * as ExcelJS from 'exceljs';
+import { saveAs } from 'file-saver';
 
 
 interface TimeSession {
@@ -47,7 +49,8 @@ export default function HistoryPage() {
         const secs = seconds % 60;
         return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
       };
-      
+
+
       const handleDelete = async (sessionId: string) => {
         if (!user) return;
         
@@ -59,6 +62,32 @@ export default function HistoryPage() {
         catch (error) {
           console.error("Error deleting session:", error);
         }
+      };
+
+      const exportToSheet = async () => {
+        if (!sessions || sessions.length === 0) {
+          console.log("No sessions to export.");
+          return;
+        }
+        const workbook = new ExcelJS.Workbook();
+        const sheet = workbook.addWorksheet('history');
+    
+        sheet.columns = [{ header: 'Date', key: 'date', width: 15 }, { header: 'Start Time', key: 'startTime', width: 15 },
+          { header: 'End Time', key: 'endTime', width: 15 }, { header: 'Duration', key: 'duration', width: 15 },
+          { header: 'Group Name', key: 'group', width: 20 },
+        ];
+
+        sessions.forEach(session => {
+          sheet.addRow({date: session.start_time.toLocaleDateString(), startTime: session.start_time.toLocaleTimeString(),
+            endTime: session.end_time ? session.end_time.toLocaleTimeString() : '-', duration: session.duration ? formatTime(session.duration) : '-',
+            group: session.group || '-',
+          });
+        });
+  
+        const buffer = await workbook.xlsx.writeBuffer();
+        //blob 
+        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        saveAs(blob, 'history.xlsx');
       };
 
   return ( 
@@ -77,7 +106,7 @@ export default function HistoryPage() {
                     
                     
 
-                  <div className=" w-11/12 mx-auto rounded-lg shadow-lg overflow-hidden ">
+                  <div className=" w-full mx-auto rounded-lg shadow-lg overflow-hidden ">
                     
                     <table className="w-full divide-y-2 divide-gray-200  text-md ">
                       <thead className="bg-gray-600 rounded-t-2xl ">
@@ -135,6 +164,7 @@ export default function HistoryPage() {
                       </tbody>
 
                     </table>
+                    <button onClick={exportToSheet}> Export as a Spreadsheet</button>
                     
                   </div>
                 </div>)}
