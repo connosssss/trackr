@@ -164,9 +164,13 @@ export default function HistoryPage() {
                       </tbody>
 
                     </table>
-                    <button onClick={exportToSheet}> Export as a Spreadsheet</button>
+                    
                     
                   </div>
+                  <div className="w-full py-5 flex items-center justify-center">
+                      <button onClick={exportToSheet}
+                      className="px-5 py-3 rounded-md bg-gray-700 text-lg"> Export as a Spreadsheet</button>
+                    </div>
                 </div>)}
               </div> 
             
