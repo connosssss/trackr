@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 
 
 import Sessions from "@/components/Sessions";
+import Navbar from "@/components/Navbar";
 
 // Define the TimeSession type
 interface TimeSession {
@@ -201,6 +202,8 @@ export default function Home() {
   return (
     <div className="bg-gray-800 min-h-screen h-full">
         
+        <Navbar />
+
         {isLoading ? (
           <div className="w-full h-full flex justify-center align-center">
           <p>Loading sessions...</p>
