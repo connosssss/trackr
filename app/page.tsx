@@ -202,7 +202,9 @@ export default function Home() {
     <div className="bg-gray-800 min-h-screen h-full">
         
         {isLoading ? (
-          <p>Loading...</p>
+          <div className="w-full h-full flex justify-center align-center">
+          <p>Loading sessions...</p>
+        </div>
         ) : user ? (
 
           <div className="">

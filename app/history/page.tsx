@@ -95,7 +95,9 @@ export default function HistoryPage() {
 <h1 className='text-xl font-semibold w-full py-5 text-center'> History</h1>
                 {isLoadingSessions ? (
 
-                  <p>Loading sessions...</p>
+                  <div className="w-full h-full flex justify-center align-center">
+                    <p>Loading sessions...</p>
+                  </div>
 
                 ) : sessions.length === 0 ? (
 

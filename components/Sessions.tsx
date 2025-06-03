@@ -56,7 +56,9 @@ export default function Sessions() {
 
                 {isLoadingSessions ? (
 
-                  <p>Loading sessions...</p>
+<div className="w-full h-full flex justify-center align-center">
+<p>Loading sessions...</p>
+</div>
 
                 ) : sessions.length === 0 ? (
 
