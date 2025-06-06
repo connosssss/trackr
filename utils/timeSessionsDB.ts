@@ -54,7 +54,7 @@ export async function createTimeSession(session: Omit<TimeSession, 'id'>): Promi
 export async function updateTimeSession(session: TimeSession): Promise<TimeSession> {
   const { data, error } = await supabase
     .from('time_sessions')
-    .update({end_time: session.end_time, duration: session.duration})
+    .update({start_time: session.start_time, end_time: session.end_time, duration: session.duration, group: session.group})
     .eq('id', session.id)
     .select()
     .single();
