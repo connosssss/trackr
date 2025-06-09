@@ -6,6 +6,7 @@ import { fetchTimeSessions, deleteTimeSession } from "@/utils/timeSessionsDB";
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import Edit from "@/components/Edit";
+import Navbar from "@/components/Navbar";
 
 interface TimeSession {
   id: string;
@@ -119,6 +120,7 @@ export default function HistoryPage() {
 
   return ( 
 <div className=" bg-gray-800 min-h-screen h-full pb-20" >
+<Navbar />
 <h1 className='text-xl font-semibold w-full py-5 text-center'> History</h1>
                 {isLoadingSessions ? (
 
@@ -135,7 +137,7 @@ export default function HistoryPage() {
                     
                     
 
-                  <div className=" w-full mx-auto rounded-lg shadow-lg overflow-hidden ">
+                  <div className=" w-5/6 mx-auto rounded-lg shadow-lg overflow-hidden ">
                     
                     <table className="w-full divide-y-2 divide-gray-200  text-md ">
                       <thead className="bg-gray-600 rounded-t-2xl ">

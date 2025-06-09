@@ -27,54 +27,69 @@ export default function Edit({
   onSave,
   user
 }: EditProps) {
-  // Local state for form fields
-  const [editStartDate, setEditStartDate] = useState<string>('');
-  const [editStartTime, setEditStartTime] = useState<string>('');
-  const [editEndDate, setEditEndDate] = useState<string>('');
-  const [editEndTime, setEditEndTime] = useState<string>('');
+
+  const [startDateTime, setStartDateTime] = useState<string>('');
+  const [endDateTime, setEndDateTime] = useState<string>('');
   const [editGroup, setEditGroup] = useState<string>('');
 
-  // Initialize form fields when editingSession changes
   useEffect(() => {
     if (editingSession) {
-      const startDate = editingSession.start_time.toISOString().split('T')[0];
-      const startTime = editingSession.start_time.toTimeString().slice(0, 8); 
+      const startt = editingSession.start_time.toISOString().slice(0, 19);
       
-      let endDate = '';
-      let endTime = '';
+      let endt = '';
       if (editingSession.end_time) {
-        endDate = editingSession.end_time.toISOString().split('T')[0];
-        endTime = editingSession.end_time.toTimeString().slice(0, 8); 
+        endt = editingSession.end_time.toISOString().slice(0, 19);
       }
       
-      setEditStartDate(startDate);
-      setEditStartTime(startTime);
-      setEditEndDate(endDate);
-      setEditEndTime(endTime);
+      setStartDateTime(startt);
+      setEndDateTime(endt);
       setEditGroup(editingSession.group || '');
     }
   }, [editingSession]);
+
+  const handleStartTimeChange = (value: string) => {
+    setStartDateTime(value);
+  };
+
+  const handleEndTimeChange = (value: string) => {
+    setEndDateTime(value);
+  };
+
+  const calculateDuration = () => {
+    if (!startDateTime) return 0;
+    
+    const start = new Date(startDateTime);
+    let end = new Date(endDateTime);
+    
+    return Math.max(0, Math.floor((end.getTime() - start.getTime()) / 1000));
+
+  };
+
+
+  const formatDuration = (seconds: number) => {
+
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
 
   const handleSaveEdit = async () => {
     if (!editingSession || !user) return;
     
     try {
-      const startDateTime = new Date(`${editStartDate}T${editStartTime}`);
+      const startTime = new Date(startDateTime);
       
-      let endDateTime = null;
-      if (editEndDate && editEndTime) {
-        endDateTime = new Date(`${editEndDate}T${editEndTime}`);
-      }
-      
+      let endTime = null;
       let duration = null;
-      if (startDateTime && endDateTime) {
-        duration = Math.floor((endDateTime.getTime() - startDateTime.getTime()) / 1000);
-      }
+      
+      endTime = new Date(endDateTime);
+      duration = Math.floor((endTime.getTime() - startTime.getTime()) / 1000);
       
       const updatedSession: TimeSession = {
         ...editingSession,
-        start_time: startDateTime,
-        end_time: endDateTime,
+        start_time: startTime,
+        end_time: endTime,
         duration: duration,
         group: editGroup || null
       };
@@ -95,48 +110,37 @@ export default function Edit({
          <h2 className="text-xl font-semibold mb-4">Edit Time Entry</h2>
          
          <div className="space-y-4">
-           <div className="grid grid-cols-2 gap-4">
-             <div>
-
-               <label className="block text-sm font-medium mb-1">Start Date</label>
-               <input 
-                 type="date" 
-                 value={editStartDate}
-                 onChange={(e) => setEditStartDate(e.target.value)}
-                 className="w-full p-2 rounded bg-gray-800 text-white"
-               />
-             </div>
-             <div>
-               <label className="block text-sm font-medium mb-1">Start Time</label>
-               <input 
-                 type="text" 
-                 value={editStartTime}
-                 onChange={(e) => setEditStartTime(e.target.value)}
-                 className="w-full p-2 rounded bg-gray-800 text-white"
-                 placeholder="HH:MM:SS"
-               />
-             </div>
+           <div>
+             <label className="block text-sm font-medium mb-1">Start Time</label>
+             <input 
+               type="datetime-local" 
+               value={startDateTime}
+               onChange={(e) => handleStartTimeChange(e.target.value)}
+               step="1"
+               className="w-full p-2 rounded bg-gray-800 text-white"
+             />
            </div>
            
-           <div className="grid grid-cols-2 gap-4">
-             <div>
-               <label className="block text-sm font-medium mb-1">End Date</label>
+           <div>
+            
+             <label className="block text-sm font-medium mb-1">End Time</label>
+             <div className="flex gap-2">
+
                <input 
-                 type="date" 
-                 value={editEndDate}
-                 onChange={(e) => setEditEndDate(e.target.value)}
-                 className="w-full p-2 rounded bg-gray-800 text-white"
+                 type="datetime-local" 
+                 value={endDateTime}
+                 onChange={(e) => handleEndTimeChange(e.target.value)}
+                 step="1"
+                 className="flex-1 p-2 rounded bg-gray-800 text-white disabled:opacity-50"
                />
+
              </div>
-             <div>
-               <label className="block text-sm font-medium mb-1">End Time</label>
-               <input 
-                 type="text" 
-                 value={editEndTime}
-                 onChange={(e) => setEditEndTime(e.target.value)}
-                 className="w-full p-2 rounded bg-gray-800 text-white"
-                 placeholder="HH:MM:SS"
-               />
+           </div>
+
+           <div className="bg-gray-800 p-3 rounded">
+             <div className="text-sm text-gray-300 mb-1">Duration</div>
+             <div className="text-lg font-mono text-white">
+               {formatDuration(calculateDuration())}
              </div>
            </div>
            

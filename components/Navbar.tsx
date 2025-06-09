@@ -20,7 +20,7 @@ export default function Navbar() {
         onClick={toggleMinimize} 
         className={`absolute top-2 ${isMinimized ? 'left-2' : 'left-5'} bg-gray-800 hover:bg-gray-500
          text-white rounded-md z-20 ${isMinimized ? 'px-2' : 'px-4 w-[80%]'}
-         transition-all duration-500 ease-in-out`}
+         transition-all duration-300 ease-in-out`}
       >
         {isMinimized ? '→' : '←'}
       </button>
