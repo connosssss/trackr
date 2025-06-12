@@ -66,7 +66,7 @@ export default function LoginPage() {
         
         <div className="w-5/6 mx-auto bg-gray-700 min-h-96 rounded-md shadow-md p-14 mt-12 
         flex flex-row">
-            <div className='w-1/4  bg-gray-600 flex flex-col text-center gap-5 
+            <div className='w-1/4  bg-gray-600 text-center 
             rounded-md shadow-md'>
                 <div className='text-2xl font-semibold mt-5 border-b-2 border-gray-700'>
                     Total Time
@@ -75,8 +75,23 @@ export default function LoginPage() {
                     isLoading ? (
                         <div>Loading...</div>
                     ) : (
-                <div className='text-xl font-semibold'>
-                    {formatTime(totalTime)} Hours
+                  <div className="h-full w-full flex flex-col gap-9 mt-10">
+                  <div className='text-2xl font-semibold text-shadow-2xs hover:scale-120 transition-all duration-300'>
+                      {formatTime(totalTime)} Hours
+                  </div>
+
+                  <div className='text-lg font-semibold text-shadow-2xs transition-all duration-300
+                  flex flex-col gap-2 mx-auto text-center opacity-75'>
+                    <div className='flex flex-row gap-2 text-center w-full justify-center'>
+                      <p>{Math.floor(totalTime / 86400)} Days</p>
+                      <p>{Math.floor((totalTime % 86400)/3600)} Hours</p>
+                      </div>
+                      <div className='flex flex-row gap-2 text-center w-full justify-center'>
+                      <p>{Math.floor((totalTime % 3600) / 60)} Minutes</p>
+                      <p>{Math.floor(totalTime % 60)} Seconds</p>
+                  </div>
+                  </div>
+
                 </div>
                     )
                 }
