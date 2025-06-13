@@ -40,6 +40,7 @@ export default function Home() {
   const[isPaused, setIsPaused] = useState(false);
 
   const [groupInput, setGroupInput] = useState<string>('');
+  const [pastGroups, setpastGroups] = useState<string[]>([]);
 
 
   useEffect(() => {
@@ -55,6 +56,7 @@ export default function Home() {
         try {
           const data = await fetchTimeSessions(user);
           setSessions(data);
+          loadPastGroups(data);
         } 
         
         catch (error) {
@@ -87,7 +89,20 @@ export default function Home() {
     
   }, [isTracking, isPaused]);
 
+  const loadPastGroups = async (data) => {
+    if(!user) return;
+    const groupCounts: { [key: string]: number } = {};
 
+          data.forEach(session => {
+            if (session.group) {
+              groupCounts[session.group] = (groupCounts[session.group] || 0) + 1;
+            }
+          });
+          
+          const sortedGroups = Object.entries(groupCounts).sort(([,a], [,b]) => b - a).slice(0, 6).map(([group]) => group);
+          
+          setpastGroups(sortedGroups);
+  }
   const startTracking = async () => {
     if (!user) return;
     
@@ -185,6 +200,9 @@ export default function Home() {
     
   } */
 
+  const selectGroup = (group: string) => {
+    setGroupInput(group);
+  };
 
   const formatTime = (seconds: number) => {
     const hours = Math.floor(seconds / 3600);
@@ -236,12 +254,12 @@ export default function Home() {
                 {hasLoaded ? <div className={` z-10 fixed w-screen top-0 h-24 bg-amber-400/30 ${!isPaused ? 'opacity-0' : 'opacity-100'} transition ease-in-out duration-300`}/> : null}
                 </div>
 
-                <div className="flex  py-3 border-b-2 border-gray-500 flex-row gap-2 items-center">
+                <div className="flex  py-3 border-b-2 border-gray-500 flex-row gap-2 items-center ">
                   {!isTracking ? ( 
                     <button 
                       onClick={startTracking}
                       className=" text-white bg-gray-700 ml-5 p-2 rounded-md
-                       active:bg-gray-500"
+                       hover:bg-gray-500 transition-all duration-300"
                     >
                       Start Tracking
                     </button>
@@ -249,7 +267,7 @@ export default function Home() {
                     <button 
                       onClick={stopTracking}
                       className=" text-white bg-gray-700 ml-5 p-2 rounded-md
-                       active:bg-gray-500"
+                       hover:bg-gray-500 transition-all duration-300"
                     >
                       Stop Tracking
                     </button>
@@ -264,7 +282,7 @@ export default function Home() {
                     <button 
                       onClick={() => {setIsPaused(true);}}
                       className=" text-white bg-gray-700 p-2 rounded-md
-                       active:bg-gray-500"
+                       hover:bg-gray-500 transition-all duration-300"
                     >
                         Pause
                     </button>
@@ -272,7 +290,7 @@ export default function Home() {
                     <button 
                       onClick={() => {setIsPaused(false);}}
                       className=" text-white bg-gray-700 p-2 rounded-md
-                       active:bg-gray-500"
+                       hover:bg-gray-500 transition-all duration-300"
                     >
                       {hasLoaded ? "Unpause" : "Pause"}
                     </button>
@@ -286,6 +304,23 @@ export default function Home() {
                       placeholder="timetracking group"
                     />
                   </form>
+                  {pastGroups.length > 0 && pastGroups.slice(0,10).map((group, index) => (
+                        <button
+                          key={index}
+                          onClick={() => selectGroup(group)}
+                          className={`px-3 py-2 rounded-md text-sm transition ml-2
+                            opacity-75
+                            ${
+                            groupInput === group 
+                              ? 'bg-gray-500 text-white' 
+                              : 'bg-gray-600 hover:bg-gray-500'
+                          }`}
+                        >
+                          {group}
+                        </button>
+                      ))
+                  
+                }
                 </div>
               
             
