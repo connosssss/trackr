@@ -4,6 +4,7 @@ import { useState, useEffect  } from 'react';
 import { useAuth } from "@/context/AuthContext";
 import { fetchTimeSessions } from "@/utils/timeSessionsDB";
 
+import Navbar from "@/components/Navbar";
 
 interface Session {
     id: string;
@@ -62,6 +63,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen w-screen bg-gray-800">
+      <Navbar/>
         <h1 className="w-full text-2xl text-center pt-5">Statistics</h1>
         
         <div className="w-5/6 mx-auto bg-gray-700 min-h-96 rounded-md shadow-md p-14 mt-12 

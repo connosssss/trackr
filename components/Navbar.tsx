@@ -14,13 +14,13 @@ export default function Navbar() {
   };
 
   return (
-    <div className={`absolute right-0 h-full backdrop-blur-sm z-20 bg-gray-500/30
-    ${isMinimized ? 'w-18' : 'w-1/6'} transition-all duration-500 ease-in-out`}>
+    <div className={`fixed right-0 h-screen backdrop-blur-sm z-20 bg-gray-500/30
+    ${isMinimized ? 'w-16' : 'w-1/6'} transition-all duration-500 ease-in-out`}>
       <button 
         onClick={toggleMinimize} 
         className={`absolute top-2 ${isMinimized ? 'left-2' : 'left-5'} bg-gray-800 hover:bg-gray-500
-         text-white rounded-md z-30 px-4 ${!isMinimized ? 'w-[80%]' : ''}
-         transition-all duration-300 ease-in-out`}
+         text-white rounded-md z-30 px-4 ${!isMinimized ? 'w-[80%]' : 'w-12'} mr-2
+         transition-all duration-500 ease-in-out`}
       >
         {isMinimized ? '→' : '←'}
       </button>
@@ -38,7 +38,7 @@ export default function Navbar() {
         </Link>
 
         <Link href="/statistics" className="hover:scale-125 transition-all duration-300 z-30">
-          <div>Stats</div>
+          <div>Statistics</div>
         </Link>
         <Link href="/user" className="hover:scale-125 transition-all duration-300 z-30">
           <div>User Info</div>
