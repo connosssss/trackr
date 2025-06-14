@@ -103,6 +103,8 @@ export default function Home() {
           
           setpastGroups(sortedGroups);
   }
+
+
   const startTracking = async () => {
     if (!user) return;
     
@@ -329,22 +331,6 @@ export default function Home() {
             <div className='h-[34rem] flex items-center mx-5'>
               <Sessions />
                </div>
-            
-              
-              
-
-
-
-
-            
-
-            <div className="flex justify-between items-center">
-              <p className="text-lg">Logged in as: <span className="font-bold">{user.email}</span></p>
-
-              <button onClick={() => signOut()} className="bg-red-500">
-                Sign Out
-              </button>
-            </div>
           </div>
         ) : null}
     </div>);
