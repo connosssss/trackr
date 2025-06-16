@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuth } from "@/context/AuthContext";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { fetchTimeSessions, createTimeSession, updateTimeSession } from "@/utils/timeSessionsDB";
 import { useRouter } from "next/navigation";
 
@@ -218,9 +218,9 @@ export default function Home() {
   const handleGroupSubmit = (e: React.FormEvent) => {
     e.preventDefault();
   };
-
+  const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   return (
-    <div className="bg-gray-800 min-h-screen h-full">
+    <div className="bg-gray-800 min-h-screen h-full w-full">
         
         <Navbar />
 
@@ -328,9 +328,50 @@ export default function Home() {
             
 
 
-            <div className='h-[34rem] flex items-center mx-5'>
-              <Sessions />
-               </div>
+            <div className='h-full flex flex-col pb-20 mx-5 mt-5'>
+                <div className='grid grid-flow-col grid-cols-8 w-[95%] border-gray-500 mr-16'>
+                  <div className="border-gray-500 border-b"></div>
+                  {daysOfWeek.map((day) => (
+                    <div key={day} className=' border-gray-500 border-b h-12 
+                    text-center'>
+                        {day}
+                      
+                    </div>
+                    
+                  )) }
+                  </div>
+                  
+                  <div className='grid grid-cols-8 w-[95%]'>
+                    {Array.from({ length: 24 }, (_, hour) => (
+                     
+                     <React.Fragment key={hour}>
+
+                        <div  className='border-gray-500 border h-12 flex items-center justify-center text-xs'>
+                          {hour === 0 ? '12:00 AM' : 
+                          hour < 12 ? `${hour}:00 AM` : 
+                          hour === 12 ? '12:00 PM' : 
+                          `${hour - 12}:00 PM`}
+                        </div>
+
+
+                        {daysOfWeek.map((day) => (
+                          
+                          <div 
+                            key={`${day}-${hour}`} 
+                            className='border-gray-500 border h-12 hover:bg-gray-600 
+                            transition-colors duration-150 cursor-pointer'
+                          >
+                           
+
+
+                          </div>
+                        ))}
+                        </React.Fragment>
+                      ))}
+
+                      </div>
+
+              </div>
           </div>
         ) : null}
     </div>);
