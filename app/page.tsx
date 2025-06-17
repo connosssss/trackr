@@ -32,12 +32,12 @@ export default function Home() {
   const [currentSession, setCurrentSession] = useState<TimeSession | null>(null);
   const [sessions, setSessions] = useState<TimeSession[]>([]);
   const [timer, setTimer] = useState(0);
-  const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null);
+
 
 
   const [isLoadingSessions, setIsLoadingSessions] = useState(false);
   const[hasLoaded, setHasLoaded] = useState(false);
-  const[isPaused, setIsPaused] = useState(false);
+
 
   const [groupInput, setGroupInput] = useState<string>('');
   const [pastGroups, setpastGroups] = useState<string[]>([]);
@@ -71,23 +71,21 @@ export default function Home() {
   }, [user]);
 
   useEffect(() => {
-    
+
     let interval: NodeJS.Timeout | null = null;
     
-    if (isTracking && !isPaused) {
-
+    if (isTracking && currentSession) {
       interval = setInterval(() => {
-
-        setTimer(prev => prev + 1);
+        const now = new Date();
+        const elapsed = Math.floor((now.getTime() - currentSession.start_time.getTime()) / 1000);
+        setTimer(elapsed);
       }, 1000);
     }
     
     return () => {
       if (interval) clearInterval(interval);
     };
-
-    
-  }, [isTracking, isPaused]);
+  }, [isTracking, currentSession]);
 
   const loadPastGroups = async (data) => {
     if(!user) return;
@@ -120,18 +118,7 @@ export default function Home() {
       
       setCurrentSession(tempSession);
       setIsTracking(true);
-      setTimer(0);
       setGroupInput('');
-      
-     /* const interval = setInterval(() => {
-        
-        setTimer(prev => prev + 1);
-        
-      }, 1000);
-      
-      
-      setTimerInterval(interval);
-      console.log(interval); */
       
       const newSession = await createTimeSession({
         user_id: user.id,
@@ -178,7 +165,9 @@ export default function Home() {
       const updatedSessions = await fetchTimeSessions(user);
       setSessions(updatedSessions);
       setIsTracking(false);
-      setIsPaused(false);
+      setTimer(0);
+      setCurrentSession(null);
+      //setIsPaused(false);
     } 
     catch (error) {
       console.error("Error stopping tracking:", error);
@@ -257,8 +246,7 @@ export default function Home() {
 
                 {hasLoaded ? <div className={` z-10 absolute  top-0 h-24 bg-red-500/20 ${isTracking ? 'opacity-0' : 'opacity-100'} 
                 transition ease-in-out duration-300 w-[99%] rounded-bl-2xl`}/> : null}
-                {hasLoaded ? <div className={` z-10 absolute w-[99%] rounded-bl-2xl top-0 h-24 bg-amber-400/30 ${!isPaused ? 'opacity-0' : 'opacity-100'} 
-                transition ease-in-out duration-300`}/> : null}
+                
                 </div>
 
                 <div className="flex  py-3 border-b-2 border-gray-500 flex-row gap-2 items-center w-[98%]">
@@ -280,28 +268,11 @@ export default function Home() {
                     </button>
                   )}
 
-                  {
-                  
-                  // Need to make form so clear on start and update historypg
+                 
                   
                   
-                  !isPaused ? (
-                    <button 
-                      onClick={() => {setIsPaused(true);}}
-                      className=" text-white bg-gray-700 p-2 rounded-md
-                       hover:bg-gray-500 transition-all duration-300"
-                    >
-                        Pause
-                    </button>
-                  ) : (
-                    <button 
-                      onClick={() => {setIsPaused(false);}}
-                      className=" text-white bg-gray-700 p-2 rounded-md
-                       hover:bg-gray-500 transition-all duration-300"
-                    >
-                      {hasLoaded ? "Unpause" : "Pause"}
-                    </button>
-                  )}
+                  
+                  
 
                   <form onSubmit={handleGroupSubmit} className="flex gap-2 ml-5">
                     <textarea 
