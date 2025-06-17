@@ -218,7 +218,10 @@ export default function Home() {
   const handleGroupSubmit = (e: React.FormEvent) => {
     e.preventDefault();
   };
-  const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const daysOfWeek = [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+
+
   return (
     <div className="bg-gray-800 min-h-screen h-full w-full">
         
@@ -236,7 +239,7 @@ export default function Home() {
             
               
               <div className=" font-mono  flex h-24 items-center transition duration-300 border-b-2 border-gray-500
-              ">
+                 w-[98%]">
                 
                 <div className="ml-5 text-4xl">
                   {formatTime(timer)}
@@ -252,11 +255,13 @@ export default function Home() {
                     </div>) : null}
 
 
-                {hasLoaded ? <div className={` z-10 fixed w-screen top-0 h-24 bg-red-500/20 ${isTracking ? 'opacity-0' : 'opacity-100'} transition ease-in-out duration-300`}/> : null}
-                {hasLoaded ? <div className={` z-10 fixed w-screen top-0 h-24 bg-amber-400/30 ${!isPaused ? 'opacity-0' : 'opacity-100'} transition ease-in-out duration-300`}/> : null}
+                {hasLoaded ? <div className={` z-10 absolute  top-0 h-24 bg-red-500/20 ${isTracking ? 'opacity-0' : 'opacity-100'} 
+                transition ease-in-out duration-300 w-[99%] rounded-bl-2xl`}/> : null}
+                {hasLoaded ? <div className={` z-10 absolute w-[99%] rounded-bl-2xl top-0 h-24 bg-amber-400/30 ${!isPaused ? 'opacity-0' : 'opacity-100'} 
+                transition ease-in-out duration-300`}/> : null}
                 </div>
 
-                <div className="flex  py-3 border-b-2 border-gray-500 flex-row gap-2 items-center ">
+                <div className="flex  py-3 border-b-2 border-gray-500 flex-row gap-2 items-center w-[98%]">
                   {!isTracking ? ( 
                     <button 
                       onClick={startTracking}
@@ -330,7 +335,7 @@ export default function Home() {
 
             <div className='h-full flex flex-col pb-20 mx-5 mt-5'>
                 <div className='grid grid-flow-col grid-cols-8 w-[95%] border-gray-500 mr-16'>
-                  <div className="border-gray-500 border-b"></div>
+                  <div className="text-white/40 text-xs border-b flex justify-center items-end "> 12:00 AM</div>
                   {daysOfWeek.map((day) => (
                     <div key={day} className=' border-gray-500 border-b h-12 
                     text-center'>
@@ -342,15 +347,16 @@ export default function Home() {
                   </div>
                   
                   <div className='grid grid-cols-8 w-[95%]'>
-                    {Array.from({ length: 24 }, (_, hour) => (
+                    {Array.from({ length: 23 }, (_, hour) => (
                      
                      <React.Fragment key={hour}>
 
-                        <div  className='border-gray-500 border h-12 flex items-center justify-center text-xs'>
-                          {hour === 0 ? '12:00 AM' : 
-                          hour < 12 ? `${hour}:00 AM` : 
-                          hour === 12 ? '12:00 PM' : 
-                          `${hour - 12}:00 PM`}
+                        <div  className='border-gray-500 border-b border-r h-12 flex justify-center items-end'>
+                          <div className="text-white/40 text-xs mb-1 ">{
+                          hour < 11 ? `${hour + 1}:00 AM` : 
+                          hour === 11 ? '12:00 PM' : 
+                          `${hour + 1 - 12}:00 PM`}
+                          </div>
                         </div>
 
 
@@ -358,8 +364,8 @@ export default function Home() {
                           
                           <div 
                             key={`${day}-${hour}`} 
-                            className='border-gray-500 border h-12 hover:bg-gray-600 
-                            transition-colors duration-150 cursor-pointer'
+                            className='border-gray-500 border-b border-r h-12
+                            '
                           >
                            
 
