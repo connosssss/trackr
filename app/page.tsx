@@ -224,10 +224,6 @@ export default function Home() {
     return `${dayName} ${dateNum}`;
   };
 
-
-
-
-
   const formatWeekRange = () => {
     const weekDates = getWeek();
     const start = weekDates[0];
@@ -243,6 +239,42 @@ export default function Home() {
     }
   };
 
+  const getSessionsForDay = (date: Date) => {
+
+    const dayStart = new Date(date);
+
+    dayStart.setHours(0, 0, 0, 0);
+
+    const dayEnd = new Date(date);
+
+    dayEnd.setHours(23, 59, 59, 999);
+
+    return sessions.filter(session => {
+      const sessionStart = new Date(session.start_time);
+      return sessionStart >= dayStart && sessionStart <= dayEnd && session.end_time;
+    });
+  };
+
+  const getSessionPosition = (session: TimeSession) => {
+    const startTime = new Date(session.start_time);
+    const endTime = session.end_time ? new Date(session.end_time) : new Date();
+    
+    const startHour = startTime.getHours();
+    const startMinute = startTime.getMinutes();
+    const endHour = endTime.getHours();
+    const endMinute = endTime.getMinutes();
+    
+    const startPosition = (startHour + startMinute / 60) * 48;
+
+    const endPosition = (endHour + endMinute / 60) * 48;
+
+    const height = endPosition - startPosition;
+    
+    return {
+      top: startPosition,
+      height: Math.max(height, 8)
+    };
+  };
 
 
   return (
@@ -372,15 +404,17 @@ export default function Home() {
                   )) }
                   </div>
                   
-                  <div className='grid grid-cols-8 w-[95%]'>
-                    {Array.from({ length: 23 }, (_, hour) => (
+                  <div className='grid grid-cols-8 w-[95%] relative'>
+                    {Array.from({ length: 24 }, (_, hour) => (
                      
                      <React.Fragment key={hour}>
 
                         <div  className='border-gray-500 border-b border-r h-12 flex justify-center items-end'>
                           <div className="text-white/40 text-xs mb-1 ">{
+                          hour === 0 ? '1:00 AM' :
                           hour < 11 ? `${hour + 1}:00 AM` : 
                           hour === 11 ? '12:00 PM' : 
+                          hour === 23 ? '12:00 AM' :
                           `${hour + 1 - 12}:00 PM`}
                           </div>
                         </div>
@@ -390,7 +424,7 @@ export default function Home() {
                           
                           <div 
                             key={`${dayIndex}-${hour}`} 
-                            className='border-gray-500 border-b border-r h-12'
+                            className='border-gray-500 border-b border-r h-12 relative'
                           >
                            
 
@@ -398,6 +432,28 @@ export default function Home() {
                           </div>
                         ))}
                         </React.Fragment>
+                      ))}
+
+                      {getWeek().map((date, dayIndex) => (
+                        <div key={`sessions-${dayIndex}`} className="absolute h-full w-[12.5%]" style={{left: `${((dayIndex + 1) / 8) * 100}%`}}>
+
+                          {getSessionsForDay(date).map((session) => {
+                            const position = getSessionPosition(session);
+
+                            return (
+                              <div
+                                key={session.id}
+                                className="absolute bg-gray-400/70 rounded-sm mx-1 px-1 text-xs text-white overflow-hidden w-[95%]"
+                                style={{
+                                  top: `${position.top}px`,
+                                  height: `${position.height}px`,
+                                }}
+                              >
+
+                              </div>
+                            );
+                          })}
+                        </div>
                       ))}
 
                       </div>
