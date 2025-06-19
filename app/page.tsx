@@ -9,7 +9,6 @@ import { useRouter } from "next/navigation";
 import Sessions from "@/components/Sessions";
 import Navbar from "@/components/Navbar";
 
-// Define the TimeSession type
 interface TimeSession {
   id: string;
   user_id?: string;
@@ -41,6 +40,16 @@ export default function Home() {
 
   const [groupInput, setGroupInput] = useState<string>('');
   const [pastGroups, setpastGroups] = useState<string[]>([]);
+
+  const [currentWeekStart, setCurrentWeekStart] = useState(() => {
+    const today = new Date();
+    const dayOfWeek = today.getDay();
+    const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+    const monday = new Date(today);
+    monday.setDate(today.getDate() + mondayOffset);
+    monday.setHours(0, 0, 0, 0);
+    return monday;
+  });
 
 
   useEffect(() => {
@@ -167,29 +176,12 @@ export default function Home() {
       setIsTracking(false);
       setTimer(0);
       setCurrentSession(null);
-      //setIsPaused(false);
     } 
+    
     catch (error) {
       console.error("Error stopping tracking:", error);
     }
   };
-/*
-  const pauseTracking = async () => {
-    const interval = setInterval(() => {
-        setTimer(prev => prev + 1);
-      }, 0);
-    setTimerInterval(interval);
-    setIsPaused(true);
-    
-  }
-  const unpauseTracking = async () => {
-    const interval = setInterval(() => {
-        setTimer(prev => prev + 1);
-      }, 1000);
-    setTimerInterval(interval);
-    setIsPaused(false);
-    
-  } */
 
   const selectGroup = (group: string) => {
     setGroupInput(group);
@@ -207,7 +199,49 @@ export default function Home() {
   const handleGroupSubmit = (e: React.FormEvent) => {
     e.preventDefault();
   };
-  const daysOfWeek = [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+  const getWeek = () => {
+    const dates = [];
+
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(currentWeekStart);
+      date.setDate(currentWeekStart.getDate() + i);
+      dates.push(date);
+    }
+    return dates;
+  };
+
+  const changeWeek = (direction: 'before' | 'later') => {
+    const newWeekStart = new Date(currentWeekStart);
+    newWeekStart.setDate(currentWeekStart.getDate() + (direction === 'later' ? 7 : -7));
+    setCurrentWeekStart(newWeekStart);
+  };
+
+  const formatDateHeader = (date: Date) => {
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const dayName = dayNames[date.getDay()];
+    const dateNum = date.getDate();
+    return `${dayName} ${dateNum}`;
+  };
+
+
+
+
+
+  const formatWeekRange = () => {
+    const weekDates = getWeek();
+    const start = weekDates[0];
+    const end = weekDates[6];
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    
+    if (start.getMonth() === end.getMonth()) {
+      return `${monthNames[start.getMonth()]} ${start.getDate()}-${end.getDate()}, ${start.getFullYear()}`;
+    } 
+    
+    else {
+      return `${monthNames[start.getMonth()]} ${start.getDate()} - ${monthNames[end.getMonth()]} ${end.getDate()}, ${start.getFullYear()}`;
+    }
+  };
 
 
 
@@ -300,17 +334,38 @@ export default function Home() {
                   
                 }
                 </div>
+
+                <div className="flex justify-start gap-3 items-center py-3 w-[93%] mx-5 mt-10">
+                <div className="text-white text-lg font-medium pr-5 min-w-52 ">
+
+                    {formatWeekRange()}
+                  </div>
+                    <button 
+                      onClick={() => changeWeek('before')}
+                      className="text-white bg-gray-700 px-3 py-1 rounded-md hover:bg-gray-500 transition-all duration-300"
+                    >
+                      ← </button>
+                      
+                      <button 
+                      onClick={() => changeWeek('later')}
+                      className="text-white bg-gray-700 px-3 py-1 rounded-md hover:bg-gray-500 transition-all duration-300"
+                    > →</button>
+                    
+                  
+                  
+                </div>
               
             
 
 
-            <div className='h-full flex flex-col pb-20 mx-5 mt-5'>
+            <div className='h-full flex flex-col pb-20 mx-5 '>
                 <div className='grid grid-flow-col grid-cols-8 w-[95%] border-gray-500 mr-16'>
                   <div className="text-white/40 text-xs border-b flex justify-center items-end "> 12:00 AM</div>
-                  {daysOfWeek.map((day) => (
-                    <div key={day} className=' border-gray-500 border-b h-12 
-                    text-center'>
-                        {day}
+
+                  {getWeek().map((date, index) => (
+                    <div key={index} className=' border-gray-500 border-b h-12 text-white/30 
+                    text-center flex items-end justify-center'>
+                        <div>{formatDateHeader(date)}</div>
                       
                     </div>
                     
@@ -331,12 +386,11 @@ export default function Home() {
                         </div>
 
 
-                        {daysOfWeek.map((day) => (
+                        {getWeek().map((date, dayIndex) => (
                           
                           <div 
-                            key={`${day}-${hour}`} 
-                            className='border-gray-500 border-b border-r h-12
-                            '
+                            key={`${dayIndex}-${hour}`} 
+                            className='border-gray-500 border-b border-r h-12'
                           >
                            
 
