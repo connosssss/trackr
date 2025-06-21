@@ -66,6 +66,12 @@ export default function Home() {
           const data = await fetchTimeSessions(user);
           setSessions(data);
           loadPastGroups(data);
+          
+          const activeSession = data.find(session => !session.end_time);
+          if (activeSession) {
+            setCurrentSession(activeSession);
+            setIsTracking(true);
+          }
         } 
         
         catch (error) {
@@ -80,15 +86,22 @@ export default function Home() {
   }, [user]);
 
   useEffect(() => {
-
     let interval: NodeJS.Timeout | null = null;
     
     if (isTracking && currentSession) {
-      interval = setInterval(() => {
+
+      const updateTimer = () => {
         const now = new Date();
         const elapsed = Math.floor((now.getTime() - currentSession.start_time.getTime()) / 1000);
         setTimer(elapsed);
-      }, 1000);
+      };
+
+      updateTimer();
+      interval = setInterval(updateTimer, 1000);
+    } 
+    
+    else {
+      setTimer(0);
     }
     
     return () => {
@@ -117,35 +130,25 @@ export default function Home() {
     
     if(!hasLoaded) setHasLoaded(true);
     try {
-      const tempSession: TimeSession = {
-        id: Date.now().toString(), 
+      const newSession = await createTimeSession({
+        user_id: user.id,
         start_time: new Date(),
         end_time: null,
         duration: null,
         group: groupInput || null
-      };
-      
-      setCurrentSession(tempSession);
-      setIsTracking(true);
-      setGroupInput('');
-      
-      const newSession = await createTimeSession({
-        user_id: user.id,
-        start_time: tempSession.start_time,
-        end_time: null,
-        duration: null,
-        group: tempSession.group
       });
     
       setCurrentSession(newSession);
-    } catch (error) {
+      setIsTracking(true);
+      setGroupInput('');
+
+    } 
+
+    catch (error) {
       console.error("Error starting tracking:", error);
       setIsTracking(false);
-      if (timerInterval) clearInterval(timerInterval);
+
     }
-
-
-    
   };
   
 
@@ -153,8 +156,6 @@ export default function Home() {
     if (!currentSession || !user) return;
     
     try {
-
-      
       const endTime = new Date();
       const duration = Math.floor((endTime.getTime() - currentSession.start_time.getTime()) / 1000);
       
