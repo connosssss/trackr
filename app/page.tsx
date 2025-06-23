@@ -128,7 +128,9 @@ export default function Home() {
   const startTracking = async () => {
     if (!user) return;
     
+    setIsTracking(true);
     if(!hasLoaded) setHasLoaded(true);
+
     try {
       const newSession = await createTimeSession({
         user_id: user.id,
@@ -139,7 +141,7 @@ export default function Home() {
       });
     
       setCurrentSession(newSession);
-      setIsTracking(true);
+      
       setGroupInput('');
 
     } 
@@ -200,6 +202,10 @@ export default function Home() {
   const handleGroupSubmit = (e: React.FormEvent) => {
     e.preventDefault();
   };
+
+
+
+
 
   const getWeek = () => {
     const dates = [];
@@ -327,7 +333,7 @@ export default function Home() {
                     </div>) : null}
 
 
-                {hasLoaded ? <div className={` z-10 absolute  top-0 h-24 bg-red-500/20 ${isTracking ? 'opacity-0' : 'opacity-100'} 
+                {hasLoaded ? <div className={` z-10 absolute  top-0 h-24 ${isTracking ? 'opacity-0' : 'opacity-100'} bg-red-500/20  
                 transition ease-in-out duration-300 w-[99%] rounded-bl-2xl`}/> : null}
                 
                 </div>
@@ -456,7 +462,8 @@ export default function Home() {
                         return sessions.map((segment, segmentIndex) => (
                           <div
                             key={`${session.id}-${segmentIndex}`}
-                            className="absolute bg-gray-400/70 rounded-sm px-1 text-xs text-white overflow-hidden"
+                            className="absolute bg-gray-500/90 rounded-sm px-1  text-white overflow-hidden
+                            flex flex-col py-2"
 
                             style={{
                               left: `${segment.left}%`,
@@ -468,7 +475,8 @@ export default function Home() {
                             }}
 
                           >
-
+                              <div className='text-md'> {session.group}</div>
+                              <div className='text-sm'> {session.duration ? formatTime(session.duration) : ''}</div>
                           </div>
                         ));
                       }).flat()}
