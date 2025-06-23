@@ -240,41 +240,57 @@ export default function Home() {
     }
   };
 
-  const getSessionsForDay = (date: Date) => {
-
-    const dayStart = new Date(date);
-
-    dayStart.setHours(0, 0, 0, 0);
-
-    const dayEnd = new Date(date);
-
-    dayEnd.setHours(23, 59, 59, 999);
+  const getSessionsForWeek = () => {
+    const weekStart = new Date(currentWeekStart);
+    weekStart.setHours(0, 0, 0, 0);
+    const weekEnd = new Date(currentWeekStart);
+    weekEnd.setDate(weekEnd.getDate() + 6);
+    weekEnd.setHours(23, 59, 59, 999);
 
     return sessions.filter(session => {
       const sessionStart = new Date(session.start_time);
-      return sessionStart >= dayStart && sessionStart <= dayEnd && session.end_time;
+      const sessionEnd = session.end_time ? new Date(session.end_time) : new Date();
+      return (sessionStart <= weekEnd && sessionEnd >= weekStart) && session.end_time;
     });
   };
 
-  const getSessionPosition = (session: TimeSession) => {
-    const startTime = new Date(session.start_time);
-    const endTime = session.end_time ? new Date(session.end_time) : new Date();
-    
-    const startHour = startTime.getHours();
-    const startMinute = startTime.getMinutes();
-    const endHour = endTime.getHours();
-    const endMinute = endTime.getMinutes();
-    
-    const startPosition = (startHour + startMinute / 60) * 48;
+  const getSessionsC = (session: TimeSession) => {
 
-    const endPosition = (endHour + endMinute / 60) * 48;
-
-    const height = endPosition - startPosition;
+    const weekDates = getWeek();
+    const sessionStart = new Date(session.start_time);
+    const sessionEnd = session.end_time ? new Date(session.end_time) : new Date();
     
-    return {
-      top: startPosition,
-      height: Math.max(height, 8)
-    };
+    const sessions = [];
+    
+    for (let i = 0; i < weekDates.length; i++) {
+      const dayStart = new Date(weekDates[i]);
+      dayStart.setHours(0, 0, 0, 0);
+      const dayEnd = new Date(weekDates[i]);
+      dayEnd.setHours(23, 59, 59, 999);
+      
+      if (sessionStart <= dayEnd && sessionEnd >= dayStart) {
+        const segmentStart = sessionStart > dayStart ? sessionStart : dayStart;
+        const segmentEnd = sessionEnd < dayEnd ? sessionEnd : dayEnd;
+        
+        const startHour = segmentStart.getHours();
+        const startMinute = segmentStart.getMinutes();
+        const endHour = segmentEnd.getHours();
+        const endMinute = segmentEnd.getMinutes();
+        
+        const startPosition = (startHour + startMinute / 60) * 48;
+        const endPosition = (endHour + endMinute / 60) * 48;
+        
+        sessions.push({
+          dayIndex: i,
+          top: startPosition,
+          height: Math.max(endPosition - startPosition, 8),
+          left: ((i + 1) / 8) * 100,
+          width: (1 / 8) * 100
+        });
+      }
+    }
+    
+    return sessions;
   };
 
 
@@ -435,27 +451,27 @@ export default function Home() {
                         </React.Fragment>
                       ))}
 
-                      {getWeek().map((date, dayIndex) => (
-                        <div key={`sessions-${dayIndex}`} className="absolute h-full w-[12.5%]" style={{left: `${((dayIndex + 1) / 8) * 100}%`}}>
+                      {getSessionsForWeek().map((session) => {
+                        const sessions = getSessionsC(session);
+                        return sessions.map((segment, segmentIndex) => (
+                          <div
+                            key={`${session.id}-${segmentIndex}`}
+                            className="absolute bg-gray-400/70 rounded-sm px-1 text-xs text-white overflow-hidden"
 
-                          {getSessionsForDay(date).map((session) => {
-                            const position = getSessionPosition(session);
+                            style={{
+                              left: `${segment.left}%`,
+                              width: `${segment.width - 0.2}%`,
+                              top: `${segment.top}px`,
+                              height: `${segment.height}px`,
+                              marginLeft: '1px',
+                              marginRight: '1px'
+                            }}
 
-                            return (
-                              <div
-                                key={session.id}
-                                className="absolute bg-gray-400/70 rounded-sm mx-1 px-1 text-xs text-white overflow-hidden w-[95%]"
-                                style={{
-                                  top: `${position.top}px`,
-                                  height: `${position.height}px`,
-                                }}
-                              >
+                          >
 
-                              </div>
-                            );
-                          })}
-                        </div>
-                      ))}
+                          </div>
+                        ));
+                      }).flat()}
 
                       </div>
 
