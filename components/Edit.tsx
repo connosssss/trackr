@@ -34,11 +34,17 @@ export default function Edit({
 
   useEffect(() => {
     if (editingSession) {
-      const startt = editingSession.start_time.toISOString().slice(0, 19);
+      const startTime = new Date(editingSession.start_time);
+      const startOffset = startTime.getTimezoneOffset() * 60000;
+      const localStartTime = new Date(startTime.getTime() - startOffset);
+      const startt = localStartTime.toISOString().slice(0, 19);
       
       let endt = '';
       if (editingSession.end_time) {
-        endt = editingSession.end_time.toISOString().slice(0, 19);
+        const endTime = new Date(editingSession.end_time);
+        const endOffset = endTime.getTimezoneOffset() * 60000;
+        const localEndTime = new Date(endTime.getTime() - endOffset);
+        endt = localEndTime.toISOString().slice(0, 19);
       }
       
       setStartDateTime(startt);
