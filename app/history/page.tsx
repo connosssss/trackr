@@ -121,7 +121,7 @@ export default function HistoryPage() {
   return ( 
 <div className=" bg-gray-800 min-h-screen h-full pb-20" >
 <Navbar />
-<h1 className='text-xl font-semibold w-full py-5 text-center'> History</h1>
+
                 {isLoadingSessions ? (
 
                   <div className="w-full h-full flex justify-center align-center">
@@ -130,36 +130,36 @@ export default function HistoryPage() {
 
                 ) : sessions.length === 0 ? (
 
-                  <p className="">No sessions recorded yet.</p>
+                  <p className="w-full text-center pt-10 text-xl font-semibold">No sessions recorded yet</p>
 
                 ) : (
                   <div>
                     
                     
 
-                  <div className=" w-5/6 mx-auto rounded-lg shadow-lg overflow-hidden ">
+                  <div className=" w-11/12 mx-5 overflow-hidden ">
                     
                     <table className="w-full divide-y-2 divide-gray-200  text-md ">
-                      <thead className="bg-gray-600 rounded-t-2xl ">
+                      <thead className=" rounded-t-2xl ">
                         <tr>
 
-                        <th scope="col" className="py-8 text-lg text-shadow-md ">Date</th>
+                        <th scope="col" className="pt-10 pb-3 text-lg text-shadow-md ">Date</th>
 
-                          <th scope="col" className="py-8 text-lg text-shadow-md ">Start Time</th>
+                          <th scope="col" className="pt-10 pb-3 text-lg text-shadow-md ">Start Time</th>
 
-                          <th scope="col" className="py-8 text-lg text-shadow-md ">End Time</th>
+                          <th scope="col" className="pt-10 pb-3 text-lg text-shadow-md ">End Time</th>
 
-                          <th scope="col" className="py-8 text-lg text-shadow-md ">Duration</th>
+                          <th scope="col" className="pt-10 pb-3 text-lg text-shadow-md ">Duration</th>
 
-                          <th scope="col" className="py-8 text-lg text-shadow-md ">Group Name</th>
+                          <th scope="col" className="pt-10 pb-3 text-lg text-shadow-md ">Group Name</th>
                           
-                          <th scope="col" className="py-8 text-lg text-shadow-md ">Edit</th>
+                          <th scope="col" className="pt-10 pb-3 text-lg text-shadow-md ">Edit</th>
                           
-                          <th scope="col" className="py-8 text-lg text-shadow-md ">Delete</th>
+                          <th scope="col" className="pt-10 pb-3 text-lg text-shadow-md ">Delete</th>
 
                         </tr>
                       </thead>
-                      <tbody className="bg-gray-700 divide-y divide-gray-600">
+                      <tbody className="divide-y divide-gray-600">
 
                         {
 
@@ -184,7 +184,7 @@ export default function HistoryPage() {
                             <td className="text-center py-5 text-gray-300">
                               <button 
                                 onClick={() => handleEdit(session)}
-                                className="bg-gray-500/70  hover:scale-115 hover:text-white py-1 px-6
+                                className="bg-gray-700 hover:scale-115 hover:text-white py-1 px-6
                                 rounded transition duration-300"
                               >
                                 Edit
@@ -209,9 +209,9 @@ export default function HistoryPage() {
                     
                     
                   </div>
-                  <div className="w-full py-5 flex items-center justify-center">
+                  <div className="w-11/12 mx-5 py-5 flex items-center justify-start">
                       <button onClick={exportToSheet}
-                      className="px-5 py-3 rounded-md bg-gray-700 text-lg"> Export as a Spreadsheet</button>
+                      className="px-6 py-2 rounded-md bg-gray-700 text-md"> Export As .xlsx (SpreadSheet)</button>
                     </div>
                 </div>)}
 
