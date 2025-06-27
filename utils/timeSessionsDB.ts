@@ -10,6 +10,15 @@ export interface TimeSession {
   group: string | null;
 }
 
+export interface GroupStat {
+  id: string;
+  user_id: string;
+  group_name: string;
+  session_count: number;
+  total_duration: number;
+  last_updated: Date;
+}
+
 export async function fetchTimeSessions(user: User): Promise<TimeSession[]> {
   const { data, error } = await supabase
     .from('time_sessions')
@@ -84,5 +93,70 @@ export async function deleteTimeSession(sessionId: string): Promise<void> {
   if (!data || data.length === 0) {
     console.error('No session found with ID:', sessionId);
     throw new Error(`No session found with ID: ${sessionId}`);
+  }
+}
+
+export async function fetchGroupList(user: User): Promise<GroupStat[]> {
+  const { data, error } = await supabase
+    .from('group_stats')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('total_duration', { ascending: false });
+  
+  if (error) {
+    console.error('Error fetching group statistics:', error);
+    throw error;
+  }
+
+  return data.map(stat => ({
+    ...stat,
+    last_updated: new Date(stat.last_updated)
+  }));
+}
+
+export async function updateGroupList(user: User): Promise<void> {
+  if (!user) return;
+
+  try {
+    const sessions = await fetchTimeSessions(user);
+    const groupStats: { [key: string]: { count: number; totalDuration: number } } = {};
+    
+    sessions.forEach(session => {
+
+      if (session.group && session.duration) {
+
+        if (!groupStats[session.group]) {
+          groupStats[session.group] = { count: 0, totalDuration: 0 };
+        }
+
+        groupStats[session.group].count += 1;
+        groupStats[session.group].totalDuration += session.duration;
+      }
+
+    });
+
+    await supabase.from('group_stats').delete().eq('user_id', user.id);
+
+    const statsToInsert = Object.entries(groupStats).map(([groupName, stats]) => ({
+      user_id: user.id,
+      group_name: groupName,
+      session_count: stats.count,
+      total_duration: stats.totalDuration,
+      last_updated: new Date().toISOString()
+    }));
+
+    if (statsToInsert.length > 0) {
+      const { error } = await supabase.from('group_stats').insert(statsToInsert);
+      
+      if (error) {
+        console.error('Error updating group stats:', error);
+        throw error;
+      }
+    }
+  } 
+  
+  catch (error) {
+    console.error('Error in updateGroupList:', error);
+    throw error;
   }
 }

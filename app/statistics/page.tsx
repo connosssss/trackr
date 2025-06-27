@@ -2,7 +2,7 @@
 
 import { useState, useEffect  } from 'react'; 
 import { useAuth } from "@/context/AuthContext";
-import { fetchTimeSessions } from "@/utils/timeSessionsDB";
+import { fetchTimeSessions, fetchGroupList, updateGroupList, GroupStat } from "@/utils/timeSessionsDB";
 
 import Navbar from "@/components/Navbar";
 
@@ -21,8 +21,9 @@ export default function LoginPage() {
     const { user } = useAuth();
 
     const [totalTime, setTotalTime] = useState<number>(0);
-
+    const [groupList, setgroupList] = useState<GroupStat[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [isUpdatingStats, setIsUpdatingStats] = useState(false);
     
     const formatTime = (seconds: number) => {
         const hours = Math.floor(seconds / 3600);
@@ -48,15 +49,34 @@ export default function LoginPage() {
            }
       };
 
-      const setTotal = (sessions: Session[]) => {
-        const total = sessions.reduce((sum, session) => sum + session.duration, 0);
+    const loadGroupList = async () => {
+        if (!user) return;
+
+        try {
+
+            setIsUpdatingStats(true);
+            await updateGroupList(user);
+  
+            const stats = await fetchGroupList(user);
+            setgroupList(stats);
+        }
+        catch (error) {
+            console.error('Error loading group statistics:', error);
+        }
+        finally {
+            setIsUpdatingStats(false);
+        }
+    };
+
+    const setTotal = (sessions: Session[]) => {
+        const total = sessions.reduce((sum, session) => sum + (session.duration || 0), 0);
         setTotalTime(total);
       };
 
       useEffect(() => {
         if (user) {
           loadSessions();
-          
+            loadGroupList();
         }
       }, [user]);
 
@@ -67,9 +87,8 @@ export default function LoginPage() {
         <h1 className="w-full text-2xl text-center pt-5">Statistics</h1>
         
         <div className="w-5/6 mx-auto bg-gray-700 min-h-96 rounded-md shadow-md p-14 mt-12 
-        flex flex-row">
-            <div className='w-1/4  bg-gray-600 text-center 
-            rounded-md shadow-md'>
+        flex flex-row gap-8">
+            <div className='w-1/4 bg-gray-600 text-center rounded-md shadow-md'>
                 <div className='text-2xl font-semibold mt-5 border-b-2 border-gray-700'>
                     Total Time
                 </div>
@@ -93,12 +112,56 @@ export default function LoginPage() {
                       <p>{Math.floor(totalTime % 60)} Seconds</p>
                   </div>
                   </div>
-
                 </div>
                     )
                 }
             </div>
-            
+
+            <div className='w-[45%] bg-gray-600 text-center rounded-md shadow-md'>
+                <div className='text-2xl font-semibold mt-5 border-b-2 border-gray-700'>
+                    Top Groups
+                </div>
+                {
+                    isUpdatingStats ? (
+                        <div className="h-full w-full flex items-center justify-center">
+                            <p>Updating statistics...</p>
+                        </div>
+                    ) : groupList.length === 0 ? (
+                        <div className="h-full w-full flex items-center justify-center">
+                            <p>No group statistics available</p>
+                        </div>
+
+                    ) : (
+                      
+                        <div className="p-6">
+                            <div className="grid grid-cols-1 gap-4">
+
+                                {groupList.slice(0,3).map((stat, index) => (
+                                    <div key={stat.id} 
+                                         className={`p-4 rounded-lg transition-all duration-300 
+                                         hover:bg-gray-500 hover:scale-[1.02]`}>
+
+                                        <div className="flex justify-between items-center">
+                                            <div className="flex items-center gap-3">
+                                                
+                                                <span className="text-lg font-semibold">{stat.group_name}</span>
+                                            </div>
+
+                                            <div className="text-end">
+
+                                                <div className="text-sm opacity-75">{stat.session_count} sessions</div>
+                                                <div className="font-medium">{formatTime(stat.total_duration)}</div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )
+                }
+            </div>
+
         </div>
     </div>
   );
