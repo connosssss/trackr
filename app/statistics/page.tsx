@@ -24,6 +24,9 @@ export default function LoginPage() {
     const [groupList, setgroupList] = useState<GroupStat[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isUpdatingStats, setIsUpdatingStats] = useState(false);
+    const [weekTime, setWeekTime] = useState<number>(0);
+    const [monthTime, setMonthTime] = useState<number>(0);
+    const [yearTime, setYearTime] = useState<number>(0);
     
     const formatTime = (seconds: number) => {
         const hours = Math.floor(seconds / 3600);
@@ -40,6 +43,7 @@ export default function LoginPage() {
         try {
             const temp = await fetchTimeSessions(user);
             setTotal(temp);
+            calculatePeriodTimes(temp);
            }
            catch (error) {
             console.error('Error loading sessions:', error);
@@ -72,6 +76,50 @@ export default function LoginPage() {
         const total = sessions.reduce((sum, session) => sum + (session.duration || 0), 0);
         setTotalTime(total);
       };
+      
+    const calculatePeriodTimes = (sessions: Session[]) => {
+        const now = new Date();
+        
+        const weekStart = new Date(now);
+        weekStart.setDate(now.getDate() - 7);
+        
+        const monthStart = new Date(now);
+        monthStart.setMonth(now.getMonth() - 1);
+        
+        const yearStart = new Date(now);
+        yearStart.setFullYear(now.getFullYear() - 1);
+        
+        const weekTotal = sessions.reduce((sum, session) => {
+
+            if (session.start_time >= weekStart && session.duration) {
+                return sum + session.duration;
+            }
+            return sum;
+
+        }, 0);
+        
+        const monthTotal = sessions.reduce((sum, session) => {
+
+            if (session.start_time >= monthStart && session.duration) {
+                return sum + session.duration;
+            }
+            return sum;
+
+        }, 0);
+        
+        const yearTotal = sessions.reduce((sum, session) => {
+
+            if (session.start_time >= yearStart && session.duration) {
+                return sum + session.duration;
+            }
+            return sum;
+
+        }, 0);
+        
+        setWeekTime(weekTotal);
+        setMonthTime(monthTotal);
+        setYearTime(yearTotal);
+    };
 
       useEffect(() => {
         if (user) {
@@ -117,15 +165,13 @@ export default function LoginPage() {
                 }
             </div>
 
-            <div className='w-[45%] bg-gray-600 text-center rounded-md shadow-md'>
+            <div className='w-1/2 bg-gray-600 text-center rounded-md shadow-md'>
                 <div className='text-2xl font-semibold mt-5 border-b-2 border-gray-700'>
                     Top Groups
                 </div>
                 {
                     isUpdatingStats ? (
-                        <div className="h-full w-full flex items-center justify-center">
-                            <p>Updating statistics...</p>
-                        </div>
+                        <div>Loading...</div>
                     ) : groupList.length === 0 ? (
                         <div className="h-full w-full flex items-center justify-center">
                             <p>No group statistics available</p>
@@ -139,7 +185,7 @@ export default function LoginPage() {
                                 {groupList.slice(0,3).map((stat, index) => (
                                     <div key={stat.id} 
                                          className={`p-4 rounded-lg transition-all duration-300 
-                                         hover:bg-gray-500 hover:scale-[1.02]`}>
+                                         `}>
 
                                         <div className="flex justify-between items-center">
                                             <div className="flex items-center gap-3">
@@ -161,7 +207,44 @@ export default function LoginPage() {
                     )
                 }
             </div>
+            
+            <div className='w-1/4 bg-gray-600 text-center rounded-md shadow-md'>
+                <div className='text-2xl font-semibold mt-5 border-b-2 border-gray-700'>
+                    Recent Activity
+                </div>
+                {
+                    isLoading ? (
+                        <div>Loading...</div>
+                    ) : (
+                        <div className="p-6">
 
+                            
+                            <div className="grid grid-cols-1 gap-4">
+                                <div className="p-2 flex justify-between items-center">
+                                    
+                                        <span className="text-md">Last Week</span>
+                                        <span className="font-medium">{formatTime(weekTime)}</span>
+                                    
+                                </div>
+
+                                <div className="p-2 flex justify-between items-center">
+                                    
+                                        <span className="text-md">Last Month</span>
+                                        <span className="font-medium">{formatTime(monthTime)}</span>
+                                    
+                                </div>
+
+                                <div className="p-2 flex justify-between items-center">
+                                    
+                                        <span className="text-md">Last Year</span>
+                                        <span className="font-medium">{formatTime(yearTime)}</span>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    )
+                }
+            </div>
         </div>
     </div>
   );
