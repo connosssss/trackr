@@ -59,7 +59,7 @@ export default function LoginPage() {
         try {
 
             setIsUpdatingStats(true);
-            await updateGroupList(user);
+           // await updateGroupList(user); was causing MAJHOIRE delay
   
             const stats = await fetchGroupList(user);
             setgroupList(stats);

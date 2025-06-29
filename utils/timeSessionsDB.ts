@@ -97,65 +97,150 @@ export async function deleteTimeSession(sessionId: string): Promise<void> {
 }
 
 export async function fetchGroupList(user: User): Promise<GroupStat[]> {
-  const { data, error } = await supabase
-    .from('group_stats')
-    .select('*')
-    .eq('user_id', user.id)
-    .order('total_duration', { ascending: false });
-  
-  if (error) {
-    console.error('Error fetching group statistics:', error);
-    throw error;
+  if (!user?.id) {
+    return [];
   }
 
-  return data.map(stat => ({
-    ...stat,
-    last_updated: new Date(stat.last_updated)
-  }));
+  try {
+    const { data, error } = await supabase
+      .from('group_stats')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('total_duration', { ascending: false });
+    
+      
+    if (error) {
+      console.error('Error fetching group statistics:', error);
+      throw error;
+    }
+
+    return data.map(stat => ({
+      ...stat,
+      start_time: new Date(stat.start_time),
+      end_time: stat.end_time ? new Date(stat.end_time) : null
+    }));
+  } 
+  catch (error) {
+    console.error('Error in fetchGroupList:', error);
+    return []; 
+  }
 }
 
 export async function updateGroupList(user: User): Promise<void> {
-  if (!user) return;
+  if (!user?.id) {
+    throw new Error('User ID is required');
+  }
 
   try {
-    const sessions = await fetchTimeSessions(user);
-    const groupStats: { [key: string]: { count: number; totalDuration: number } } = {};
-    
-    sessions.forEach(session => {
 
-      if (session.group && session.duration) {
+    const { data: groupData, error: groupError } = await supabase
+      .from('time_sessions')
+      .select('group, duration')
+      .eq('user_id', user.id)
+      .not('group', 'is', null)
+      .not('duration', 'is', null)
+      .gt('duration', 0);
 
-        if (!groupStats[session.group]) {
-          groupStats[session.group] = { count: 0, totalDuration: 0 };
-        }
+    if (groupError) {
+      console.error('Error fetching sessions for group stats:', groupError);
+      throw groupError;
+    }
 
-        groupStats[session.group].count += 1;
-        groupStats[session.group].totalDuration += session.duration;
+    if (!groupData || groupData.length === 0) {
+
+      await supabase.from('group_stats').delete().eq('user_id', user.id);
+      return;
+    }
+
+
+    const groupStats = groupData.reduce((acc, session) => {
+      const group = session.group;
+      if (!acc[group]) {
+        acc[group] = { count: 0, totalDuration: 0 };
       }
+      acc[group].count += 1;
+      acc[group].totalDuration += session.duration;
+      return acc;
+    }, {} as { [key: string]: { count: number; totalDuration: number } });
 
+    const { data: existingStats, error: fetchError } = await supabase
+      .from('group_stats')
+      .select('group_name, session_count, total_duration')
+      .eq('user_id', user.id);
+
+    if (fetchError) {
+      console.error('Error fetching existing group stats:', fetchError);
+      throw fetchError;
+    }
+
+    const existingStatsMap = (existingStats || []).reduce((acc, stat) => {
+      acc[stat.group_name] = {
+        count: stat.session_count,
+        totalDuration: stat.total_duration
+      };
+      return acc;
+    }, {} as { [key: string]: { count: number; totalDuration: number } });
+
+    const currentTime = new Date().toISOString();
+    const statsToUpsert: any[] = [];
+    const groupsToDelete: string[] = [];
+
+    Object.entries(groupStats).forEach(([groupName, stats]) => {
+      const existing = existingStatsMap[groupName];
+      if (!existing || 
+          existing.count !== stats.count || 
+          existing.totalDuration !== stats.totalDuration) {
+        statsToUpsert.push({
+          user_id: user.id,
+          group_name: groupName,
+          session_count: stats.count,
+          total_duration: stats.totalDuration,
+          last_updated: currentTime
+        });
+      }
     });
 
-    await supabase.from('group_stats').delete().eq('user_id', user.id);
-
-    const statsToInsert = Object.entries(groupStats).map(([groupName, stats]) => ({
-      user_id: user.id,
-      group_name: groupName,
-      session_count: stats.count,
-      total_duration: stats.totalDuration,
-      last_updated: new Date().toISOString()
-    }));
-
-    if (statsToInsert.length > 0) {
-      const { error } = await supabase.from('group_stats').insert(statsToInsert);
-      
-      if (error) {
-        console.error('Error updating group stats:', error);
-        throw error;
+    Object.keys(existingStatsMap).forEach(groupName => {
+      if (!groupStats[groupName]) {
+        groupsToDelete.push(groupName);
       }
+    });
+
+    const operations = [];
+
+
+    if (groupsToDelete.length > 0) {
+      operations.push(
+        supabase
+          .from('group_stats')
+          .delete()
+          .eq('user_id', user.id)
+          .in('group_name', groupsToDelete)
+      );
     }
-  } 
-  
-  catch (error) {
+    if (statsToUpsert.length > 0) {
+      operations.push(
+        supabase
+          .from('group_stats')
+          .upsert(statsToUpsert, {
+            onConflict: 'user_id,group_name'
+          })
+      );
+    }
+
+
+    if (operations.length > 0) {
+      const results = await Promise.all(operations);
+
+      results.forEach((result, index) => {
+        if (result.error) {
+          console.error(`Error in batch operation ${index}:`, result.error);
+          throw result.error;
+        }
+      });
+    }
+
+  } catch (error) {
     console.error('Error in updateGroupList:', error);
     throw error;
   }
