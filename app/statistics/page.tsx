@@ -3,6 +3,7 @@
 import { useState, useEffect  } from 'react'; 
 import { useAuth } from "@/context/AuthContext";
 import { fetchTimeSessions, fetchGroupList, updateGroupList, GroupStat } from "@/utils/timeSessionsDB";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
 import Navbar from "@/components/Navbar";
 
@@ -27,6 +28,7 @@ export default function LoginPage() {
     const [weekTime, setWeekTime] = useState<number>(0);
     const [monthTime, setMonthTime] = useState<number>(0);
     const [yearTime, setYearTime] = useState<number>(0);
+    const [sessions, setSessions] = useState<Session[]>([]);
     
     const formatTime = (seconds: number) => {
         const hours = Math.floor(seconds / 3600);
@@ -35,6 +37,39 @@ export default function LoginPage() {
         return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
       };
 
+    const stringToColor = (str: string) => {
+
+        ///dsa...
+        let hash = 1;
+
+        for (let i = 0; i < str.length; i++) {
+
+            hash = str.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        
+        const hue = Math.abs(hash) % 360;
+        const saturation = 65 + (Math.abs(hash) % 35);
+        const lightness = 45 + (Math.abs(hash) % 20);
+        
+        return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+    };
+
+    const preparePieChartData = () => {
+        //has to go over sessions for now cause no group
+        const groupMap = new Map<string, number>();
+        
+        sessions.forEach(session => {
+            const groupName = session.group || 'No Group';
+            const currentTime = groupMap.get(groupName) || 0;
+            groupMap.set(groupName, currentTime + (session.duration || 0));
+        });
+        
+        return Array.from(groupMap.entries()).map(([name, value]) => ({
+                name,
+                value,
+                color: stringToColor(name)
+            })).sort((a, b) => b.value - a.value); 
+    };
 
       const loadSessions = async () => {
         setIsLoading(true);
@@ -42,6 +77,7 @@ export default function LoginPage() {
 
         try {
             const temp = await fetchTimeSessions(user);
+            setSessions(temp);
             setTotal(temp);
             calculatePeriodTimes(temp);
            }
@@ -128,9 +164,10 @@ export default function LoginPage() {
         }
       }, [user]);
 
+    const pieChartData = preparePieChartData();
 
   return (
-    <div className="min-h-screen w-screen bg-gray-800">
+    <div className="min-h-screen w-full bg-gray-800 pb-20">
       <Navbar/>
         <h1 className="w-full text-2xl text-center pt-5">Statistics</h1>
         
@@ -245,6 +282,61 @@ export default function LoginPage() {
                     )
                 }
             </div>
+
+
+            
+        </div>
+        <div className="w-5/6 mx-auto bg-gray-700 min-h-96 rounded-md shadow-md p-14 mt-12 
+        flex flex-row gap-8">
+
+            <div className='w-1/4 bg-gray-600 rounded-md shadow-md p-6'>
+
+                {isLoading ? (
+                    <div className="flex items-center justify-center h-80">
+                        Loading...
+                    </div>
+                ) : pieChartData.length === 0 ? (
+                    <div className="flex items-center justify-center h-80">
+                        <p className="text-lg opacity-75">No data available</p>
+                    </div>
+                ) : (
+                    <div className="h-full w-full">
+                        
+                            <ResponsiveContainer width="100%" height="100%">
+                                <PieChart>
+
+                                    <Pie
+                                        data={pieChartData}
+                                        dataKey="value"
+                                        stroke="#0"
+                                    >
+
+                                        {pieChartData.map((entry, index) => (
+                                            <Cell key={`cell-${index}`} fill={entry.color} />
+                                        ))}
+
+                                    </Pie>
+
+                                    <Tooltip 
+                                        formatter={(value: number, name: string) => [
+                                            <span style={{ color: '#d1d5db' }}>{name}: {formatTime(value)}</span>
+                                        ]}
+                                        
+                                        labelFormatter={() => ""}
+                                        contentStyle={{
+                                            backgroundColor: '#1f2937',
+                                            border: '1px solid #374151',
+                                            borderRadius: '8px',
+                                        }}
+                                    />
+                                </PieChart>
+                            </ResponsiveContainer>
+                       
+                        
+                    </div>
+                )}
+            </div>
+
         </div>
     </div>
   );
