@@ -109,7 +109,7 @@ export default function Home() {
     };
   }, [isTracking, currentSession]);
 
-  const loadPastGroups = async (data) => {
+  const loadPastGroups = async (data: TimeSession[]) => {
     if(!user) return;
     const groupCounts: { [key: string]: number } = {};
 
@@ -123,7 +123,7 @@ export default function Home() {
           
           setpastGroups(sortedGroups);
   }
-
+  
 
   const startTracking = async () => {
     if (!user) return;
@@ -163,6 +163,7 @@ export default function Home() {
       
       const completedSession: TimeSession = {
         ...currentSession,
+         user_id: user.id,
         end_time: endTime,
         duration
       };

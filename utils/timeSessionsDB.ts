@@ -3,7 +3,7 @@ import { User } from '@supabase/supabase-js';
 
 export interface TimeSession {
   id: string;
-  user_id: string;
+  user_id: string; 
   start_time: Date;
   end_time: Date | null;
   duration: number | null;

@@ -94,13 +94,14 @@ export default function Edit({
       
       const updatedSession: TimeSession = {
         ...editingSession,
+        user_id: user.id,
         start_time: startTime,
         end_time: endTime,
         duration: duration,
         group: editGroup || null
       };
       
-      await updateTimeSession(updatedSession);
+      await updateTimeSession(updatedSession as any);
       onSave(updatedSession);
     } catch (error) {
       console.error("Error updating session:", error);

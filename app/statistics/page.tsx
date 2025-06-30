@@ -9,10 +9,10 @@ import Navbar from "@/components/Navbar";
 
 interface Session {
     id: string;
-    user_id?: string;
+    user_id: string;
     start_time: Date;
     end_time: Date | null;
-    duration: number | 0;
+    duration: number | null;
     group: string | null;
   }
 
