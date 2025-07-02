@@ -3,7 +3,7 @@
 import { useState, useEffect  } from 'react'; 
 import { useAuth } from "@/context/AuthContext";
 import { fetchTimeSessions, fetchGroupList, updateGroupList, GroupStat } from "@/utils/timeSessionsDB";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
 
 import Navbar from "@/components/Navbar";
 
@@ -29,6 +29,7 @@ export default function LoginPage() {
     const [monthTime, setMonthTime] = useState<number>(0);
     const [yearTime, setYearTime] = useState<number>(0);
     const [sessions, setSessions] = useState<Session[]>([]);
+    const [selectedPeriod, setSelectedPeriod] = useState<'week' | 'month' | '3months' | 'year' | 'alltime'>('month');
     
     const formatTime = (seconds: number) => {
         const hours = Math.floor(seconds / 3600);
@@ -38,8 +39,6 @@ export default function LoginPage() {
       };
 
     const stringToColor = (str: string) => {
-
-        ///dsa...
         let hash = 1;
 
         for (let i = 0; i < str.length; i++) {
@@ -55,7 +54,6 @@ export default function LoginPage() {
     };
 
     const preparePieChartData = () => {
-        //has to go over sessions for now cause no group
         const groupMap = new Map<string, number>();
         
         sessions.forEach(session => {
@@ -69,6 +67,143 @@ export default function LoginPage() {
                 value,
                 color: stringToColor(name)
             })).sort((a, b) => b.value - a.value); 
+    };
+
+    const prepareBarChartData = () => {
+
+        const now = new Date();
+        let startDate: Date;
+        let dateLabels: string[] = [];
+        
+        switch (selectedPeriod) {
+
+            case 'week':
+                startDate = new Date(now);
+                startDate.setDate(now.getDate() - 6);
+                for (let i = 6; i >= 0; i--) {
+                    const date = new Date(now);
+                    date.setDate(now.getDate() - i);
+                    dateLabels.push(date.toLocaleDateString('en-US', { weekday: 'short' }));
+                }
+                break;
+
+            case 'month':
+                startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+                for (let i = 1; i <= daysInMonth; i++) {
+                    dateLabels.push(i.toString());
+                }
+                break;
+
+            case '3months':
+                startDate = new Date(now);
+                startDate.setMonth(now.getMonth() - 2);
+                startDate.setDate(1);
+                for (let i = 0; i < 3; i++) {
+                    const date = new Date(now);
+                    date.setMonth(now.getMonth() - (2 - i));
+                    dateLabels.push(date.toLocaleDateString('en-US', { month: 'short' }));
+                }
+                break;
+
+            case 'year':
+                startDate = new Date(now);
+                startDate.setMonth(0);
+                startDate.setDate(1);
+                for (let i = 0; i < 12; i++) {
+                    const date = new Date(now.getFullYear(), i, 1);
+                    dateLabels.push(date.toLocaleDateString('en-US', { month: 'short' }));
+                }
+                break;
+
+            case 'alltime':
+                if (sessions.length === 0) return [];
+
+                const firstSession = sessions.reduce((earliest, session) => 
+                    new Date(session.start_time) < new Date(earliest.start_time) ? session : earliest
+                );
+
+                const lastSession = sessions.reduce((latest, session) => 
+                    new Date(session.start_time) > new Date(latest.start_time) ? session : latest
+                );
+                
+                const firstDate = new Date(firstSession.start_time);
+                const lastDate = new Date(lastSession.start_time);
+                
+                firstDate.setMonth(firstDate.getMonth());
+                firstDate.setDate(1);
+                lastDate.setMonth(lastDate.getMonth());
+                lastDate.setDate(1);
+                
+                const current = new Date(firstDate);
+
+                while (current <= lastDate) {
+                    dateLabels.push(current.toLocaleDateString('en-US', { month: 'short', year: '2-digit' }));
+                    current.setMonth(current.getMonth() + 1);
+                }
+
+                startDate = firstDate;
+                break;
+        }
+
+
+
+
+        const dataMap = new Map<string, number>();
+        dateLabels.forEach(label => dataMap.set(label, 0));
+
+        sessions.forEach(session => {
+
+            const sessionDate = new Date(session.start_time);
+            
+            if (session.duration) {
+                let label: string = '';
+                let shouldInclude = false;
+                
+                switch (selectedPeriod) {
+                    case 'week':
+                        if (sessionDate >= startDate) {
+                            label = sessionDate.toLocaleDateString('en-US', { weekday: 'short' });
+                            shouldInclude = true;
+                        }
+                        break;
+                    case 'month':
+                        if (sessionDate.getMonth() === now.getMonth() && sessionDate.getFullYear() === now.getFullYear()) {
+                            label = sessionDate.getDate().toString();
+                            shouldInclude = true;
+                        }
+                        break;
+                    case '3months':
+                        if (sessionDate >= startDate) {
+                            label = sessionDate.toLocaleDateString('en-US', { month: 'short' });
+                            shouldInclude = true;
+                        }
+                        break;
+                    case 'year':
+                        if (sessionDate.getFullYear() === now.getFullYear()) {
+                            label = sessionDate.toLocaleDateString('en-US', { month: 'short' });
+                            shouldInclude = true;
+                        }
+                        break;
+                    case 'alltime':
+                        if (sessionDate >= startDate) {
+                            label = sessionDate.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+                            shouldInclude = true;
+                        }
+                        break;
+                }
+                
+                if (shouldInclude && label && dataMap.has(label)) {
+                    const currentTime = dataMap.get(label) || 0;
+                    dataMap.set(label, currentTime + session.duration);
+                }
+            }
+        });
+
+        return dateLabels.map(label => ({
+            name: label,
+            hours: Math.round((dataMap.get(label) || 0) / 3600 * 100) / 100
+        }));
     };
 
       const loadSessions = async () => {
@@ -93,9 +228,7 @@ export default function LoginPage() {
         if (!user) return;
 
         try {
-
             setIsUpdatingStats(true);
-           // await updateGroupList(user); was causing MAJHOIRE delay
   
             const stats = await fetchGroupList(user);
             setgroupList(stats);
@@ -165,6 +298,7 @@ export default function LoginPage() {
       }, [user]);
 
     const pieChartData = preparePieChartData();
+    const barChartData = prepareBarChartData();
 
   return (
     <div className="min-h-screen w-full bg-gray-800 pb-20">
@@ -289,7 +423,7 @@ export default function LoginPage() {
         <div className="w-5/6 mx-auto bg-gray-700 min-h-96 rounded-md shadow-md p-14 mt-12 
         flex flex-row gap-8">
 
-            <div className='w-1/4 bg-gray-600 rounded-md shadow-md p-6'>
+            <div className='w-1/2 bg-gray-600 rounded-md shadow-md p-6'>
 
                 {isLoading ? (
                     <div className="flex items-center justify-center h-80">
@@ -333,6 +467,78 @@ export default function LoginPage() {
                             </ResponsiveContainer>
                        
                         
+                    </div>
+                )}
+            </div>
+
+            <div className='w-1/2 bg-gray-600 rounded-md shadow-md p-6'>
+                <div className="flex justify-between items-center mb-4">
+                    <select
+                        value={selectedPeriod}
+                        onChange={(e) => setSelectedPeriod(e.target.value as 'week' | 'month' | '3months' | 'year' | 'alltime')}
+                        className="bg-gray-700 text-white rounded px-3 py-1 border border-gray-500 
+                        focus:outline-none focus:border-gray-400"
+                    >
+
+                        <option value="week">Last 7 Days</option>
+                        <option value="month">This Month</option>
+                        <option value="3months">Last 3 Months</option>
+                        <option value="year">This Year</option>
+                        <option value="alltime">All Time</option>
+
+                    </select>
+                </div>
+
+                {isLoading ? (
+
+                    <div className="flex items-center justify-center h-80">
+                        Loading...
+                    </div>
+
+                ) : barChartData.length === 0 ? (
+                    <div className="flex items-center justify-center h-80">
+
+                        No data available
+                    </div>
+
+                ) : (
+
+                    <div className="h-80 w-full">
+
+                        <ResponsiveContainer width="100%" height="100%">
+
+                            <BarChart data={barChartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                                <XAxis 
+                                    dataKey="name" 
+                                    stroke="#9ca3af"
+                                    fontSize={12}
+                                    interval={0}
+                                    tick={{ fontSize: 10 }}
+                                />
+
+                                <YAxis 
+                                    stroke="#9ca3af"
+                                    fontSize={12}
+
+                                />
+
+                                <Tooltip 
+                                    formatter={(value: number) => [`${value} hours`, 'Hours Worked']}
+                                    labelStyle={{ color: '#d1d5db' }}
+                                    contentStyle={{
+                                        backgroundColor: '#1f2937',
+                                        border: '1px solid #374151',
+                                        borderRadius: '8px',
+                                    }}
+                                />
+                                <Bar 
+                                    dataKey="hours" 
+                                    fill="#8b5cf6"
+                                    radius={[4, 4, 0, 0]}
+                                />
+                            </BarChart>
+                        </ResponsiveContainer>
                     </div>
                 )}
             </div>
