@@ -41,6 +41,9 @@ export default function Home() {
   const [groupInput, setGroupInput] = useState<string>('');
   const [pastGroups, setpastGroups] = useState<string[]>([]);
 
+  const [hoveredSession, setHoveredSession] = useState<string | null>(null);
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+
   const [currentWeekStart, setCurrentWeekStart] = useState(() => {
     const today = new Date();
     const dayOfWeek = today.getDay();
@@ -208,6 +211,22 @@ export default function Home() {
 
 
 
+  const handleMouseEnter = (sessionId: string, event: React.MouseEvent) => {
+    setHoveredSession(sessionId);
+    setTooltipPosition({ x: event.clientX, y: event.clientY });
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredSession(null);
+  };
+
+  const handleMouseMove = (event: React.MouseEvent) => {
+    if (hoveredSession) {
+      setTooltipPosition({ x: event.clientX, y: event.clientY });
+    }
+  };
+
+
 
 
   const getWeek = () => {
@@ -286,8 +305,8 @@ export default function Home() {
         const endHour = segmentEnd.getHours();
         const endMinute = segmentEnd.getMinutes();
         
-        const startPosition = (startHour + startMinute / 60) * 48;
-        const endPosition = (endHour + endMinute / 60) * 48;
+        const startPosition = (startHour + startMinute / 60) * 64;
+        const endPosition = (endHour + endMinute / 60) * 64;
         
         sessions.push({
           dayIndex: i,
@@ -435,7 +454,7 @@ export default function Home() {
                      
                      <React.Fragment key={hour}>
 
-                        <div  className='border-gray-500 border-b border-r h-12 flex justify-center items-end'>
+                        <div  className='border-gray-500 border-b border-r h-16 flex justify-center items-end'>
                           <div className="text-white/40 text-xs mb-1 ">{
                           hour === 0 ? '1:00 AM' :
                           hour < 11 ? `${hour + 1}:00 AM` : 
@@ -450,7 +469,7 @@ export default function Home() {
                           
                           <div 
                             key={`${dayIndex}-${hour}`} 
-                            className='border-gray-500 border-b border-r h-12 relative'
+                            className='border-gray-500 border-b border-r h-16 relative'
                           >
                            
 
@@ -463,20 +482,27 @@ export default function Home() {
                       {getSessionsForWeek().map((session) => {
                         const sessions = getSessionsC(session);
                         return sessions.map((segment, segmentIndex) => (
+
                           <div
                             key={`${session.id}-${segmentIndex}`}
 
                             className="absolute bg-gray-500/90 rounded-sm px-1  text-white overflow-hidden
-                            flex flex-col py-2"
+                            flex flex-col py-2 cursor-pointer hover:bg-gray-400/90 transition-colors"
 
                             style={{
+                              
                               left: `${segment.left}%`,
                               width: `${segment.width - 0.2}%`,
                               top: `${segment.top}px`,
                               height: `${segment.height}px`,
                               marginLeft: '1px',
                               marginRight: '1px'
+
                             }}
+
+                            onMouseEnter={(e) => handleMouseEnter(session.id, e)}
+                            onMouseLeave={handleMouseLeave}
+                            onMouseMove={handleMouseMove}
 
                           >
                               <div className='text-sm'> {session.group}</div>
@@ -490,5 +516,31 @@ export default function Home() {
               </div>
           </div>
         ) : null}
+
+        {hoveredSession && (
+
+          <div className="fixed z-50 bg-gray-900 text-white px-3 py-2 rounded-md text-sm pointer-events-none"
+            style={{
+              left: `${tooltipPosition.x + 10}px`,
+              top: `${tooltipPosition.y - 10}px`,
+            }}>
+
+            {(() => {
+              const session = sessions.find(s => s.id === hoveredSession);
+              return session ? (
+                <div>
+
+                  <div className="font-semibold">{session.group || 'No Group'}</div>
+                  
+                  <div className="text-xs opacity-75">
+                    {session.duration ? formatTime(session.duration) : 'No duration'}
+                  </div>
+
+                </div>
+              ) : null;
+            }) ()}
+
+          </div>
+        )}
     </div>);
 }
