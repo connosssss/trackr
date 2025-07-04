@@ -10,6 +10,17 @@ export default function LoginPage() {
     const { user, isLoading, signOut } = useAuth();
     const router = useRouter();
 
+    const handleSignOut = async () => {
+        try {
+            await signOut();
+            router.push('/login');
+        } 
+        
+        catch (error) {
+            console.error('Error signing out:', error);
+        }
+    };
+
   return (
     <div className="flex  bg-gray-800 w-full items-center justify-center h-screen ">
         <Navbar/>
@@ -19,10 +30,7 @@ export default function LoginPage() {
                 Email: {user?.email}
             </h2>
              
-            <button onClick={() => {
-              signOut();
-              router.push('/login');
-            }}
+            <button onClick={handleSignOut}
                 className='px-10 py-4 hover:bg-red-900 bg-red-800 w-1/3 rounded-md 
                 transition-all duration-300'>Sign Out</button>
         </div>
