@@ -12,10 +12,14 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
 
   const [isLogin, setIsLogin] = useState(true);
-  const { signIn, signUp, user, isLoading } = useAuth();
+  const { signIn, signUp, resetPassword, user, isLoading } = useAuth();
 
   
   const router = useRouter();
+
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
+  const [hasSent, setHasSent] = useState(false);
 
   useEffect(() => {
     if (user && !isLoading) {
@@ -41,9 +45,24 @@ export default function LoginPage() {
     }
   };
 
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    
+    try {
+      await resetPassword(resetEmail);
+      setHasSent(true);
+    } 
+    catch (error) {
+      setError((error as Error).message);
+    }
+  };
+
   return (
     <div className="flex  bg-gray-800 w-full items-center justify-center h-screen ">
-   <div className='flex flex-col w-1/3  bg-gray-700/70 filter  rounded-lg items-center py-14 '>
+   { !showForgotPassword ? (
+    <div className='flex flex-col w-1/3  bg-gray-700/70 filter  rounded-lg items-center py-14 '>
      <h2 className="text-4xl font-semibold  ">{isLogin ? 'Login' : 'Create Account'}</h2>
     
     {error && (
@@ -82,6 +101,18 @@ export default function LoginPage() {
       >
         {isLogin ? 'Sign In' : 'Sign Up'}
       </button>
+      
+      <button 
+          type="button" 
+          onClick={() => {
+            setShowForgotPassword(true);
+            setError(null);
+          }}
+          className="text-md hover:text-blue-200 text-blue-300 underline mt-3 transition-all duration-300"
+        >
+          Forgot Password
+        </button>
+        
         <button 
           type="button" 
           onClick={() => {
@@ -92,10 +123,62 @@ export default function LoginPage() {
         >
           {isLogin ? 'Sign up' : 'Sign in'}
         </button>
+          
+          
+
       </div>
       
     </form>
-   </div>
+   </div> ) : 
+   
+   // Forgot password part
+
+
+
+
+   (
+  
+
+    <div className='flex flex-col w-1/3  bg-gray-700/70 filter  rounded-lg items-center py-14 '>
+      <h2 className="text-4xl font-semibold  ">Forgot Password</h2>
+    
+    {error && (
+      <div className="mb-4 ">
+        {error}
+      </div>
+    )}
+    
+    <form onSubmit={handleForgotPassword} className='w-3/4 flex flex-col justify-center items-center p-5 mt-5'>
+      <input
+        id="resetEmail"
+        type="email"
+        value={resetEmail}
+        onChange={(e) => setResetEmail(e.target.value)}
+        className="w-full p-2 border focus:outline-none mb-4 rounded"
+        placeholder="Email"
+        required
+      />
+      
+      
+      
+      
+      <div className="text-center  flex flex-col mt-8 w-full ">
+
+        <button
+        type="submit"
+        className="bg-white/30 hover:bg-white/20 p-4 rounded w-full transition-all duration-300"
+      >
+        {!hasSent ? 'Send' : 'Sent!'}
+      </button>
+      
+
+      </div>
+      
+    </form>
+    
+    
+    </div>
+  )}
   </div>
   );
 }

@@ -2,11 +2,13 @@
 
 import { useAuth } from '@/context/AuthContext';
 import Navbar from "@/components/Navbar";
+import { useRouter } from "next/navigation";
 
 
 export default function LoginPage() {
     
     const { user, isLoading, signOut } = useAuth();
+    const router = useRouter();
 
   return (
     <div className="flex  bg-gray-800 w-full items-center justify-center h-screen ">
@@ -17,7 +19,10 @@ export default function LoginPage() {
                 Email: {user?.email}
             </h2>
              
-            <button onClick={() => signOut()}
+            <button onClick={() => {
+              signOut();
+              router.push('/login');
+            }}
                 className='px-10 py-4 hover:bg-red-900 bg-red-800 w-1/3 rounded-md 
                 transition-all duration-300'>Sign Out</button>
         </div>

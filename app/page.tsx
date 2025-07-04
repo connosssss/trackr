@@ -85,6 +85,8 @@ export default function Home() {
     }
   }, [user]);
 
+  
+
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
     
@@ -463,6 +465,7 @@ export default function Home() {
                         return sessions.map((segment, segmentIndex) => (
                           <div
                             key={`${session.id}-${segmentIndex}`}
+
                             className="absolute bg-gray-500/90 rounded-sm px-1  text-white overflow-hidden
                             flex flex-col py-2"
 
@@ -476,8 +479,8 @@ export default function Home() {
                             }}
 
                           >
-                              <div className='text-md'> {session.group}</div>
-                              <div className='text-sm'> {session.duration ? formatTime(session.duration) : ''}</div>
+                              <div className='text-sm'> {session.group}</div>
+                              <div className='text-xs'> {session.duration ? formatTime(session.duration) : ''}</div>
                           </div>
                         ));
                       }).flat()}
