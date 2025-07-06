@@ -21,10 +21,11 @@ export default function StartPage() {
 
  
   const [time, setTime] = useState(new Date());
+  const [isClient, setIsClient] = useState(false);
 
 
   useEffect(() => {
-
+    setIsClient(true);
     const interval = setInterval(() => {
       setTime(new Date());
     }, 1000);
@@ -84,14 +85,14 @@ export default function StartPage() {
             <div
               className="absolute top-1/2 left-1/2 w-1 h-32 bg-gray-300 origin-bottom transform -translate-x-1/2 -translate-y-1/2 rounded-full"
               style={{
-                transform: `translate(-50%, -50%) rotate(${(time.getHours() % 12) * 30 + time.getMinutes() / 2}deg)`,
+                transform: `translate(-50%, -50%) rotate(${isClient ? (time.getHours() % 12) * 30 + time.getMinutes() / 2 : 0}deg)`,
               }}
             ></div>
             
             <div
               className="absolute top-1/2 left-1/2 w-1 h-42 bg-gray-300 origin-bottom transform -translate-x-1/2 -translate-y-1/2 rounded-full"
               style={{
-                transform: `translate(-50%, -50%) rotate(${time.getMinutes() * 6}deg)`,
+                transform: `translate(-50%, -50%) rotate(${isClient ? time.getMinutes() * 6 : 0}deg)`,
               }}
             ></div>
             
@@ -99,7 +100,7 @@ export default function StartPage() {
             <div
               className="absolute top-1/2 left-1/2 w-0.5 h-64 bg-gray-300 origin-bottom transform -translate-x-1/2 -translate-y-1/2 rounded-full"
               style={{
-                transform: `translate(-50%, -50%) rotate(${time.getSeconds() * 6}deg)`,
+                transform: `translate(-50%, -50%) rotate(${isClient ? time.getSeconds() * 6 : 0}deg)`,
               }}
             ></div>
             
