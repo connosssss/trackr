@@ -4,6 +4,7 @@ import { useAuth } from "@/context/AuthContext";
 import React, { useState, useEffect } from "react";
 import { fetchTimeSessions, createTimeSession, updateTimeSession } from "@/utils/timeSessionsDB";
 import { useRouter } from "next/navigation";
+import {updateGroupList} from "@/utils/timeSessionsDB";
 
 
 import Sessions from "@/components/Sessions";
@@ -177,6 +178,7 @@ export default function Home() {
         ...completedSession,
         user_id: user.id
       }
+      
     
     );
       
@@ -189,6 +191,13 @@ export default function Home() {
     
     catch (error) {
       console.error("Error stopping tracking:", error);
+    }
+
+    try{
+      await updateGroupList(user);
+    }
+    catch(error){
+      console.error("Error updating group database:", error);
     }
   };
 

@@ -229,7 +229,7 @@ export default function LoginPage() {
 
         try {
             setIsUpdatingStats(true);
-  
+            
             const stats = await fetchGroupList(user);
             setgroupList(stats);
         }
@@ -317,7 +317,7 @@ export default function LoginPage() {
                     ) : (
                   <div className="h-full w-full flex flex-col gap-9 mt-10">
                   <div className='text-2xl font-semibold text-shadow-2xs hover:scale-120 transition-all duration-300'>
-                      {formatTime(totalTime)} Hours
+                      {formatTime(totalTime)} 
                   </div>
 
                   <div className='text-lg font-semibold text-shadow-2xs transition-all duration-300
@@ -435,8 +435,8 @@ export default function LoginPage() {
                     </div>
                 ) : (
                     <div className="h-full w-full">
-                        
-                            <ResponsiveContainer width="100%" height="100%">
+                        <div className='text-center text-2xl font-semibold'> Group Breakdown </div>
+                            <ResponsiveContainer width="100%" height="90%">
                                 <PieChart>
 
                                     <Pie
