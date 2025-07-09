@@ -528,7 +528,7 @@ export default function Home() {
 
         {hoveredSession && (
 
-          <div className="fixed z-50 bg-gray-900 text-white px-3 py-2 rounded-md text-sm pointer-events-none"
+          <div className="fixed z-50 bg-gray-900/90 text-white px-3 py-2 rounded-md text-sm pointer-events-none"
             style={{
               left: `${tooltipPosition.x + 10}px`,
               top: `${tooltipPosition.y - 10}px`,
