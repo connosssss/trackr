@@ -291,6 +291,14 @@ export default function Home() {
     });
   };
 
+  const getActiveSessions = () => {
+    //easy null check + if need more
+    if (!isTracking || !currentSession) return [];
+
+    return [currentSession];
+  };
+  
+
   const getSessionsC = (session: TimeSession) => {
 
     const weekDates = getWeek();
@@ -520,6 +528,37 @@ export default function Home() {
                         ));
                       }).flat()}
 
+                      {getActiveSessions().map((session) => {
+
+                        const sessions = getSessionsC(session);
+
+                        return sessions.map((segment, segmentIndex) => (
+                          <div
+                            key={`active-${session.id}-${segmentIndex}`}
+
+
+                            className="absolute bg-cyan-700/90 rounded-sm px-1  text-white overflow-hidden
+                            flex flex-col py-2 cursor-pointer hover:bg-cyan-600/90 transition-colors"
+
+                            style={{
+                              left: `${segment.left}%`,
+                              width: `${segment.width - 0.2}%`,
+                              top: `${segment.top}px`,
+                              height: `${segment.height}px`,
+                              marginLeft: '1px',
+                              marginRight: '1px' }}
+
+                            onMouseEnter={(e) => handleMouseEnter(session.id, e)}
+                            onMouseLeave={handleMouseLeave}
+                            onMouseMove={handleMouseMove}
+
+                          >
+                              <div className='text-sm'> {session.group}</div>
+                              <div className='text-xs'> Active</div>
+                          </div>
+                        ));
+                      }).flat()}
+
                       </div>
 
               </div>
@@ -536,13 +575,16 @@ export default function Home() {
 
             {(() => {
               const session = sessions.find(s => s.id === hoveredSession);
+              const isActiveSession = currentSession && currentSession.id === hoveredSession;
+              
+
               return session ? (
                 <div>
 
                   <div className="font-semibold">{session.group || 'No Group'}</div>
                   
                   <div className="text-xs opacity-75">
-                    {session.duration ? formatTime(session.duration) : 'No duration'}
+                    {isActiveSession ? formatTime(timer) : (session.duration ? formatTime(session.duration) : 'No duration')}
                   </div>
 
                 </div>
