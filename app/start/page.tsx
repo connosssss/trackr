@@ -79,27 +79,30 @@ export default function StartPage() {
 
         {/* clock */}
         
-          <div className="relative w-[35rem] h-[35rem] ml-30">
+          <div className="relative w-[min(35rem,40vw)] h-[min(35rem,40vw)] aspect-square ml-30">
             <div className="absolute inset-0 rounded-full border-4 border-gray-600"></div>
             
             <div
-              className="absolute top-1/2 left-1/2 w-1 h-32 bg-gray-300 origin-bottom transform -translate-x-1/2 -translate-y-1/2 rounded-full"
+              className="absolute top-1/2 left-1/2 w-1 bg-gray-300 origin-bottom transform -translate-x-1/2 -translate-y-1/2 rounded-full"
               style={{
+                height: '35%',
                 transform: `translate(-50%, -50%) rotate(${isClient ? (time.getHours() % 12) * 30 + time.getMinutes() / 2 : 0}deg)`,
               }}
             ></div>
             
             <div
-              className="absolute top-1/2 left-1/2 w-1 h-42 bg-gray-300 origin-bottom transform -translate-x-1/2 -translate-y-1/2 rounded-full"
+              className="absolute top-1/2 left-1/2 w-1 bg-gray-300 origin-bottom transform -translate-x-1/2 -translate-y-1/2 rounded-full"
               style={{
+                height: '45%',
                 transform: `translate(-50%, -50%) rotate(${isClient ? time.getMinutes() * 6 : 0}deg)`,
               }}
             ></div>
             
             
             <div
-              className="absolute top-1/2 left-1/2 w-0.5 h-64 bg-gray-300 origin-bottom transform -translate-x-1/2 -translate-y-1/2 rounded-full"
+              className="absolute top-1/2 left-1/2 w-0.5 bg-gray-300 origin-bottom transform -translate-x-1/2 -translate-y-1/2 rounded-full"
               style={{
+                height: '48%',
                 transform: `translate(-50%, -50%) rotate(${isClient ? time.getSeconds() * 6 : 0}deg)`,
               }}
             ></div>
