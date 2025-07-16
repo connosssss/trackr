@@ -3,7 +3,8 @@
 import { useState, useEffect  } from 'react'; 
 import { useAuth } from "@/context/AuthContext";
 import { fetchTimeSessions, fetchGroupList, updateGroupList, GroupStat } from "@/utils/timeSessionsDB";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid,
+    LineChart, Line, AreaChart, Area } from 'recharts';
 
 import Navbar from "@/components/Navbar";
 
@@ -29,7 +30,8 @@ export default function LoginPage() {
     const [monthTime, setMonthTime] = useState<number>(0);
     const [yearTime, setYearTime] = useState<number>(0);
     const [sessions, setSessions] = useState<Session[]>([]);
-    const [selectedPeriod, setSelectedPeriod] = useState<'week' | 'month' | '3months' | 'year' | 'alltime'>('month');
+    const [selectedPeriod, setSelectedPeriod] = useState<'week' | 'month' | '3months' | 'year' | 'alltime'>('week');
+    const [chartType, setChartType] = useState<'bar' | 'line' | 'area'>('bar');
     
     const formatTime = (seconds: number) => {
         const hours = Math.floor(seconds / 3600);
@@ -487,6 +489,17 @@ export default function LoginPage() {
                         <option value="alltime">All Time</option>
 
                     </select>
+
+                    <select
+                        value={chartType}
+                        onChange={(e) => setChartType(e.target.value as 'bar' | 'line' | 'area')}
+                        className="bg-gray-700 text-white rounded px-3 py-1 border border-gray-500 
+                        focus:outline-none focus:border-gray-400"
+                        >
+                        <option value="bar">Bar Chart</option>
+                        <option value="line">Line Chart</option>
+                        <option value="area">Area Chart</option>
+                    </select>
                 </div>
 
                 {isLoading ? (
@@ -506,38 +519,106 @@ export default function LoginPage() {
                     <div className="h-80 w-full">
 
                         <ResponsiveContainer width="100%" height="100%">
+                            {chartType === 'bar' ? (
+                                <BarChart data={barChartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                                    <XAxis 
+                                        dataKey="name" 
+                                        stroke="#9ca3af"
+                                        fontSize={12}
+                                        interval={0}
+                                        tick={{ fontSize: 10 }}
+                                    />
+                                    <YAxis 
+                                        stroke="#9ca3af"
+                                        fontSize={12}
+                                    />
+                                    <Tooltip 
+                                        formatter={(value: number) => [`${value} hours`, 'Hours Worked']}
+                                        labelStyle={{ color: '#d1d5db' }}
+                                        contentStyle={{
+                                            backgroundColor: '#1f2937',
+                                            border: '1px solid #374151',
+                                            borderRadius: '8px',
+                                        }}
+                                    />
 
-                            <BarChart data={barChartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                                <XAxis 
-                                    dataKey="name" 
-                                    stroke="#9ca3af"
-                                    fontSize={12}
-                                    interval={0}
-                                    tick={{ fontSize: 10 }}
-                                />
+                                    <Bar 
+                                        dataKey="hours" 
+                                        fill="#8b5cf6"
+                                        radius={[4, 4, 0, 0]}
+                                    />
+                                </BarChart>
+                            ) : chartType === 'line' ? (
 
-                                <YAxis 
-                                    stroke="#9ca3af"
-                                    fontSize={12}
+                                <LineChart data={barChartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                                    <XAxis 
+                                        dataKey="name" 
+                                        stroke="#9ca3af"
+                                        fontSize={12}
+                                        interval={0}
+                                        tick={{ fontSize: 10 }}
+                                    />
+                                    <YAxis 
+                                        stroke="#9ca3af"
+                                        fontSize={12}
+                                    />
+                                    <Tooltip 
+                                        formatter={(value: number) => [`${value} hours`, 'Hours Worked']}
+                                        labelStyle={{ color: '#d1d5db' }}
+                                        contentStyle={{
+                                            backgroundColor: '#1f2937',
+                                            border: '1px solid #374151',
+                                            borderRadius: '8px',
+                                        }}
+                                    />
+                                    
+                                    <Line 
+                                        type="monotone" 
+                                        dataKey="hours" 
+                                        stroke="#8b5cf6" 
+                                        strokeWidth={3}
+                                        dot={{ fill: '#8b5cf6', strokeWidth: 2, r: 4 }}
+                                    />
+                                </LineChart>
 
-                                />
+                            ) : (
 
-                                <Tooltip 
-                                    formatter={(value: number) => [`${value} hours`, 'Hours Worked']}
-                                    labelStyle={{ color: '#d1d5db' }}
-                                    contentStyle={{
-                                        backgroundColor: '#1f2937',
-                                        border: '1px solid #374151',
-                                        borderRadius: '8px',
-                                    }}
-                                />
-                                <Bar 
-                                    dataKey="hours" 
-                                    fill="#8b5cf6"
-                                    radius={[4, 4, 0, 0]}
-                                />
-                            </BarChart>
+                                <AreaChart data={barChartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                                    <XAxis 
+                                        dataKey="name" 
+                                        stroke="#9ca3af"
+                                        fontSize={12}
+                                        interval={0}
+                                        tick={{ fontSize: 10 }}
+                                    />
+                                    <YAxis 
+                                        stroke="#9ca3af"
+                                        fontSize={12}
+                                    />
+                                    <Tooltip 
+                                        formatter={(value: number) => [`${value} hours`, 'Hours Worked']}
+                                        labelStyle={{ color: '#d1d5db' }}
+                                        contentStyle={{
+                                            backgroundColor: '#1f2937',
+                                            border: '1px solid #374151',
+                                            borderRadius: '8px',
+                                        }}
+                                    />
+
+                                    <Area 
+                                        type="monotone" 
+                                        dataKey="hours" 
+                                        stroke="#8b5cf6" 
+                                        fill="#8b5cf6"
+                                        fillOpacity={0.6}
+                                    />
+                                </AreaChart>
+
+
+                            )}
                         </ResponsiveContainer>
                     </div>
                 )}
