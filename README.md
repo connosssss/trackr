@@ -26,7 +26,38 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 and then fill in the variables with your keys
 
 ### Step 4
-tk...
+To set up the tables, run this code in the SQL Editor in supabase
+```
+CREATE TABLE public.time_sessions (
+  group text,
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  user_id uuid DEFAULT gen_random_uuid(),
+  start_time timestamp with time zone DEFAULT now(),
+  end_time timestamp with time zone,
+  duration bigint,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT time_sessions_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE public.group_stats (
+  session_count integer NOT NULL DEFAULT 0,
+  total_duration integer NOT NULL DEFAULT 0,
+  user_id uuid NOT NULL,
+  group_name text NOT NULL,
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  last_updated timestamp with time zone DEFAULT now(),
+  CONSTRAINT group_stats_pkey PRIMARY KEY (id)
+);
+```
+Then create these policies to allow the users to use / edit the tables
+<img width="1602" height="765" alt="image" src="https://github.com/user-attachments/assets/a706feb0-b390-4ccd-996b-c6abc802cf55" />
+<img width="992" height="907" alt="image" src="https://github.com/user-attachments/assets/7b27ca08-5e60-4e07-b7b9-2e6d409e90c8" />
+
+### Step 5
+Start the app by running 
+```
+npm run dev
+```
 
 
 ### Link: https://trackr-nu.vercel.app
