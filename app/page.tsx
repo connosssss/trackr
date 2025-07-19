@@ -104,10 +104,6 @@ export default function Home() {
 
       updateTimer();
       interval = setInterval(updateTimer, 1000);
-    } 
-    
-    else {
-      setTimer(0);
     }
     
     return () => {
@@ -185,7 +181,9 @@ export default function Home() {
       const updatedSessions = await fetchTimeSessions(user);
       setSessions(updatedSessions);
       setIsTracking(false);
-      setTimer(0);
+      
+      setTimer(duration);
+      
       setCurrentSession(null);
     } 
     
@@ -373,7 +371,7 @@ export default function Home() {
 
 
                 {hasLoaded ? <div className={` z-10 absolute  top-0 h-24 ${isTracking ? 'opacity-0' : 'opacity-100'} bg-red-500/20  
-                transition ease-in-out duration-300 w-[99%] rounded-bl-2xl`}/> : null}
+                transition ease-in-out duration-300 w-[99%]`}/> : null}
                 
                 </div>
 
