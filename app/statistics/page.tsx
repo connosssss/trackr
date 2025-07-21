@@ -302,15 +302,16 @@ export default function LoginPage() {
     const pieChartData = preparePieChartData();
     const barChartData = prepareBarChartData();
 
-  return (
-    <div className="min-h-screen w-full bg-gray-800 pb-20">
-      <Navbar/>
-        <h1 className="w-full text-2xl text-center pt-5">Statistics</h1>
+  return (<><Navbar/>
+    <div className="min-h-screen w-full bg-gray-800 pb-20 pt-10">
+      
         
-        <div className="w-5/6 mx-auto bg-gray-700 min-h-96 rounded-md shadow-md p-14 mt-12 
+
+        
+        <div className="w-5/6 mx-auto min-h-72 rounded-md  
         flex flex-row gap-8">
-            <div className='w-1/4 bg-gray-600 text-center rounded-md shadow-md'>
-                <div className='text-2xl font-semibold mt-5 border-b-2 border-gray-700'>
+            <div className='w-1/4 bg-gray-700 text-center rounded-md shadow-md '>
+                <div className='text-2xl font-semibold mt-5 border-b-2 border-gray-800'>
                     Total Time
                 </div>
                 {
@@ -318,7 +319,8 @@ export default function LoginPage() {
                         <div>Loading...</div>
                     ) : (
                   <div className="h-full w-full flex flex-col gap-9 mt-10">
-                  <div className='text-2xl font-semibold text-shadow-2xs hover:scale-120 transition-all duration-300'>
+
+                  <div className='text-4xl font-semibold text-shadow-2xs hover:scale-120 transition-all duration-300'>
                       {formatTime(totalTime)} 
                   </div>
 
@@ -338,8 +340,8 @@ export default function LoginPage() {
                 }
             </div>
 
-            <div className='w-1/2 bg-gray-600 text-center rounded-md shadow-md'>
-                <div className='text-2xl font-semibold mt-5 border-b-2 border-gray-700'>
+            <div className='w-1/2 bg-gray-700 text-center rounded-md shadow-md'>
+                <div className='text-2xl font-semibold mt-5 border-b-2 border-gray-800'>
                     Top Groups
                 </div>
                 {
@@ -381,8 +383,8 @@ export default function LoginPage() {
                 }
             </div>
             
-            <div className='w-1/4 bg-gray-600 text-center rounded-md shadow-md'>
-                <div className='text-2xl font-semibold mt-5 border-b-2 border-gray-700'>
+            <div className='w-1/4 bg-gray-700 text-center rounded-md shadow-md'>
+                <div className='text-2xl font-semibold mt-5 border-b-2 border-gray-800'>
                     Recent Activity
                 </div>
                 {
@@ -422,10 +424,10 @@ export default function LoginPage() {
 
             
         </div>
-        <div className="w-5/6 mx-auto bg-gray-700 min-h-96 rounded-md shadow-md p-14 mt-12 
-        flex flex-row gap-8">
+        <div className="w-5/6 mx-auto  min-h-96 rounded-md shadow-md mt-12 
+        flex flex-row gap-12">
 
-            <div className='w-1/2 bg-gray-600 rounded-md shadow-md p-6'>
+            <div className='w-1/2 bg-gray-700 rounded-md shadow-md p-6'>
 
                 {isLoading ? (
                     <div className="flex items-center justify-center h-80">
@@ -473,7 +475,7 @@ export default function LoginPage() {
                 )}
             </div>
 
-            <div className='w-1/2 bg-gray-600 rounded-md shadow-md p-6'>
+            <div className='w-1/2 bg-gray-700 rounded-md shadow-md p-6'>
                 <div className="flex justify-between items-center mb-4">
                     <select
                         value={selectedPeriod}
@@ -521,13 +523,13 @@ export default function LoginPage() {
                         <ResponsiveContainer width="100%" height="100%">
                             {chartType === 'bar' ? (
                                 <BarChart data={barChartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                                     <XAxis 
                                         dataKey="name" 
                                         stroke="#9ca3af"
                                         fontSize={12}
                                         interval={0}
                                         tick={{ fontSize: 10 }}
+                                        
                                     />
                                     <YAxis 
                                         stroke="#9ca3af"
@@ -552,7 +554,6 @@ export default function LoginPage() {
                             ) : chartType === 'line' ? (
 
                                 <LineChart data={barChartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                                     <XAxis 
                                         dataKey="name" 
                                         stroke="#9ca3af"
@@ -586,7 +587,6 @@ export default function LoginPage() {
                             ) : (
 
                                 <AreaChart data={barChartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                                     <XAxis 
                                         dataKey="name" 
                                         stroke="#9ca3af"
@@ -626,5 +626,6 @@ export default function LoginPage() {
 
         </div>
     </div>
+    </>
   );
 }
