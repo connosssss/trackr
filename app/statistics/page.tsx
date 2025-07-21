@@ -303,7 +303,7 @@ export default function LoginPage() {
     const barChartData = prepareBarChartData();
 
   return (<><Navbar/>
-    <div className="min-h-screen w-full bg-gray-800 pb-20 pt-10">
+    <div className="min-h-screen w-full bg-gray-800 pb-16 pt-10">
       
         
 
@@ -318,9 +318,9 @@ export default function LoginPage() {
                     isLoading ? (
                         <div>Loading...</div>
                     ) : (
-                  <div className="h-full w-full flex flex-col gap-9 mt-10">
+                  <div className="h-full w-full flex flex-col gap-12 mt-14">
 
-                  <div className='text-4xl font-semibold text-shadow-2xs hover:scale-120 transition-all duration-300'>
+                  <div className='text-5xl font-semibold text-shadow-2xs hover:scale-120 transition-all duration-300'>
                       {formatTime(totalTime)} 
                   </div>
 
@@ -359,8 +359,8 @@ export default function LoginPage() {
 
                                 {groupList.slice(0,3).map((stat, index) => (
                                     <div key={stat.id} 
-                                         className={`p-4 rounded-lg transition-all duration-300 
-                                         `}>
+                                         className={`p-4 rounded-lg transition-all duration-300 bg-gray-800/60 hover:shadow-lg
+                                         ${index == 0 ? 'text-amber-400 hover:shadow-amber-400/30 ' : index == 1 ? 'text-slate-300 hover:shadow-slate-300/30' : 'text-orange-600 hover:shadow-orange-600/30'}`}>
 
                                         <div className="flex justify-between items-center">
                                             <div className="flex items-center gap-3">
@@ -394,25 +394,28 @@ export default function LoginPage() {
                         <div className="p-6">
 
                             
-                            <div className="grid grid-cols-1 gap-4">
-                                <div className="p-2 flex justify-between items-center">
+                            <div className="grid grid-cols-1 gap-12 text-xl font-semibold mt-4 ">
+                                <div className="p-2 flex justify-between items-center text-green-300/85 hover:text-green-300 hover:scale-110
+                                transform transition-all duration-300">
                                     
-                                        <span className="text-md">Last Week</span>
-                                        <span className="font-medium">{formatTime(weekTime)}</span>
-                                    
-                                </div>
-
-                                <div className="p-2 flex justify-between items-center">
-                                    
-                                        <span className="text-md">Last Month</span>
-                                        <span className="font-medium">{formatTime(monthTime)}</span>
+                                        <span >Last Week</span>
+                                        <span >{formatTime(weekTime)}</span>
                                     
                                 </div>
 
-                                <div className="p-2 flex justify-between items-center">
+                                <div className="p-2 flex justify-between items-center text-[#68f2d9]/80 hover:text-[#68f2d9] hover:scale-110
+                                transform transition-all duration-300">
                                     
-                                        <span className="text-md">Last Year</span>
-                                        <span className="font-medium">{formatTime(yearTime)}</span>
+                                        <span >Last Month</span>
+                                        <span >{formatTime(monthTime)}</span>
+                                    
+                                </div>
+
+                                <div className="p-2 flex justify-between items-center text-sky-300/80 hover:text-sky-300 hover:scale-110
+                                transform transition-all duration-300">
+                                    
+                                        <span >Last Year</span>
+                                        <span >{formatTime(yearTime)}</span>
                                     
                                 </div>
                             </div>
@@ -491,7 +494,8 @@ export default function LoginPage() {
                         <option value="alltime">All Time</option>
 
                     </select>
-
+                    
+                    <div className='text-xl font-semibold'> Quick Graph</div>
                     <select
                         value={chartType}
                         onChange={(e) => setChartType(e.target.value as 'bar' | 'line' | 'area')}
