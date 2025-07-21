@@ -3,6 +3,10 @@
 
 trackr is a bare bones time tracking app made to be simple and without the bloat that many others have with it. Its main focus is making personal time tracking simple while still being able to show stats/analytics that most other lock behind a pay wall, but for free. It was made using Supabase as a database along Next js for user auth, made with next js for the front end and back end, used tailwind css and a bit of manual css for the styling, and was deployed on vercel.
 
+### Features
+trackr allows you to track different time sessions, with it allowing for you to be able to assign groups to these sessions / put tags onto them. Then you can see total hours, popular groups, amount of hours over time, and different group ratios. It also allows users to edit pre-existing time sessions, delete them, and export all time sessions as an excel sheet ( More export options coming soon)
+
+
 ### Installation
 ### Step 1
 You could do it through 2 different ways, downloading the zip file or cloning. For downloading it, you can download the zip file on the github page and then unzip it and open the folder. For cloning the repository, you can just run 
