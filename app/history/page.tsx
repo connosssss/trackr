@@ -119,7 +119,7 @@ export default function HistoryPage() {
     };
 
   return ( 
-<div className=" bg-gray-800 min-h-screen h-full pb-20" >
+<div className=" bg-gray-900 min-h-screen h-full pb-20" >
 <Navbar />
 
                 {isLoadingSessions ? (

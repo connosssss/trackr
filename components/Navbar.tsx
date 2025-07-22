@@ -14,11 +14,11 @@ export default function Navbar() {
   };
 
   return (
-    <div className={`fixed right-0 h-screen backdrop-blur-sm z-20 bg-gray-500/30
+    <div className={`fixed right-0 h-screen backdrop-blur-sm z-20 bg-gray-700/30
     ${isMinimized ? 'w-16' : 'w-1/6'} transition-all duration-500 ease-in-out`}>
       <button 
         onClick={toggleMinimize} 
-        className={`absolute top-2 ${isMinimized ? 'left-2' : 'left-5'} bg-gray-800 hover:bg-gray-500
+        className={`absolute top-2 ${isMinimized ? 'left-2' : 'left-5'} bg-gray-900 hover:bg-gray-700
          text-white rounded-md z-30 px-4 ${!isMinimized ? 'w-[80%]' : 'w-12'} mr-2
          transition-all duration-500 ease-in-out`}
       >
