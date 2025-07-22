@@ -303,15 +303,15 @@ export default function LoginPage() {
     const barChartData = prepareBarChartData();
 
   return (<><Navbar/>
-    <div className="min-h-screen w-full bg-gray-800 pb-16 pt-10">
+    <div className="min-h-screen w-full bg-gray-900 pb-16 pt-10">
       
         
 
         
         <div className="w-5/6 mx-auto min-h-72 rounded-md  
         flex flex-row gap-8">
-            <div className='w-1/4 bg-gray-700 text-center rounded-md shadow-md '>
-                <div className='text-2xl font-semibold mt-5 border-b-2 border-gray-800'>
+            <div className='w-1/4 bg-gray-800 text-center rounded-md shadow-lg shadow-indigo-900/20'>
+                <div className='text-2xl font-semibold mt-5 border-b-2 border-gray-900'>
                     Total Time
                 </div>
                 {
@@ -340,8 +340,8 @@ export default function LoginPage() {
                 }
             </div>
 
-            <div className='w-1/2 bg-gray-700 text-center rounded-md shadow-md'>
-                <div className='text-2xl font-semibold mt-5 border-b-2 border-gray-800'>
+            <div className='w-1/2 bg-gray-800 text-center rounded-md shadow-lg shadow-indigo-900/20'>
+                <div className='text-2xl font-semibold mt-5 border-b-2 border-gray-900'>
                     Top Groups
                 </div>
                 {
@@ -359,7 +359,7 @@ export default function LoginPage() {
 
                                 {groupList.slice(0,3).map((stat, index) => (
                                     <div key={stat.id} 
-                                         className={`p-4 rounded-lg transition-all duration-300 bg-gray-800/60 hover:shadow-lg
+                                         className={`p-4 rounded-lg transition-all duration-300 bg-gray-900/60 hover:shadow-lg
                                          ${index == 0 ? 'text-amber-400 hover:shadow-amber-400/30 ' : index == 1 ? 'text-slate-300 hover:shadow-slate-300/30' : 'text-orange-600 hover:shadow-orange-600/30'}`}>
 
                                         <div className="flex justify-between items-center">
@@ -383,8 +383,8 @@ export default function LoginPage() {
                 }
             </div>
             
-            <div className='w-1/4 bg-gray-700 text-center rounded-md shadow-md'>
-                <div className='text-2xl font-semibold mt-5 border-b-2 border-gray-800'>
+            <div className='w-1/4 bg-gray-800 text-center rounded-md shadow-lg shadow-indigo-900/20'>
+                <div className='text-2xl font-semibold mt-5 border-b-2 border-gray-900'>
                     Recent Activity
                 </div>
                 {
@@ -427,10 +427,10 @@ export default function LoginPage() {
 
             
         </div>
-        <div className="w-5/6 mx-auto  min-h-96 rounded-md shadow-md mt-12 
+        <div className="w-5/6 mx-auto  min-h-96 rounded-md  mt-12 
         flex flex-row gap-12">
 
-            <div className='w-1/2 bg-gray-700 rounded-md shadow-md p-6'>
+            <div className='w-1/2 bg-gray-800 rounded-md shadow-lg shadow-indigo-900/20 p-6'>
 
                 {isLoading ? (
                     <div className="flex items-center justify-center h-80">
@@ -478,12 +478,12 @@ export default function LoginPage() {
                 )}
             </div>
 
-            <div className='w-1/2 bg-gray-700 rounded-md shadow-md p-6'>
+            <div className='w-1/2 bg-gray-800 rounded-md shadow-lg shadow-indigo-900/20 p-6'>
                 <div className="flex justify-between items-center mb-4">
                     <select
                         value={selectedPeriod}
                         onChange={(e) => setSelectedPeriod(e.target.value as 'week' | 'month' | '3months' | 'year' | 'alltime')}
-                        className="bg-gray-700 text-white rounded px-3 py-1 border border-gray-500 
+                        className="bg-gray-800 text-white rounded px-3 py-1 border border-gray-500 
                         focus:outline-none focus:border-gray-400"
                     >
 
@@ -499,7 +499,7 @@ export default function LoginPage() {
                     <select
                         value={chartType}
                         onChange={(e) => setChartType(e.target.value as 'bar' | 'line' | 'area')}
-                        className="bg-gray-700 text-white rounded px-3 py-1 border border-gray-500 
+                        className="bg-gray-800 text-white rounded px-3 py-1 border border-gray-500 
                         focus:outline-none focus:border-gray-400"
                         >
                         <option value="bar">Bar Chart</option>
@@ -551,7 +551,7 @@ export default function LoginPage() {
 
                                     <Bar 
                                         dataKey="hours" 
-                                        fill="#8b5cf6"
+                                        fill="#563ead"
                                         radius={[4, 4, 0, 0]}
                                     />
                                 </BarChart>

@@ -338,7 +338,7 @@ export default function Home() {
 
 
   return (
-    <div className="bg-gray-800 min-h-screen h-full w-full">
+    <div className="bg-gray-900 min-h-screen h-full w-full">
         
         <Navbar />
 
@@ -353,8 +353,8 @@ export default function Home() {
             
             
               
-              <div className=" font-mono  flex h-24 items-center transition duration-300 border-b-2 border-gray-500
-                 w-[98%]">
+              <div className=" font-mono  flex h-24 items-center transition duration-300 border-b-2 border-gray-600 bg-gray-800/50
+                 w-full">
                 
                 <div className="ml-5 text-4xl">
                   {formatTime(timer)}
@@ -375,7 +375,7 @@ export default function Home() {
                 
                 </div>
 
-                <div className="flex  py-3 border-b-2 border-gray-500 flex-row gap-2 items-center w-[98%]">
+                <div className="flex  py-3 border-b-2 border-gray-600 flex-row gap-2 items-center w-full bg-gray-800/50 shadow-lg shadow-indigo-900/20">
                   {!isTracking ? ( 
                     <button 
                       onClick={startTracking}
@@ -427,12 +427,8 @@ export default function Home() {
                 }
                 </div>
 
-                <div className="flex justify-start gap-3 items-center py-3 w-[93%] mx-5 mt-10">
-                <div className="text-white text-lg font-medium pr-5 min-w-52 ">
-
-                    {formatWeekRange()}
-                  </div>
-                    <button 
+                <div className="flex justify-start gap-3 items-center py-3 w-[93%] mx-5 mt-3">
+                  <button 
                       onClick={() => changeWeek('before')}
                       className="text-white bg-gray-700 px-3 py-1 rounded-md hover:bg-gray-500 transition-all duration-300"
                     >
@@ -442,6 +438,12 @@ export default function Home() {
                       onClick={() => changeWeek('later')}
                       className="text-white bg-gray-700 px-3 py-1 rounded-md hover:bg-gray-500 transition-all duration-300"
                     > →</button>
+
+                <div className="text-white text-lg font-medium pr-5 min-w-52 ">
+
+                    {formatWeekRange()}
+                  </div>
+                    
                     
                   
                   
@@ -451,11 +453,11 @@ export default function Home() {
 
 
             <div className='h-full flex flex-col pb-20 mx-5 '>
-                <div className='grid grid-flow-col grid-cols-8 w-[95%] border-gray-500 mr-16'>
+                <div className='grid grid-flow-col grid-cols-8 w-[95%] border-gray-600 mr-16'>
                   <div className="text-white/40 text-xs border-b flex justify-center items-end "> 12:00 AM</div>
 
                   {getWeek().map((date, index) => (
-                    <div key={index} className=' border-gray-500 border-b h-12 text-white/30 
+                    <div key={index} className=' border-gray-600 border-b h-12 text-white/30 
                     text-center flex items-end justify-center'>
                         <div>{formatDateHeader(date)}</div>
                       
@@ -501,8 +503,8 @@ export default function Home() {
                           <div
                             key={`${session.id}-${segmentIndex}`}
 
-                            className="absolute bg-gray-500/90 rounded-sm px-1  text-white overflow-hidden
-                            flex flex-col py-2 cursor-pointer hover:bg-gray-400/90 transition-colors"
+                            className="absolute bg-gradient-to-br from-gray-700 to-gray-700/70 rounded-sm px-1  text-white overflow-hidden
+                            flex flex-col py-2 cursor-pointer hover:from-gray-600/90 hover:to-gray-600/60  transition-colors"
 
                             style={{
                               
@@ -563,9 +565,13 @@ export default function Home() {
           </div>
         ) : null}
 
+
+
+
+
         {hoveredSession && (
 
-          <div className="fixed z-50 bg-gray-900/90 text-white px-3 py-2 rounded-md text-sm pointer-events-none"
+          <div className="fixed z-50 bg-gray-800/80 text-white px-3 py-2 rounded-md text-sm pointer-events-none"
             style={{
               left: `${tooltipPosition.x + 10}px`,
               top: `${tooltipPosition.y - 10}px`,
@@ -591,5 +597,6 @@ export default function Home() {
 
           </div>
         )}
-    </div>);
+    </div>
+    );
 }
