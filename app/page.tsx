@@ -9,6 +9,7 @@ import {updateGroupList} from "@/utils/timeSessionsDB";
 
 import Sessions from "@/components/Sessions";
 import Navbar from "@/components/Navbar";
+import Edit from "@/components/Edit";
 
 interface TimeSession {
   id: string;
@@ -45,6 +46,9 @@ export default function Home() {
   const [hoveredSession, setHoveredSession] = useState<string | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
 
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingSession, setEditingSession] = useState<TimeSession | null>();
+
   const [currentWeekStart, setCurrentWeekStart] = useState(() => {
     const today = new Date();
     const dayOfWeek = today.getDay();
@@ -55,16 +59,7 @@ export default function Home() {
     return monday;
   });
 
-
-  useEffect(() => {
-    if (!isLoading && !user) {
-      router.push('/start');
-    }
-  }, [user, isLoading, router]);
-
-  useEffect(() => {
-    if (user) {
-      const loadSessions = async () => {
+  const loadSessions = async () => {
         setIsLoadingSessions(true);
         try {
           const data = await fetchTimeSessions(user);
@@ -84,7 +79,15 @@ export default function Home() {
           setIsLoadingSessions(false);
         }
       };
-      
+
+  useEffect(() => {
+    if (!isLoading && !user) {
+      router.push('/start');
+    }
+  }, [user, isLoading, router]);
+
+  useEffect(() => {
+    if (user) {
       loadSessions();
     }
   }, [user]);
@@ -233,6 +236,17 @@ export default function Home() {
     }
   };
 
+  const handleCancelEdit = () => {
+      setIsEditing(false);
+      setEditingSession(null);
+    };
+
+
+  const handleSaveComplete = async (updatedSession: TimeSession) => {
+      await loadSessions();
+      setIsEditing(false);
+      setEditingSession(null);
+    };
 
 
 
@@ -339,6 +353,14 @@ export default function Home() {
 
   return (
     <div className="bg-gray-900 min-h-screen h-full w-full">
+      {isEditing && editingSession && (
+              <Edit
+                editingSession={editingSession}
+                onCancel={handleCancelEdit}
+                onSave={handleSaveComplete}
+                user={user}
+              />
+            )}
         
         <Navbar />
 
@@ -521,6 +543,11 @@ export default function Home() {
                             onMouseLeave={handleMouseLeave}
                             onMouseMove={handleMouseMove}
 
+                            onClick={() => {
+                              setEditingSession(session)
+                              setIsEditing(true);
+                            }}
+
                           >
                               <div className='text-sm'> {session.group}</div>
                               <div className='text-xs'> {session.duration ? formatTime(session.duration) : ''}</div>
@@ -575,7 +602,8 @@ export default function Home() {
             style={{
               left: `${tooltipPosition.x + 10}px`,
               top: `${tooltipPosition.y - 10}px`,
-            }}>
+            }}
+            >
 
             {(() => {
               const session = sessions.find(s => s.id === hoveredSession);

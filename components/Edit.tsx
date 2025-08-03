@@ -109,9 +109,7 @@ export default function Edit({
   };
 
   return (
-    <div 
-    className="fixed inset-0 bg-black/40 backdrop-blur-sm bg-opacity-50 flex items-center justify-center z-20">
-       <div className="bg-gray-700 p-8 rounded-lg w-1/2 max-w-lg">
+       <div className="bg-gray-700 p-8 rounded-lg w-full max-w-lg mx-4 z-50">
 
 
          <h2 className="text-xl font-semibold mb-4">Edit Time Entry</h2>
@@ -184,6 +182,6 @@ export default function Edit({
            </button>
          </div>
        </div>
-     </div>
+     
   );
 }
