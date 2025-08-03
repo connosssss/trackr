@@ -60,6 +60,7 @@ export default function Home() {
   });
 
   const loadSessions = async () => {
+        if (!user) return;
         setIsLoadingSessions(true);
         try {
           const data = await fetchTimeSessions(user);
@@ -181,8 +182,10 @@ export default function Home() {
     
     );
       
-      const updatedSessions = await fetchTimeSessions(user);
-      setSessions(updatedSessions);
+      if (user) {
+        const updatedSessions = await fetchTimeSessions(user);
+        setSessions(updatedSessions);
+      }
       setIsTracking(false);
       
       setTimer(duration);
