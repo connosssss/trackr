@@ -109,7 +109,7 @@ export default function Edit({
   };
 
   return (
-       <div className="bg-gray-700 p-8 rounded-lg w-full max-w-lg mx-4 z-50">
+       <div className="bg-gray-700 p-8 rounded-lg w-full max-w-lg mx-4 z-50" onClick={(e) => e.stopPropagation()}>
 
 
          <h2 className="text-xl font-semibold mb-4">Edit Time Entry</h2>

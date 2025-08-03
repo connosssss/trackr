@@ -354,12 +354,15 @@ export default function Home() {
   return (
     <div className="bg-gray-900 min-h-screen h-full w-full">
       {isEditing && editingSession && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm bg-opacity-50 flex items-center justify-center z-20"
+        onClick={handleCancelEdit}>
               <Edit
                 editingSession={editingSession}
                 onCancel={handleCancelEdit}
                 onSave={handleSaveComplete}
                 user={user}
               />
+          </div>
             )}
         
         <Navbar />
