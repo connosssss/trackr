@@ -3,8 +3,8 @@
 import { useState, useEffect  } from 'react'; 
 import { useAuth } from "@/context/AuthContext";
 import { fetchTimeSessions, fetchGroupList, updateGroupList, GroupStat } from "@/utils/timeSessionsDB";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid,
-    LineChart, Line, AreaChart, Area } from 'recharts';
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid,
+    LineChart, Line, AreaChart, Area, Tooltip } from 'recharts';
 
 
 
@@ -34,6 +34,7 @@ export default function LoginPage() {
     const [sessions, setSessions] = useState<Session[]>([]);
     const [selectedPeriod, setSelectedPeriod] = useState<'week' | 'month' | '3months' | 'year' | 'alltime'>('week');
     const [chartType, setChartType] = useState<'bar' | 'line' | 'area'>('bar');
+    const [hoveredSlice, setHoveredSlice] = useState<number | null>(null);
     
     const formatTime = (seconds: number) => {
         const hours = Math.floor(seconds / 3600);
@@ -57,7 +58,9 @@ export default function LoginPage() {
         return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
     };
 
-    const preparePieChartData = () => {
+    const createPieSlices = () => {
+
+
         const groupMap = new Map<string, number>();
         
         sessions.forEach(session => {
@@ -66,11 +69,53 @@ export default function LoginPage() {
             groupMap.set(groupName, currentTime + (session.duration || 0));
         });
         
-        return Array.from(groupMap.entries()).map(([name, value]) => ({
+
+        const data = Array.from(groupMap.entries()).map(([name, value]) => ({
                 name,
                 value,
                 color: stringToColor(name)
-            })).sort((a, b) => b.value - a.value); 
+            })).sort((a, b) => b.value - a.value);
+
+
+        const total = data.reduce((sum, item) => sum + item.value, 0);
+        let cumulativeAngle = 0;
+        const radius = 130;
+        const centerX = 150;
+        const centerY = 150;
+
+
+        const degToRad = (deg: number) => (deg - 90) * Math.PI / 180;
+
+        return data.map((item, index) => {
+            
+            const percentage = Math.round((item.value / total) * 1000) / 10;
+            const angle = (item.value / total) * 360;
+            const startAngle = cumulativeAngle;
+            const endAngle = cumulativeAngle + angle;
+            
+            const startRad = degToRad(startAngle);
+            const endRad = degToRad(endAngle);
+            
+            const x1 = centerX + radius * Math.cos(startRad);
+            const y1 = centerY + radius * Math.sin(startRad);
+            const x2 = centerX + radius * Math.cos(endRad);
+            const y2 = centerY + radius * Math.sin(endRad);
+            
+            const largeArcFlag = angle > 180 ? 1 : 0;
+            
+            const pathData = `M ${centerX} ${centerY} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2} Z`;
+
+            cumulativeAngle += angle;
+
+            return {
+                pathData,
+                color: item.color,
+                name: item.name,
+                value: item.value,
+                percentage,
+                index
+            };
+        });
     };
 
     const prepareBarChartData = () => {
@@ -301,8 +346,8 @@ export default function LoginPage() {
         }
       }, [user]);
 
-    const pieChartData = preparePieChartData();
     const barChartData = prepareBarChartData();
+    const pieSlices = createPieSlices();
 
   return (<><Navbar/>
     <div className="min-h-screen w-full bg-gray-900 pb-16 pt-10">
@@ -438,43 +483,49 @@ export default function LoginPage() {
                     <div className="flex items-center justify-center h-80">
                         Loading...
                     </div>
-                ) : pieChartData.length === 0 ? (
+                ) : pieSlices.length === 0 ? (
                     <div className="flex items-center justify-center h-80">
                         <p className="text-lg opacity-75">No data available</p>
                     </div>
                 ) : (
                     <div className="h-full w-full">
+
                         <div className='text-center text-2xl font-semibold'> Group Breakdown </div>
-                            <ResponsiveContainer width="100%" height="90%">
-                                <PieChart>
+                        <div className="flex items-center justify-center h-80">
 
-                                    <Pie
-                                        data={pieChartData}
-                                        dataKey="value"
-                                        stroke="#0"
-                                    >
+                            <div className="relative">
 
-                                        {pieChartData.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={entry.color} />
-                                        ))}
+                                <svg width="300" height="300" className="transform -rotate-90">
 
-                                    </Pie>
+                                    {pieSlices.map((slice, index) => (
+                                        <path
+                                            key={index}
+                                            d={slice.pathData}
+                                            fill={slice.color}
+                                            stroke="#1f2937"
+                                            strokeWidth="2"
+                                            className={`transition-all duration-200 cursor-pointer ${
+                                                hoveredSlice === index ? 'opacity-80' : 'opacity-100'}`}
 
-                                    <Tooltip 
-                                        formatter={(value: number, name: string) => [
-                                            <span style={{ color: '#d1d5db' }}>{name}: {formatTime(value)}</span>
-                                        ]}
-                                        
-                                        labelFormatter={() => ""}
-                                        contentStyle={{
-                                            backgroundColor: '#1f2937',
-                                            border: '1px solid #374151',
-                                            borderRadius: '8px',
-                                        }}
-                                    />
-                                </PieChart>
-                            </ResponsiveContainer>
-                       
+                                            onMouseEnter={() => setHoveredSlice(index)}
+                                            onMouseLeave={() => setHoveredSlice(null)}
+                                        />
+                                    ))}
+
+                                </svg>
+
+                                {hoveredSlice !== null && pieSlices[hoveredSlice] && (
+                                    <div className="absolute bg-gray-700/60 text-white px-3 py-2 rounded-lg text-sm pointer-events-none shadow-lg
+                                    top-1/3 transform -translate-x-24">
+                                                        
+                                        <div className="font-semibold">{pieSlices[hoveredSlice].name}</div>
+                                        <div>{formatTime(pieSlices[hoveredSlice].value)}</div>
+                                        <div className="text-xs opacity-75">{pieSlices[hoveredSlice].percentage}%</div>
+                                    </div>
+                                )}
+                                
+                            </div>
+                        </div>
                         
                     </div>
                 )}
