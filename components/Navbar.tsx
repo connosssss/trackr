@@ -40,6 +40,10 @@ export default function Navbar() {
         <Link href="/statistics" className="hover:scale-125 transition-all duration-300 z-30">
           <div>Statistics</div>
         </Link>
+
+        <Link href="/graphs" className="hover:scale-125 transition-all duration-300 z-30">
+          <div>Graphs</div>
+        </Link>
         <Link href="/user" className="hover:scale-125 transition-all duration-300 z-30">
           <div>User Info</div>
         </Link>
