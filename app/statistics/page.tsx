@@ -20,7 +20,7 @@ interface Session {
   }
 
 
-export default function LoginPage() {
+export default function stats() {
 
     const { user } = useAuth();
 
@@ -35,6 +35,18 @@ export default function LoginPage() {
     const [selectedPeriod, setSelectedPeriod] = useState<'week' | 'month' | '3months' | 'year' | 'alltime'>('week');
     const [chartType, setChartType] = useState<'bar' | 'line' | 'area'>('bar');
     const [hoveredSlice, setHoveredSlice] = useState<number | null>(null);
+
+
+
+
+    const sample = [[0,1,0,1,0,1,0, 0,1,0,1,0,1,0, 0,1,0,1,0,1,0, 1,1,1],
+                    [0,1,0,1,0,1,0, 0,1,0,1,0,1,0, 0,1,0,1,0,1,0, 1,1,1],
+                    [0,1,0,1,0,1,0, 0,1,0,1,0,1,0, 0,1,0,1,0,1,0, 1,1,1],
+                    [0,1,0,1,0,1,0, 0,1,0,1,0,1,0, 0,1,0,1,0,1,0, 1,1,1],
+                    [0,1,0,1,0,1,0, 0,1,0,1,0,1,0, 0,1,0,1,0,1,0, 1,1,1],
+                    [0,1,0,1,0,1,0, 0,1,0,1,0,1,0, 0,1,0,1,0,1,0, 1,1,1],
+                    [0,1,0,1,0,1,0, 0,1,0,1,0,1,0, 0,1,0,1,0,1,0, 1,1,1]       
+                    ]
     
     const formatTime = (seconds: number) => {
         const hours = Math.floor(seconds / 3600);
@@ -393,7 +405,25 @@ export default function LoginPage() {
                 )}
             </div>
 
-            
+            <div className='w-1/2 bg-gray-800 rounded-md shadow-lg shadow-indigo-900/20 p-6 flex flex-col items-center'>
+                <h1 className='font-semibold text-2xl'>Activity by the Hour</h1>
+                <div className='grid grid-cols-24 w-11/12 h-11/12 bg-gray-700/20'>
+                    {sample.map((percents, rowIndex) => (
+                        <div key={rowIndex}>
+
+                            {percents.map((val, colIndex) => (
+                                <div key={`${rowIndex}-${colIndex}`} className="bg-amber-200/20 p-2">
+                                    {val}
+                                </div>
+                            ))}
+
+                        </div>
+
+                    )
+                )}
+                </div>
+
+            </div>
 
         </div>
     </div>
