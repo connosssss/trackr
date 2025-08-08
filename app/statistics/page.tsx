@@ -36,17 +36,8 @@ export default function stats() {
     const [chartType, setChartType] = useState<'bar' | 'line' | 'area'>('bar');
     const [hoveredSlice, setHoveredSlice] = useState<number | null>(null);
 
-
-
-
-    const sample = [[0,1,0,1,0,1,0, 0,1,0,1,0,1,0, 0,1,0,1,0,1,0, 1,1,1],
-                    [0,1,0,1,0,1,0, 0,1,0,1,0,1,0, 0,1,0,1,0,1,0, 1,1,1],
-                    [0,1,0,1,0,1,0, 0,1,0,1,0,1,0, 0,1,0,1,0,1,0, 1,1,1],
-                    [0,1,0,1,0,1,0, 0,1,0,1,0,1,0, 0,1,0,1,0,1,0, 1,1,1],
-                    [0,1,0,1,0,1,0, 0,1,0,1,0,1,0, 0,1,0,1,0,1,0, 1,1,1],
-                    [0,1,0,1,0,1,0, 0,1,0,1,0,1,0, 0,1,0,1,0,1,0, 1,1,1],
-                    [0,1,0,1,0,1,0, 0,1,0,1,0,1,0, 0,1,0,1,0,1,0, 1,1,1]       
-                    ]
+    const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const hourLabels = Array.from({length: 24}, (_, i) => i.toString().padStart(2, '0'));
     
     const formatTime = (seconds: number) => {
         const hours = Math.floor(seconds / 3600);
@@ -70,6 +61,49 @@ export default function stats() {
         return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
     };
 
+    const createActivityHeatmap = () => {
+        // hopefully works right
+        const heatmapArray: number[][] = Array(7).fill(null).map(() => Array(24).fill(0));
+        
+        sessions.forEach(session => {
+            if (!session.start_time || !session.duration) return;
+            
+            const startTime = new Date(session.start_time);
+            const endTime = session.end_time ? new Date(session.end_time) : new Date(startTime.getTime() + (session.duration * 1000));
+           
+            const dayOfWeek = startTime.getDay();
+            let time = new Date(startTime);
+            const sessionEndTime = new Date(endTime);
+    
+
+            while (time < sessionEndTime) {
+                const hour = time.getHours();
+                const nextHour = new Date(time);
+                nextHour.setHours(hour + 1, 0, 0, 0);
+                
+                const periodEnd = nextHour > sessionEndTime ? sessionEndTime : nextHour;
+                const timeInThisHour = (periodEnd.getTime() - time.getTime()) / 1000;
+                
+                heatmapArray[dayOfWeek][hour] += timeInThisHour;
+                
+                time = nextHour;
+             
+            }
+        });
+        
+        const maxValue = Math.max(...heatmapArray.flat());
+        return heatmapArray.map(day => 
+            day.map(hour => maxValue > 0 ? hour / maxValue : 0)
+        );
+    };
+
+    const getColorIntensity = (intensity: number) => {
+        if (intensity === 0) return 'rgba(34, 197, 94, 0.1)'; 
+
+        const opacity = Math.max(0.25, intensity); 
+        return `rgba(34, 197, 94, ${opacity})`;
+    };
+
     const createPieSlices = () => {
 
 
@@ -77,8 +111,8 @@ export default function stats() {
         
         sessions.forEach(session => {
             const groupName = session.group || 'No Group';
-            const currentTime = groupMap.get(groupName) || 0;
-            groupMap.set(groupName, currentTime + (session.duration || 0));
+            const time = groupMap.get(groupName) || 0;
+            groupMap.set(groupName, time + (session.duration || 0));
         });
         
 
@@ -222,6 +256,7 @@ export default function stats() {
         }
       }, [user]);
     const pieSlices = createPieSlices();
+    const heatmapArray = createActivityHeatmap();
 
   return (<><Navbar/>
     <div className="min-h-screen w-full bg-gray-900 pb-16 pt-10">
@@ -405,24 +440,72 @@ export default function stats() {
                 )}
             </div>
 
-            <div className='w-1/2 bg-gray-800 rounded-md shadow-lg shadow-indigo-900/20 p-6 flex flex-col items-center'>
-                <h1 className='font-semibold text-2xl'>Activity by the Hour</h1>
-                <div className='grid grid-cols-24 w-11/12 h-11/12 bg-gray-700/20'>
-                    {sample.map((percents, rowIndex) => (
-                        <div key={rowIndex}>
+            <div className='w-1/2 bg-gray-800 rounded-md shadow-lg shadow-indigo-900/20 p-6 flex flex-col items-center justify-center gap-6'>
+                <h1 className='font-semibold text-2xl mb-4'>Activity by the Hour</h1>
 
-                            {percents.map((val, colIndex) => (
-                                <div key={`${rowIndex}-${colIndex}`} className="bg-amber-200/20 p-2">
-                                    {val}
+                {
+                isLoading ? (
+                    <div className="flex items-center justify-center h-full">
+                        Loading...
+                    </div>) : (
+
+                    <div className='w-full h-full flex flex-col items-center'>
+
+                        
+                        <div className='grid grid-cols-24 gap-1 w-[92%] ml-10  mb-2 text-xs text-gray-400'>
+                            {hourLabels.map((hour, index) => (
+                                <div key={hour} className={`text-center ${index % 3 == 0 ? 'opacity-100' : 'opacity-0'}`}>
+                                    {hour}
                                 </div>
                             ))}
-
                         </div>
+                        
+                       
+                        <div className='flex flex-col gap-1 w-full'>
+                            {heatmapArray.map((dayData, dayIndex) => (
+                                <div key={dayIndex} className='flex gap-1 items-center'>
+                                 
+                                    <div className='w-8 text-xs text-gray-400 text-right mr-2'>
 
-                    )
+                                        {dayLabels[dayIndex] }
+                                        
+                                    </div>
+                                    
+                              
+                                    <div className='grid grid-cols-24 gap-1 flex-1'>
+                                        {dayData.map((intensity, hourIndex) => (
+                                            <div
+                                                key={`${dayIndex}-${hourIndex}`}
+                                                className="aspect-square relative"
+                                                style={{backgroundColor: getColorIntensity(intensity) }}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        
+                        
+                        
+                        
+                        <div className='flex items-center gap-2 mt-4 text-xs text-gray-400'>
+                            <div>Less</div>
+
+                            <div className='flex gap-1'>
+                                
+                                {Array.from({length: 5}, (_, i) => (
+                                    <div
+                                        key={i}
+                                        className="w-3 h-3 rounded-sm"
+                                        style={{ backgroundColor: `rgba(34, 197, 94, ${0.2 + (i * 0.2)})` }}
+                                    />
+                                ))}
+                            </div>
+
+                            <div>More</div>
+                        </div>
+                    </div>
                 )}
-                </div>
-
             </div>
 
         </div>
