@@ -35,6 +35,7 @@ export default function stats() {
     const [selectedPeriod, setSelectedPeriod] = useState<'week' | 'month' | '3months' | 'year' | 'alltime'>('week');
     const [chartType, setChartType] = useState<'bar' | 'line' | 'area'>('bar');
     const [hoveredSlice, setHoveredSlice] = useState<number | null>(null);
+     const [hoveredCell, setHoveredCell] = useState<{row: number, col: number} | null>(null);
 
     const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const hourLabels = Array.from({length: 24}, (_, i) => i.toString().padStart(2, '0'));
@@ -441,7 +442,27 @@ export default function stats() {
             </div>
 
             <div className='w-1/2 bg-gray-800 rounded-md shadow-lg shadow-indigo-900/20 p-6 flex flex-col items-center justify-center gap-6'>
-                <h1 className='font-semibold text-2xl mb-4'>Activity by the Hour</h1>
+            <div className='flex flex-row w-full text-center items-center '>
+                <div className=" absolute pointer-events-none z-10  rounded-md   text-center font-semibold bg-gray-700/20  h-20 pt-1 w-[11%]">
+                                {hoveredCell && (<div className='justify-center items-center'>
+                                <div>
+
+                                    {dayLabels[hoveredCell.row]} at {hourLabels[hoveredCell.col]}:00
+                                </div>
+
+                                <div>
+                                    {formatTime(Math.round(heatmapArray[hoveredCell.row][hoveredCell.col] * Math.max(...heatmapArray.flat()) * 3600))}
+                                </div>
+
+                                <div>
+                                    {(heatmapArray[hoveredCell.row][hoveredCell.col] * 100).toFixed(1)}%
+                                </div></div>)}
+
+                            </div>
+                            <h1 className='font-semibold text-2xl mb-4 w-full mt-2'>Activity by the Hour</h1>
+                
+                </div>
+                
 
                 {
                 isLoading ? (
@@ -476,8 +497,10 @@ export default function stats() {
                                         {dayData.map((intensity, hourIndex) => (
                                             <div
                                                 key={`${dayIndex}-${hourIndex}`}
-                                                className="aspect-square relative"
+                                                className="aspect-square relative rounded-sm"
                                                 style={{backgroundColor: getColorIntensity(intensity) }}
+                                                onMouseEnter={() => setHoveredCell({row: dayIndex, col: hourIndex})}
+                                                onMouseLeave={() => setHoveredCell(null)}
                                             />
                                         ))}
                                     </div>
@@ -485,6 +508,8 @@ export default function stats() {
                             ))}
                         </div>
                         
+                        
+                            
                         
                         
                         
