@@ -189,15 +189,16 @@ export default function LoginPage() {
 
 
   return (
-    <div className="flex  bg-gray-900 w-full items-center justify-center h-screen  ">
+    <div className="bg-gray-900 w-full">
+    <div className="flex flex-col bg-gray-900 w-[95%] items-center  h-screen  ">
         <Navbar/>
 
-            <div className='w-[90%] h-[50%] bg-gray-800 rounded-md shadow-lg shadow-indigo-900/20 p-6'>
-                <div className="flex justify-between items-center mb-4">
+            
+                <div className="flex  mb-4 flex-row w-full justify-between">
                     <select
                         value={selectedPeriod}
                         onChange={(e) => setSelectedPeriod(e.target.value as 'week' | 'month' | '3months' | 'year' | 'alltime')}
-                        className="bg-gray-800 text-white rounded px-3 py-1 border border-gray-500 
+                        className="bg-gray-800 text-white rounded px-9 py-3 border border-gray-500 text-md mt-5 ml-5
                         focus:outline-none focus:border-gray-400"
                     >
 
@@ -209,11 +210,11 @@ export default function LoginPage() {
 
                     </select>
                     
-                    <div className='text-xl font-semibold'> Quick Graph</div>
+                    <div className='text-3xl font-semibold mt-5'> Time Graph</div>
                     <select
                         value={chartType}
                         onChange={(e) => setChartType(e.target.value as 'bar' | 'line' | 'area')}
-                        className="bg-gray-800 text-white rounded px-3 py-1 border border-gray-500 
+                        className="bg-gray-800 text-white rounded px-9 py-3 border border-gray-500 text-md mt-5 
                         focus:outline-none focus:border-gray-400"
                         >
                         <option value="bar">Bar Chart</option>
@@ -236,7 +237,7 @@ export default function LoginPage() {
 
                 ) : (
 
-                    <div className="h-80 w-full">
+                    <div className="h-[95%] w-full">
 
                         <ResponsiveContainer width="100%" height="100%">
                             {chartType === 'bar' ? (
@@ -340,7 +341,6 @@ export default function LoginPage() {
                         </ResponsiveContainer>
                     </div>
                 )}
-            </div>
-  </div>
+  </div></div>
   );
 }
