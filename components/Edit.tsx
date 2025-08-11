@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { updateTimeSession } from "@/utils/timeSessionsDB";
+import { updateTimeSession, deleteTimeSession, updateGroupList } from "@/utils/timeSessionsDB";
 import { User } from '@supabase/supabase-js';
 
 interface TimeSession {
@@ -18,6 +18,7 @@ interface EditProps {
   editingSession: TimeSession;
   onCancel: () => void;
   onSave: (updatedSession: TimeSession) => void;
+  onDelete: () => void;
   user: User | null;
 }
 
@@ -25,6 +26,7 @@ export default function Edit({
   editingSession,
   onCancel,
   onSave,
+  onDelete,
   user
 }: EditProps) {
 
@@ -108,6 +110,25 @@ export default function Edit({
     }
   };
 
+  const handleDelete = async () => {
+        if (!editingSession || !user) return;
+
+        let id = editingSession.id;
+        
+        try {
+          await deleteTimeSession(id);
+          onDelete();
+        } 
+        catch (error) {
+          console.error("Error deleting session:", error);
+        }
+        finally{
+          await updateGroupList;
+
+        }
+      };
+  
+
   return (
        <div className="bg-gray-700 p-8 rounded-lg w-full max-w-lg mx-4 z-50" onClick={(e) => e.stopPropagation()}>
 
@@ -172,6 +193,13 @@ export default function Edit({
              "
            >
              Cancel
+           </button>
+           <button
+             onClick={handleDelete}
+             className="px-4 py-2 bg-red-600/30 text-white rounded 
+             "
+           >
+             Delete
            </button>
            <button
              onClick={handleSaveEdit}

@@ -251,6 +251,12 @@ export default function Home() {
       setEditingSession(null);
     };
 
+  const handleDeleteComplete = async () => {
+      await loadSessions();
+      setIsEditing(false);
+      setEditingSession(null);
+    };
+
 
 
   const getWeek = () => {
@@ -363,6 +369,7 @@ export default function Home() {
                 editingSession={editingSession}
                 onCancel={handleCancelEdit}
                 onSave={handleSaveComplete}
+                onDelete={handleDeleteComplete}
                 user={user}
               />
           </div>
