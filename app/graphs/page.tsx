@@ -18,6 +18,22 @@ export default function LoginPage() {
     const { user } = useAuth();
 
 
+    const [currentWeekStart, setCurrentWeekStart] = useState(() => {
+        const today = new Date();
+        const dayOfWeek = today.getDay();
+        const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+        const monday = new Date(today);
+        monday.setDate(today.getDate() + mondayOffset);
+        monday.setHours(0, 0, 0, 0);
+        return monday;
+    });
+
+    const [currentMonth, setCurrentMonth] = useState(() => {
+        const today = new Date();
+        return new Date(today.getFullYear(), today.getMonth(), 1);
+    });
+
+
 
     
     useEffect(() => {
@@ -39,28 +55,69 @@ export default function LoginPage() {
     }, [user]);
 
 
+    //week from main
+    //need years, month working
+    const changeWeek = (direction: 'before' | 'later') => {
+        const newWeekStart = new Date(currentWeekStart);
+        newWeekStart.setDate(currentWeekStart.getDate() + (direction === 'later' ? 7 : -7));
+        setCurrentWeekStart(newWeekStart);
+    };
+
+    const changeMonth = (direction: 'before' | 'later') => {
+        const newMonth = new Date(currentMonth);
+        newMonth.setMonth(currentMonth.getMonth() + (direction === 'later' ? 1 : -1));
+        setCurrentMonth(newMonth);
+    };
+
+
+
+    const formatWeekRange = () => {
+
+        const weekEnd = new Date(currentWeekStart);
+        weekEnd.setDate(currentWeekStart.getDate() + 6);
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        
+        if (currentWeekStart.getMonth() === weekEnd.getMonth()) {
+            return `${monthNames[currentWeekStart.getMonth()]} ${currentWeekStart.getDate()}-${weekEnd.getDate()}, ${currentWeekStart.getFullYear()}`;
+        } else {
+            return `${monthNames[currentWeekStart.getMonth()]} ${currentWeekStart.getDate()} - ${monthNames[weekEnd.getMonth()]} ${weekEnd.getDate()}, ${currentWeekStart.getFullYear()}`;
+        }
+    };
+
+    const formatMonthRange = () => {
+        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        return `${monthNames[currentMonth.getMonth()]}   ${currentMonth.getFullYear()}`;
+    };
+
     const prepareChartData = () => {
         if (sessions.length === 0) return [];
 
         const now = new Date();
         let startDate: Date;
+        let endDate: Date;
         let dateLabels: string[] = [];
 
         switch (selectedPeriod) {
 
             case 'week':
-                startDate = new Date(now);
-                startDate.setDate(now.getDate() - 6);
-                for (let i = 6; i >= 0; i--) {
-                    const date = new Date(now);
-                    date.setDate(now.getDate() - i);
+                startDate = new Date(currentWeekStart);
+                endDate = new Date(currentWeekStart);
+                endDate.setDate(currentWeekStart.getDate() + 6);
+                endDate.setHours(23, 59, 59, 999);
+                
+                for (let i = 0; i < 7; i++) {
+                    const date = new Date(currentWeekStart);
+                    date.setDate(currentWeekStart.getDate() + i);
                     dateLabels.push(date.toLocaleDateString('en-US', { weekday: 'short' }));
                 }
                 break;
 
             case 'month':
-                startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-                const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+                startDate = new Date(currentMonth);
+                endDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
+                endDate.setHours(23, 59, 59, 999);
+                
+                const daysInMonth = endDate.getDate();
                 for (let i = 1; i <= daysInMonth; i++) {
                     dateLabels.push(i.toString());
                 }
@@ -131,7 +188,7 @@ export default function LoginPage() {
 
             switch (selectedPeriod) {
                 case 'week':
-                    if (sessionDate >= startDate) {
+                    if (sessionDate >= startDate && sessionDate <= endDate) {
                         key = sessionDate.toLocaleDateString('en-US', { weekday: 'short' });
                         if (dataMap.has(key)) {
                             dataMap.set(key, dataMap.get(key)! + (session.duration / 3600)); // Convert to hours
@@ -140,7 +197,7 @@ export default function LoginPage() {
                     break;
 
                 case 'month':
-                    if (sessionDate.getMonth() === now.getMonth() && sessionDate.getFullYear() === now.getFullYear()) {
+                    if (sessionDate >= startDate && sessionDate <= endDate) {
                         key = sessionDate.getDate().toString();
                         if (dataMap.has(key)) {
                             dataMap.set(key, dataMap.get(key)! + (session.duration / 3600));
@@ -190,7 +247,7 @@ export default function LoginPage() {
 
   return (
     <div className="bg-gray-900 w-full">
-    <div className="flex flex-col bg-gray-900 w-[95%] items-center  h-screen  ">
+    <div className="flex flex-col bg-gray-900 w-[95%] items-center  h-full   ">
         <Navbar/>
 
             
@@ -202,8 +259,8 @@ export default function LoginPage() {
                         focus:outline-none focus:border-gray-400"
                     >
 
-                        <option value="week">Last 7 Days</option>
-                        <option value="month">This Month</option>
+                        <option value="week">Week</option>
+                        <option value="month">Month</option>
                         <option value="3months">Last 3 Months</option>
                         <option value="year">This Year</option>
                         <option value="alltime">All Time</option>
@@ -222,6 +279,34 @@ export default function LoginPage() {
                         <option value="area">Area Chart</option>
                     </select>
                 </div>
+
+                
+                {
+                (selectedPeriod === 'week' || selectedPeriod === 'month') && (
+
+                    <div className="flex justify-center gap-3 items-center py-3 w-full  mb-4 ml-9">
+                        <button 
+                            onClick={() => selectedPeriod === 'week' ? changeWeek('before') : changeMonth('before')}
+                            className="text-white bg-gray-700 px-3 py-1 rounded-md hover:bg-gray-500 transition-all duration-300"
+                        >
+                            ← 
+                        </button>
+
+                        <div className="text-white text-lg font-medium  w-auto">
+                            {selectedPeriod === 'week' ? formatWeekRange() : formatMonthRange()}
+                        </div>
+                        
+                        <button 
+                            onClick={() => selectedPeriod === 'week' ? changeWeek('later') : changeMonth('later')}
+                            className="text-white bg-gray-700 px-3 py-1 rounded-md hover:bg-gray-500 transition-all duration-300"
+                        >
+                            →
+                        </button>
+
+                        
+                    </div>
+
+                )}
 
                 {isLoading ? (
 
