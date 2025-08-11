@@ -539,9 +539,7 @@ export default function stats() {
                 <div>
                     {dayLabels[hoveredCell.row]} at {hourLabels[hoveredCell.col]}:00
                 </div>
-                <div>
-                    {formatTime(Math.round(heatmapArray[hoveredCell.row][hoveredCell.col] * Math.max(...heatmapArray.flat()) * 3600))}
-                </div>
+               
                 <div>
                     {(heatmapArray[hoveredCell.row][hoveredCell.col] * 100).toFixed(1)}%
                 </div>
