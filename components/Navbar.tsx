@@ -44,8 +44,9 @@ export default function Navbar() {
         <Link href="/graphs" className="hover:scale-125 transition-all duration-300 z-30">
           <div>Graphs</div>
         </Link>
+        
         <Link href="/user" className="hover:scale-125 transition-all duration-300 z-30">
-          <div>User Info</div>
+          <div>Settings</div>
         </Link>
       </div>
     </div>

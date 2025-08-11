@@ -40,7 +40,7 @@ export default function Edit({
       const startOffset = startTime.getTimezoneOffset() * 60000;
       const localStartTime = new Date(startTime.getTime() - startOffset);
       const startt = localStartTime.toISOString().slice(0, 19);
-      
+
       let endt = '';
       if (editingSession.end_time) {
         const endTime = new Date(editingSession.end_time);
@@ -48,7 +48,7 @@ export default function Edit({
         const localEndTime = new Date(endTime.getTime() - endOffset);
         endt = localEndTime.toISOString().slice(0, 19);
       }
-      
+
       setStartDateTime(startt);
       setEndDateTime(endt);
       setEditGroup(editingSession.group || '');
@@ -65,10 +65,10 @@ export default function Edit({
 
   const calculateDuration = () => {
     if (!startDateTime) return 0;
-    
+
     const start = new Date(startDateTime);
     let end = new Date(endDateTime);
-    
+
     return Math.max(0, Math.floor((end.getTime() - start.getTime()) / 1000));
 
   };
@@ -84,16 +84,16 @@ export default function Edit({
 
   const handleSaveEdit = async () => {
     if (!editingSession || !user) return;
-    
+
     try {
       const startTime = new Date(startDateTime);
-      
+
       let endTime = null;
       let duration = null;
-      
+
       endTime = new Date(endDateTime);
       duration = Math.floor((endTime.getTime() - startTime.getTime()) / 1000);
-      
+
       const updatedSession: TimeSession = {
         ...editingSession,
         user_id: user.id,
@@ -102,7 +102,7 @@ export default function Edit({
         duration: duration,
         group: editGroup || null
       };
-      
+
       await updateTimeSession(updatedSession as any);
       onSave(updatedSession);
     } catch (error) {
@@ -111,102 +111,102 @@ export default function Edit({
   };
 
   const handleDelete = async () => {
-        if (!editingSession || !user) return;
+    if (!editingSession || !user) return;
 
-        let id = editingSession.id;
-        
-        try {
-          await deleteTimeSession(id);
-          await updateGroupList(user);
-          onDelete();
-        } 
-        catch (error) {
-          console.error("Error deleting session:", error);
-        }
-      };
-  
+    let id = editingSession.id;
+
+    try {
+      await deleteTimeSession(id);
+      await updateGroupList(user);
+      onDelete();
+    }
+    catch (error) {
+      console.error("Error deleting session:", error);
+    }
+  };
+
 
   return (
-       <div className="bg-gray-700 p-8 rounded-lg w-full max-w-lg mx-4 z-50" onClick={(e) => e.stopPropagation()}>
+    <div className="bg-gray-700 p-8 rounded-lg w-full max-w-lg mx-4 z-50" onClick={(e) => e.stopPropagation()}>
 
 
-         <h2 className="text-xl font-semibold mb-4">Edit Time Entry</h2>
-         
-         <div className="space-y-4">
-           <div>
-             <label className="block text-sm font-medium mb-1">Start Time</label>
-             <input 
-               type="datetime-local" 
-               value={startDateTime}
-               onChange={(e) => handleStartTimeChange(e.target.value)}
-               step="1"
-               className="w-full p-2 rounded bg-gray-800 text-white"
-             />
-           </div>
-           
-           <div>
-            
-             <label className="block text-sm font-medium mb-1">End Time</label>
-             <div className="flex gap-2">
+      <h2 className="text-xl font-semibold mb-4">Edit Time Entry</h2>
 
-               <input 
-                 type="datetime-local" 
-                 value={endDateTime}
-                 onChange={(e) => handleEndTimeChange(e.target.value)}
-                 step="1"
-                 className="flex-1 p-2 rounded bg-gray-800 text-white disabled:opacity-50"
-               />
+      <div className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium mb-1">Start Time</label>
+          <input
+            type="datetime-local"
+            value={startDateTime}
+            onChange={(e) => handleStartTimeChange(e.target.value)}
+            step="1"
+            className="w-full p-2 rounded bg-gray-800 text-white"
+          />
+        </div>
 
-             </div>
-           </div>
+        <div>
 
-           <div className="bg-gray-800 p-3 rounded">
-             <div className="text-sm text-gray-300 mb-1">Duration</div>
-             <div className="text-lg font-mono text-white">
-               {formatDuration(calculateDuration())}
-             </div>
-           </div>
-           
+          <label className="block text-sm font-medium mb-1">End Time</label>
+          <div className="flex gap-2">
 
-           <div>
+            <input
+              type="datetime-local"
+              value={endDateTime}
+              onChange={(e) => handleEndTimeChange(e.target.value)}
+              step="1"
+              className="flex-1 p-2 rounded bg-gray-800 text-white disabled:opacity-50"
+            />
 
-             <label className="block text-sm font-medium mb-1">Group</label>
-             <input 
-               type="text" 
-               value={editGroup}
-               onChange={(e) => setEditGroup(e.target.value)}
-               className="w-full p-2 rounded bg-gray-800 text-white"
-               placeholder="Group name"
-             />
-           </div>
-         </div>
-         
-         <div className="flex justify-end mt-6 gap-3">
+          </div>
+        </div>
+
+        <div className="bg-gray-800 p-3 rounded">
+          <div className="text-sm text-gray-300 mb-1">Duration</div>
+          <div className="text-lg font-mono text-white">
+            {formatDuration(calculateDuration())}
+          </div>
+        </div>
 
 
-           <button
-             onClick={onCancel}
-             className="px-4 py-2 bg-gray-600 text-white rounded 
+        <div>
+
+          <label className="block text-sm font-medium mb-1">Group</label>
+          <input
+            type="text"
+            value={editGroup}
+            onChange={(e) => setEditGroup(e.target.value)}
+            className="w-full p-2 rounded bg-gray-800 text-white"
+            placeholder="Group name"
+          />
+        </div>
+      </div>
+
+      <div className="flex justify-end mt-6 gap-3">
+
+
+        <button
+          onClick={onCancel}
+          className="px-4 py-2 bg-gray-600 text-white rounded 
              "
-           >
-             Cancel
-           </button>
-           <button
-             onClick={handleDelete}
-             className="px-4 py-2 bg-red-600/30 text-white rounded 
+        >
+          Cancel
+        </button>
+        <button
+          onClick={handleDelete}
+          className="px-4 py-2 bg-red-600/30 text-white rounded 
              "
-           >
-             Delete
-           </button>
-           <button
-             onClick={handleSaveEdit}
-             className="px-4 py-2 bg-gray-600 text-white rounded 
+        >
+          Delete
+        </button>
+        <button
+          onClick={handleSaveEdit}
+          className="px-4 py-2 bg-gray-600 text-white rounded 
              "
-           >
-             Save Changes
-           </button>
-         </div>
-       </div>
-     
+        >
+          Save Changes
+        </button>
+      </div>
+    </div>
+
   );
 }
