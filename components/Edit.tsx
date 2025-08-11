@@ -117,14 +117,11 @@ export default function Edit({
         
         try {
           await deleteTimeSession(id);
+          await updateGroupList(user);
           onDelete();
         } 
         catch (error) {
           console.error("Error deleting session:", error);
-        }
-        finally{
-          await updateGroupList;
-
         }
       };
   
