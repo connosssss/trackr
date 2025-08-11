@@ -95,6 +95,12 @@ export default function HistoryPage() {
       setEditingSession(null);
     };
 
+    const handleDeleteFromEdit = async () => {
+      await loadSessions();
+      setIsEditing(false);
+      setEditingSession(null);
+    };
+
     const exportToSheet = async () => {
       if (!sessions || sessions.length === 0) {
         console.log("No sessions to export.");
@@ -224,6 +230,7 @@ export default function HistoryPage() {
           editingSession={editingSession}
           onCancel={handleCancelEdit}
           onSave={handleSaveComplete}
+          onDelete={handleDeleteFromEdit}
           user={user}
         />
         </div>
