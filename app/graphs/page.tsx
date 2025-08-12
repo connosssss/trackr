@@ -127,6 +127,7 @@ export default function LoginPage() {
                 startDate = new Date(now);
                 startDate.setMonth(now.getMonth() - 2);
                 startDate.setDate(1);
+                endDate = new Date(now);
                 for (let i = 0; i < 3; i++) {
                     const date = new Date(now);
                     date.setMonth(now.getMonth() - (2 - i));
@@ -138,6 +139,7 @@ export default function LoginPage() {
                 startDate = new Date(now);
                 startDate.setMonth(0);
                 startDate.setDate(1);
+                endDate = new Date(now);
                 for (let i = 0; i < 12; i++) {
                     const date = new Date(now.getFullYear(), i, 1);
                     dateLabels.push(date.toLocaleDateString('en-US', { month: 'short' }));
@@ -171,6 +173,7 @@ export default function LoginPage() {
                 }
 
                 startDate = firstDate;
+                endDate = new Date(lastDate);
                 break;
         }
 
@@ -191,7 +194,7 @@ export default function LoginPage() {
                     if (sessionDate >= startDate && sessionDate <= endDate) {
                         key = sessionDate.toLocaleDateString('en-US', { weekday: 'short' });
                         if (dataMap.has(key)) {
-                            dataMap.set(key, dataMap.get(key)! + (session.duration / 3600)); // Convert to hours
+                            dataMap.set(key, dataMap.get(key)! + (session.duration / 3600));
                         }
                     }
                     break;
@@ -247,7 +250,7 @@ export default function LoginPage() {
 
   return (
     <div className="bg-gray-900 w-full">
-    <div className="flex flex-col bg-gray-900 w-[95%] items-center  h-full   ">
+    <div className="flex flex-col bg-gray-900 w-[95%] items-center  min-h-screen   ">
         <Navbar/>
 
             
@@ -322,11 +325,12 @@ export default function LoginPage() {
 
                 ) : (
 
-                    <div className="h-[95%] w-full">
+                    <div className="h-[42rem] w-full">
 
                         <ResponsiveContainer width="100%" height="100%">
                             {chartType === 'bar' ? (
                                 <BarChart data={barChartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                                     <XAxis 
                                         dataKey="name" 
                                         stroke="#9ca3af"
@@ -358,6 +362,7 @@ export default function LoginPage() {
                             ) : chartType === 'line' ? (
 
                                 <LineChart data={barChartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                                     <XAxis 
                                         dataKey="name" 
                                         stroke="#9ca3af"
@@ -391,6 +396,7 @@ export default function LoginPage() {
                             ) : (
 
                                 <AreaChart data={barChartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                                     <XAxis 
                                         dataKey="name" 
                                         stroke="#9ca3af"
