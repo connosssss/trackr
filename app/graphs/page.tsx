@@ -8,7 +8,7 @@ import { fetchTimeSessions, TimeSession} from "@/utils/timeSessionsDB";
 import { useAuth } from "@/context/AuthContext";
 
 
-//git url testing
+
 export default function LoginPage() {
 
     const [selectedPeriod, setSelectedPeriod] = useState<'week' | 'month' | '3months' | 'year' | 'alltime'>('week');
