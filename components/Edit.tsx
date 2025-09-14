@@ -186,21 +186,21 @@ export default function Edit({
 
         <button
           onClick={onCancel}
-          className="px-4 py-2 bg-gray-600 text-white rounded 
+          className="px-4 py-2 bg-gray-600 text-white rounded  hover:bg-gray-500  
              "
         >
           Cancel
         </button>
         <button
           onClick={handleDelete}
-          className="px-4 py-2 bg-red-600/30 text-white rounded 
+          className="px-4 py-2 bg-red-600/30 text-white rounded  hover:bg-red-500/30
              "
         >
           Delete
         </button>
         <button
           onClick={handleSaveEdit}
-          className="px-4 py-2 bg-gray-600 text-white rounded 
+          className="px-4 py-2 bg-gray-600 text-white rounded  hover:bg-gray-500  
              "
         >
           Save Changes

@@ -132,8 +132,9 @@ export default function HistoryPage() {
 
                 {isLoadingSessions ? (
 
-                  <div className="w-full h-full flex justify-center align-center">
-                    <p>Loading sessions...</p>
+                  <div className="w-screen h-screen flex justify-center items-center flex-col gap-20">
+                    <p className="text-4xl font-bold">Loading sessions...</p>
+                    <div className=" animate-spin w-16 h-16 rounded-full border-8 border-gray-700 border-b-transparent"/>
                   </div>
 
                 ) : sessions.length === 0 ? (
