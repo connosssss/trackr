@@ -361,7 +361,7 @@ export default function Home() {
 
 
   return (
-    <div className="bg-gray-900 min-h-screen h-full w-full">
+    <div className="bg-[#141318] min-h-screen h-full w-full">
       {isEditing && editingSession && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm bg-opacity-50 flex items-center justify-center z-20"
         onClick={handleCancelEdit}>
@@ -380,7 +380,7 @@ export default function Home() {
         {isLoading ? (
           <div className="w-screen h-screen flex justify-center items-center flex-col gap-20">
           <p className="text-4xl font-bold">Loading sessions...</p>
-          <div className=" animate-spin w-16 h-16 rounded-full border-8 border-gray-700 border-b-transparent"/>
+          <div className=" animate-spin w-16 h-16 rounded-full border-8 border-white/50 border-b-transparent"/>
           
         </div>
         ) : user ? (
@@ -390,7 +390,7 @@ export default function Home() {
             
             
               
-              <div className=" font-mono  flex h-24 items-center transition duration-300 border-b-2 border-gray-600 bg-gray-800/50
+              <div className=" font-mono  flex h-24 items-center transition duration-300 border-b border-white/50 bg-[#0B0A0E]
                  w-full">
                 
                 <div className="ml-5 text-4xl">
@@ -412,20 +412,20 @@ export default function Home() {
                 
                 </div>
 
-                <div className="flex  py-3 border-b-2 border-gray-600 flex-row gap-2 items-center w-full bg-gray-800/50 shadow-lg shadow-indigo-900/20">
+                <div className="flex  py-3 border-b border-white/50 flex-row gap-2 items-center w-full bg-[#0B0A0E] ">
                   {!isTracking ? ( 
                     <button 
                       onClick={startTracking}
-                      className=" text-white bg-gray-700 ml-5 p-2 rounded-md
-                       hover:bg-gray-500 transition-all duration-300"
+                      className=" text-white bg-[#1B1A1F] hover:hover:bg-[#2A292E]  ml-5 p-2 rounded-md
+                       transition-all duration-300"
                     >
                       Start Tracking
                     </button>
                   ) : (
                     <button 
                       onClick={stopTracking}
-                      className=" text-white bg-gray-700 ml-5 p-2 rounded-md
-                       hover:bg-gray-500 transition-all duration-300"
+                      className=" text-white bg-[#1B1A1F] ml-5 p-2 rounded-md
+                       hover:hover:bg-[#2A292E] transition-all duration-300"
                     >
                       Stop Tracking
                     </button>
@@ -437,24 +437,25 @@ export default function Home() {
                   
                   
 
-                  <form onSubmit={handleGroupSubmit} className="flex gap-2 ml-5">
+                  <form onSubmit={handleGroupSubmit} className="flex gap-2 ml-2">
                     <textarea 
-                      className="bg-gray-700 text-white p-2 rounded-md h-10 resize-none"
+                      className="bg-[#1B1A1F] text-white p-2 rounded-md h-10 resize-none"
                       value={groupInput}
                       onChange={(e) => setGroupInput(e.target.value)}
                       placeholder="timetracking group"
                     />
                   </form>
+                  <div className="mx-3 border border-r border-white/50 h-8"/>
                   {pastGroups.length > 0 && pastGroups.slice(0,10).map((group, index) => (
                         <button
                           key={index}
                           onClick={() => selectGroup(group)}
-                          className={`px-3 py-2 rounded-md text-sm transition ml-2
-                            opacity-75
+                          className={`px-3 py-2.5 rounded-md text-sm transition 
+                            
                             ${
                             groupInput === group 
                               ? 'bg-gray-500 text-white' 
-                              : 'bg-gray-600 hover:bg-gray-500'
+                              : 'bg-[#1B1A1F] hover:hover:bg-[#2A292E]'
                           }`}
                         >
                           {group}
@@ -467,13 +468,13 @@ export default function Home() {
                 <div className="flex justify-start gap-3 items-center py-3 w-[93%] mx-5 mt-3">
                   <button 
                       onClick={() => changeWeek('before')}
-                      className="text-white bg-gray-700 px-3 py-1 rounded-md hover:bg-gray-500 transition-all duration-300"
+                      className="text-white bg-[#1B1A1F] px-3 py-1 rounded-md hover:hover:bg-[#2A292E] transition-all duration-300"
                     >
                       ← </button>
                       
                       <button 
                       onClick={() => changeWeek('later')}
-                      className="text-white bg-gray-700 px-3 py-1 rounded-md hover:bg-gray-500 transition-all duration-300"
+                      className="text-white bg-[#1B1A1F] px-3 py-1 rounded-md hover:hover:bg-[#2A292E] transition-all duration-300"
                     > →</button>
 
                 <div className="text-white text-lg font-medium pr-5 min-w-52 ">
@@ -490,11 +491,11 @@ export default function Home() {
 
 
             <div className='h-full flex flex-col pb-20 mx-5 '>
-                <div className='grid grid-flow-col grid-cols-8 w-[95%] border-gray-600 mr-16'>
+                <div className='grid grid-flow-col grid-cols-8 w-[95%] border-white/50 mr-16'>
                   <div className="text-white/40 text-xs border-b flex justify-center items-end "> 12:00 AM</div>
 
                   {getWeek().map((date, index) => (
-                    <div key={index} className=' border-gray-600 border-b h-12 text-white/30 
+                    <div key={index} className=' border-white/50 border-b h-12 text-white/30 
                     text-center flex items-end justify-center'>
                         <div>{formatDateHeader(date)}</div>
                       
@@ -508,7 +509,7 @@ export default function Home() {
                      
                      <React.Fragment key={hour}>
 
-                        <div  className='border-gray-500 border-b border-r h-16 flex justify-center items-end'>
+                        <div  className='border-white/50 border-b border-r h-16 flex justify-center items-end'>
                           <div className="text-white/40 text-xs mb-1 ">{
                           hour === 0 ? '1:00 AM' :
                           hour < 11 ? `${hour + 1}:00 AM` : 
@@ -523,7 +524,7 @@ export default function Home() {
                           
                           <div 
                             key={`${dayIndex}-${hour}`} 
-                            className='border-gray-500 border-b border-r h-16 relative'
+                            className='border-white/50 border-b border-r h-16 relative'
                           >
                            
 
@@ -540,8 +541,8 @@ export default function Home() {
                           <div
                             key={`${session.id}-${segmentIndex}`}
 
-                            className="absolute bg-gradient-to-br from-gray-700 to-gray-700/70 rounded-sm px-1  text-white overflow-hidden
-                            flex flex-col py-2 cursor-pointer hover:from-gray-600/90 hover:to-gray-600/60  transition-colors"
+                            className="absolute bg-[#2A292E]/80 hover:hover:bg-[#313136]/80 rounded-sm px-1  text-white overflow-hidden
+                            flex flex-col py-2 cursor-pointer  transition-colors"
 
                             style={{
                               
@@ -613,7 +614,7 @@ export default function Home() {
 
         {hoveredSession && (
 
-          <div className="fixed z-50 bg-gray-800/80 text-white px-3 py-2 rounded-md text-sm pointer-events-none"
+          <div className="fixed z-50 bg-[#1B1A1F]  text-white px-3 py-2 rounded-md text-sm pointer-events-none"
             style={{
               left: `${tooltipPosition.x + 10}px`,
               top: `${tooltipPosition.y - 10}px`,
