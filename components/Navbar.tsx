@@ -14,7 +14,7 @@ export default function Navbar() {
   };
 
   return (
-    <div className={`fixed right-0 h-screen backdrop-blur-sm z-20 bg-[#0B0A0E]
+    <div className={`fixed right-0 h-screen backdrop-blur-sm z-20 bg-[#07060a]
     ${isMinimized ? 'w-16' : 'w-1/6'} transition-all duration-500 ease-in-out`}>
       <button 
         onClick={toggleMinimize} 

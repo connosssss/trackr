@@ -265,15 +265,15 @@ export default function stats() {
     };
 
   return (<><Navbar/>
-    <div className="min-h-screen w-full bg-gray-900 pb-16 pt-10">
+    <div className="min-h-screen w-full bg-[#141318] pb-16 pt-10">
       
         
 
         
         <div className="w-5/6 mx-auto min-h-72 rounded-md  
         flex flex-row gap-8">
-            <div className='w-1/4 bg-gray-800 text-center rounded-md shadow-lg shadow-indigo-900/20'>
-                <div className='text-2xl font-semibold mt-5 border-b-2 border-gray-900'>
+            <div className='w-1/4 bg-[#0c0b10] text-center rounded-md shadow-sm   '>
+                <div className='text-2xl font-semibold mt-5 border-b border-white'>
                     Total Time
                 </div>
                 {
@@ -302,8 +302,8 @@ export default function stats() {
                 }
             </div>
 
-            <div className='w-1/2 bg-gray-800 text-center rounded-md shadow-lg shadow-indigo-900/20'>
-                <div className='text-2xl font-semibold mt-5 border-b-2 border-gray-900'>
+            <div className='w-1/2 bg-[#0c0b10] text-center rounded-md shadow-sm   '>
+                <div className='text-2xl font-semibold mt-5 border-b border-white'>
                     Top Groups
                 </div>
                 {
@@ -321,7 +321,7 @@ export default function stats() {
 
                                 {groupList.slice(0,3).map((stat, index) => (
                                     <div key={stat.id} 
-                                         className={`p-4 rounded-lg transition-all duration-300 bg-gray-900/60 hover:shadow-lg
+                                         className={`p-4 rounded-lg transition-all duration-300 bg-[#141318]  hover:shadow-lg
                                          ${index == 0 ? 'text-amber-400 hover:shadow-amber-400/30 ' : index == 1 ? 'text-slate-300 hover:shadow-slate-300/30' : 'text-orange-600 hover:shadow-orange-600/30'}`}>
 
                                         <div className="flex justify-between items-center">
@@ -345,8 +345,8 @@ export default function stats() {
                 }
             </div>
             
-            <div className='w-1/4 bg-gray-800 text-center rounded-md shadow-lg shadow-indigo-900/20'>
-                <div className='text-2xl font-semibold mt-5 border-b-2 border-gray-900'>
+            <div className='w-1/4 bg-[#0c0b10] text-center rounded-md shadow-sm   '>
+                <div className='text-2xl font-semibold mt-5 border-b border-white'>
                     Recent Activity
                 </div>
                 {
@@ -365,7 +365,7 @@ export default function stats() {
                                     
                                 </div>
 
-                                <div className="p-2 flex justify-between items-center text-[#68f2d9]/80 hover:text-[#68f2d9] hover:scale-110
+                                <div className="p-2 flex justify-between items-center text-[#4ef3d5]/80 hover:text-[#4ef3d5] hover:scale-110
                                 transform transition-all duration-300">
                                     
                                         <span >Last Month</span>
@@ -373,7 +373,7 @@ export default function stats() {
                                     
                                 </div>
 
-                                <div className="p-2 flex justify-between items-center text-sky-300/80 hover:text-sky-300 hover:scale-110
+                                <div className="p-2 flex justify-between items-center text-sky-400/80 hover:text-sky-400 hover:scale-110
                                 transform transition-all duration-300">
                                     
                                         <span >Last Year</span>
@@ -392,7 +392,7 @@ export default function stats() {
         <div className="w-5/6 mx-auto  min-h-96 rounded-md  mt-12 
         flex flex-row gap-12">
 
-            <div className='w-1/2 bg-gray-800 rounded-md shadow-lg shadow-indigo-900/20 p-6'>
+            <div className='w-1/2 bg-[#0c0b10] rounded-md shadow-sm    p-6'>
 
                 {isLoading ? (
                     <div className="flex items-center justify-center h-80">
@@ -436,7 +436,7 @@ export default function stats() {
                 )}
             </div>
 
-            <div className='w-1/2 bg-gray-800 rounded-md shadow-lg shadow-indigo-900/20 p-6 flex flex-col items-center justify-center gap-6'>
+            <div className='w-1/2 bg-[#0c0b10] rounded-md shadow-sm    p-6 flex flex-col items-center justify-center gap-6'>
             <div className='flex flex-row w-full text-center items-center '>
                 
                                 

@@ -20,7 +20,19 @@ interface TimeSession {
   group: string | null;
 }
 
+/*
+Darkest
+bg-[#0B0A0E]
+bg-[#141318]  background
+bg-[#1B1A1F] 
+bg-[#2A292E]
 
+Lightest
+
+calendar part
+bg-[#2A292E]/80 hover:hover:bg-[#313136]/80
+
+*/
 
 export default function Home() {
 
@@ -492,10 +504,10 @@ export default function Home() {
 
             <div className='h-full flex flex-col pb-20 mx-5 '>
                 <div className='grid grid-flow-col grid-cols-8 w-[95%] border-white/50 mr-16'>
-                  <div className="text-white/40 text-xs border-b flex justify-center items-end "> 12:00 AM</div>
+                  <div className=" text-xs border-b flex justify-center items-end "> 12:00 AM</div>
 
                   {getWeek().map((date, index) => (
-                    <div key={index} className=' border-white/50 border-b h-12 text-white/30 
+                    <div key={index} className=' border-white/50 border-b h-12 
                     text-center flex items-end justify-center'>
                         <div>{formatDateHeader(date)}</div>
                       
@@ -510,7 +522,7 @@ export default function Home() {
                      <React.Fragment key={hour}>
 
                         <div  className='border-white/50 border-b border-r h-16 flex justify-center items-end'>
-                          <div className="text-white/40 text-xs mb-1 ">{
+                          <div className=" text-xs mb-1 ">{
                           hour === 0 ? '1:00 AM' :
                           hour < 11 ? `${hour + 1}:00 AM` : 
                           hour === 11 ? '12:00 PM' : 
