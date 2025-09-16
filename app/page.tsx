@@ -22,7 +22,7 @@ interface TimeSession {
 
 /*
 Darkest
-bg-[#0B0A0E]
+ bg-[#0B0A0E] -> bg-[#0c0b10]
 bg-[#141318]  background
 bg-[#1B1A1F] 
 bg-[#2A292E]
@@ -402,7 +402,7 @@ export default function Home() {
             
             
               
-              <div className=" font-mono  flex h-24 items-center transition duration-300 border-b border-white/50 bg-[#0B0A0E]
+              <div className=" font-mono  flex h-24 items-center transition duration-300 border-b border-white/50 bg-[#0c0b10]
                  w-full">
                 
                 <div className="ml-5 text-4xl">
@@ -424,7 +424,7 @@ export default function Home() {
                 
                 </div>
 
-                <div className="flex  py-3 border-b border-white/50 flex-row gap-2 items-center w-full bg-[#0B0A0E] ">
+                <div className="flex  py-3 border-b border-white/50 flex-row gap-2 items-center w-full bg-[#0c0b10] ">
                   {!isTracking ? ( 
                     <button 
                       onClick={startTracking}

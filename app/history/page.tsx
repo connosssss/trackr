@@ -127,14 +127,14 @@ export default function HistoryPage() {
     };
 
   return ( 
-<div className=" bg-gray-900 min-h-screen h-full pb-20" >
+<div className=" bg-[#141318] min-h-screen h-full pb-20" >
 <Navbar />
 
                 {isLoadingSessions ? (
 
                   <div className="w-screen h-screen flex justify-center items-center flex-col gap-20">
                     <p className="text-4xl font-bold">Loading sessions...</p>
-                    <div className=" animate-spin w-16 h-16 rounded-full border-8 border-gray-700 border-b-transparent"/>
+                    <div className=" animate-spin w-16 h-16 rounded-full border-8 border-white border-b-transparent"/>
                   </div>
 
                 ) : sessions.length === 0 ? (
@@ -146,7 +146,7 @@ export default function HistoryPage() {
                     
                     
 
-                  <div className=" w-11/12 mx-5 overflow-hidden ">
+                  <div className=" w-10/12 mx-auto overflow-hidden -translate-x-8 ">
                     
                     <table className="w-full divide-y-2 divide-gray-200  text-md ">
                       <thead className=" rounded-t-2xl ">
@@ -168,41 +168,41 @@ export default function HistoryPage() {
 
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-gray-600">
+                      <tbody className="divide-y divide-white/20">
 
                         {
 
                           
                         sessions.map((session) => (
-                          <tr key={session.id} className="hover:bg-gray-600 transition duration-300">
-                            <td className="text-center py-5 text-gray-300">
+                          <tr key={session.id} className="">
+                            <td className="text-center py-2 text-gray-300 text-sm">
                               {session.start_time.toLocaleDateString()}
                             </td>
-                            <td className="text-center py-5 text-gray-300">
+                            <td className="text-center py-2 text-gray-300 text-sm">
                               {session.start_time.toLocaleTimeString()}
                             </td>
-                            <td className="text-center py-5 text-gray-300">
+                            <td className="text-center py-2 text-gray-300 text-sm">
                               {session.end_time ? session.end_time.toLocaleTimeString() : '-'}
                             </td>
-                            <td className="text-center py-5 text-gray-300">
+                            <td className="text-center py-2 text-gray-300 text-sm">
                               {session.duration ? formatTime(session.duration) : '-'}
                             </td>
-                            <td className="text-center py-5 text-gray-300">
+                            <td className="text-center py-2 text-gray-300 text-sm">
                               {session.group}
                             </td>
-                            <td className="text-center py-5 text-gray-300">
+                            <td className="text-center py-2 text-gray-300 text-sm">
                               <button 
                                 onClick={() => handleEdit(session)}
-                                className="bg-gray-700 hover:scale-115 hover:text-white py-1 px-6
+                                className="bg-[#0c0b10] hover:bg-[#2A292E] py-1 px-6
                                 rounded transition duration-300"
                               >
                                 Edit
                               </button>
                             </td>
-                            <td className="text-center py-5 text-gray-300">
+                            <td className="text-center py-2 text-gray-300 text-sm">
                               <button 
                                 onClick={() => handleDelete(session.id)}
-                                className="bg-red-400/70 text-red-200 hover:text-red-50 hover:scale-115 py-1 px-6
+                                className=" bg-[#0c0b10] hover:bg-[#2A292E] py-1 px-6
                                 rounded transition duration-300"
                               >
                                 X
@@ -218,9 +218,9 @@ export default function HistoryPage() {
                     
                     
                   </div>
-                  <div className="w-11/12 mx-5 py-5 flex items-center justify-start">
+                  <div className="w-10/12 mx-auto flex items-center justify-start -translate-x-8 mt-4">
                       <button onClick={exportToSheet}
-                      className="px-6 py-2 rounded-md bg-gray-700 text-md"> Export As .xlsx (SpreadSheet)</button>
+                      className="px-6 py-2 rounded-md bg-[#0c0b10] hover:bg-[#2A292E] text-md"> Export As .xlsx (SpreadSheet)</button>
                     </div>
                 </div>)}
 
