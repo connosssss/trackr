@@ -40,23 +40,23 @@ export default function LoginPage() {
     };
 
   return (
-    <div className="flex  bg-gray-900 w-full items-center justify-center h-screen ">
+    <div className="flex  bg-[#141318] w-full items-center justify-center h-screen ">
         <Navbar/>
-        <div className='min-w-1/3 min-h-1/2 bg-gray-800 rounded-md p-12
-        flex flex-col justify-start items-center gap-6 shadow-lg shadow-indigo-900/20'>
+        <div className='min-w-1/3 min-h-1/2 bg-[#0c0b10] rounded-md p-12
+        flex flex-col justify-start items-center gap-6 shadow-md shadow-black'>
             <h2 className='text-xl font-bold text-shadow-2'>
                 Email: {user?.email}
             </h2>
              
 
             <button onClick={handleForgotPassword}
-                className='py-2 hover:bg-blue-500/50 bg-blue-400/50 w-1/3 rounded-md
+                className='py-2 bg-[#141318] hover:bg-[#2A292E] w-1/3 rounded-md shadow-md shadow-black
                 transition-all duration-300 '>Reset Password</button>
 
                 
             <button onClick={handleSignOut}
-                className='py-2 hover:bg-red-400/50 bg-red-400/70 w-1/3 rounded-md 
-                transition-all duration-300 '>Sign Out</button>
+                className='py-2 hover:bg-red-400/30 bg-red-400/50 w-1/3 rounded-md shadow-md shadow-black
+                transition-all duration-300 '>Sign Out</button> 
 
 
             
