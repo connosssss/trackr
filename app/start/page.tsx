@@ -73,17 +73,17 @@ export default function StartPage() {
   };
 
   return (
-    <div className="bg-gray-800 w-full h-full">
+    <div className="bg-[#141318] w-full h-full">
 
       <div className='h-screen flex flex-row items-center'>
 
         {/* clock */}
         
           <div className="relative w-[min(35rem,40vw)] h-[min(35rem,40vw)] aspect-square ml-30">
-            <div className="absolute inset-0 rounded-full border-4 border-gray-600"></div>
+            <div className="absolute inset-0 rounded-full  bg-[#0c0b10]"></div>
             
             <div
-              className="absolute top-1/2 left-1/2 w-1 bg-gray-300 origin-bottom transform -translate-x-1/2 -translate-y-1/2 rounded-full"
+              className="absolute top-1/2 left-1/2 w-1 bg-white origin-bottom transform -translate-x-1/2 -translate-y-1/2 rounded-full"
               style={{
                 height: '35%',
                 transform: `translate(-50%, -50%) rotate(${isClient ? (time.getHours() % 12) * 30 + time.getMinutes() / 2 : 0}deg)`,
@@ -91,7 +91,7 @@ export default function StartPage() {
             ></div>
             
             <div
-              className="absolute top-1/2 left-1/2 w-1 bg-gray-300 origin-bottom transform -translate-x-1/2 -translate-y-1/2 rounded-full"
+              className="absolute top-1/2 left-1/2 w-1 bg-white origin-bottom transform -translate-x-1/2 -translate-y-1/2 rounded-full"
               style={{
                 height: '45%',
                 transform: `translate(-50%, -50%) rotate(${isClient ? time.getMinutes() * 6 : 0}deg)`,
@@ -100,7 +100,7 @@ export default function StartPage() {
             
             
             <div
-              className="absolute top-1/2 left-1/2 w-0.5 bg-gray-300 origin-bottom transform -translate-x-1/2 -translate-y-1/2 rounded-full"
+              className="absolute top-1/2 left-1/2 w-0.5 bg-white origin-bottom transform -translate-x-1/2 -translate-y-1/2 rounded-full"
               style={{
                 height: '48%',
                 transform: `translate(-50%, -50%) rotate(${isClient ? time.getSeconds() * 6 : 0}deg)`,
@@ -108,7 +108,7 @@ export default function StartPage() {
             ></div>
             
 
-            <div className="absolute top-1/2 left-1/2 w-3 h-3 bg-gray-300 rounded-full transform -translate-x-1/2 -translate-y-1/2 "></div>
+            <div className="absolute top-1/2 left-1/2 w-3 h-3 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2 "></div>
           </div>
 
 
@@ -134,7 +134,7 @@ export default function StartPage() {
 
        
         {!showForgotPassword ? (
-          <div className="flex flex-col w-1/3 bg-gray-700/70 rounded-lg items-center py-14">
+          <div className="flex flex-col w-1/3 bg-[#0c0b10] rounded-lg items-center py-14">
             <h2 className="text-4xl font-semibold">{isLogin ? 'Login' : 'Create Account'}</h2>
 
             {error && <div className="mb-4">{error}</div>}
@@ -165,7 +165,7 @@ export default function StartPage() {
 
                 <button
                   type="submit"
-                  className="bg-white/30 hover:bg-white/20 p-4 rounded w-full transition-all duration-300"
+                  className="bg-[#141318] hover:bg-[#2A292E] shadow-md shadow-black p-4 rounded w-full transition-all duration-300"
                 >
 
                   {isLogin ? 'Sign In' : 'Sign Up'}
@@ -177,7 +177,7 @@ export default function StartPage() {
                     setShowForgotPassword(true);
                     setError(null);
                   }}
-                  className="text-md hover:text-blue-200 text-blue-300 underline mt-3 transition-all duration-300"
+                  className="text-md text-white/80 hover:text-white underline mt-3 transition-all duration-300"
                 >
 
                   Forgot Password
@@ -190,7 +190,7 @@ export default function StartPage() {
                     setIsLogin(!isLogin);
                     setError(null);
                   }}
-                  className="text-md hover:text-blue-200 text-blue-300 underline mt-3 transition-all duration-300"
+                  className="text-md text-white/80 hover:text-white underline mt-3 transition-all duration-300"
                 >
                   {isLogin ? 'Sign up' : 'Sign in'}
                 </button>
@@ -200,9 +200,12 @@ export default function StartPage() {
           </div>
         ) : (
 
-          <div className="flex flex-col w-1/3 bg-gray-700/70 rounded-lg items-center py-14">
+          <div className="flex flex-col w-1/3 bg-[#0c0b10] rounded-lg items-center py-14">
 
-            <h2 className="text-4xl font-semibold">Forgot Password</h2>
+            <h2 className="text-2xl ">Forgot Password</h2>
+
+
+
 
             {error && <div className="mb-4">{error}</div>}
 
@@ -213,7 +216,7 @@ export default function StartPage() {
                 type="email"
                 value={resetEmail}
                 onChange={(e) => setResetEmail(e.target.value)}
-                className="w-full p-2 border focus:outline-none mb-4 rounded"
+                className="w-full p-2 border focus:outline-none mb-4 rounded outline-none border-none bg-[#141318]"
                 placeholder="Email"
                 required
 
@@ -223,7 +226,7 @@ export default function StartPage() {
 
                 <button
                   type="submit"
-                  className="bg-white/30 hover:bg-white/20 p-4 rounded w-full transition-all duration-300"
+                  className="bg-[#141318] hover:bg-[#2A292E] p-4 rounded w-full transition-all duration-300 "
                 >
                   {!hasSent ? 'Send' : 'Sent!'}
                 </button>
