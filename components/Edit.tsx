@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { updateTimeSession, deleteTimeSession, updateGroupList } from "@/utils/timeSessionsDB";
+import { updateTimeSession, deleteTimeSession } from "@/utils/timeSessionsDB";
 import { User } from '@supabase/supabase-js';
 
 interface TimeSession {
@@ -117,7 +117,6 @@ export default function Edit({
 
     try {
       await deleteTimeSession(id);
-      await updateGroupList(user);
       onDelete();
     }
     catch (error) {

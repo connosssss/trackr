@@ -7,7 +7,7 @@ import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import Edit from "@/components/Edit";
 import Navbar from "@/components/Navbar";
-import {updateGroupList} from "@/utils/timeSessionsDB";
+
 
 interface TimeSession {
   id: string;
@@ -70,7 +70,6 @@ export default function HistoryPage() {
       
       try {
         await deleteTimeSession(sessionId);
-        await updateGroupList(user);
         const updatedSessions = sessions.filter(session => session.id !== sessionId);
         setSessions(updatedSessions);
       } 
