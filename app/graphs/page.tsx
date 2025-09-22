@@ -249,8 +249,8 @@ export default function LoginPage() {
 
 
   return (
-    <div className="bg-gray-900 w-full">
-    <div className="flex flex-col bg-gray-900 w-[95%] items-center  min-h-screen   ">
+    <div className="bg-[#141318] w-full">
+    <div className="flex flex-col  w-[95%] items-center  min-h-screen   ">
         <Navbar/>
 
             
@@ -258,7 +258,7 @@ export default function LoginPage() {
                     <select
                         value={selectedPeriod}
                         onChange={(e) => setSelectedPeriod(e.target.value as 'week' | 'month' | '3months' | 'year' | 'alltime')}
-                        className="bg-gray-800 text-white rounded px-9 py-3 border border-gray-500 text-md mt-5 ml-5
+                        className="bg-[#0c0b10] text-white rounded px-9 py-3 border border-gray-500 text-md mt-5 ml-5
                         focus:outline-none focus:border-gray-400"
                     >
 
@@ -270,11 +270,11 @@ export default function LoginPage() {
 
                     </select>
                     
-                    <div className='text-3xl font-semibold mt-5'> Time Graph</div>
+                   
                     <select
                         value={chartType}
                         onChange={(e) => setChartType(e.target.value as 'bar' | 'line' | 'area')}
-                        className="bg-gray-800 text-white rounded px-9 py-3 border border-gray-500 text-md mt-5 
+                        className="bg-[#0c0b10] text-white rounded px-9 py-3 border border-gray-500 text-md mt-5 
                         focus:outline-none focus:border-gray-400"
                         >
                         <option value="bar">Bar Chart</option>
@@ -290,7 +290,7 @@ export default function LoginPage() {
                     <div className="flex justify-center gap-3 items-center py-3 w-full  mb-4 ml-9">
                         <button 
                             onClick={() => selectedPeriod === 'week' ? changeWeek('before') : changeMonth('before')}
-                            className="text-white bg-gray-700 px-3 py-1 rounded-md hover:bg-gray-500 transition-all duration-300"
+                            className="text-white bg-[#0c0b10] px-3 py-1 rounded-md hover:bg-gray-500 transition-all duration-300"
                         >
                             ← 
                         </button>
@@ -301,7 +301,7 @@ export default function LoginPage() {
                         
                         <button 
                             onClick={() => selectedPeriod === 'week' ? changeWeek('later') : changeMonth('later')}
-                            className="text-white bg-gray-700 px-3 py-1 rounded-md hover:bg-gray-500 transition-all duration-300"
+                            className="text-white bg-[#0c0b10] px-3 py-1 rounded-md hover:bg-gray-500 transition-all duration-300"
                         >
                             →
                         </button>
@@ -355,7 +355,7 @@ export default function LoginPage() {
 
                                     <Bar 
                                         dataKey="hours" 
-                                        fill="#563ead"
+                                        fill="#4b4b51ff"
                                         radius={[4, 4, 0, 0]}
                                     />
                                 </BarChart>
@@ -387,9 +387,9 @@ export default function LoginPage() {
                                     <Line 
                                         type="monotone" 
                                         dataKey="hours" 
-                                        stroke="#8b5cf6" 
+                                        stroke="#4b4b51ff" 
                                         strokeWidth={3}
-                                        dot={{ fill: '#8b5cf6', strokeWidth: 2, r: 4 }}
+                                        dot={{ fill: '#4b4b51ff', strokeWidth: 2, r: 4 }}
                                     />
                                 </LineChart>
 
@@ -421,8 +421,8 @@ export default function LoginPage() {
                                     <Area 
                                         type="monotone" 
                                         dataKey="hours" 
-                                        stroke="#8b5cf6" 
-                                        fill="#8b5cf6"
+                                        stroke="#4b4b51ff" 
+                                        fill="#4b4b51ff"
                                         fillOpacity={0.6}
                                     />
                                 </AreaChart>
