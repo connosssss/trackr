@@ -47,8 +47,10 @@ CREATE TABLE public.time_sessions (
 ```
 Then create these policies to allow the users to use / edit the tables
 
+<img width="1829" height="657" alt="image" src="https://github.com/user-attachments/assets/036bde7d-d507-45a1-b0bd-fcec35000f6b" />
 
-<img width="992" height="907" alt="image" src="https://github.com/user-attachments/assets/7b27ca08-5e60-4e07-b7b9-2e6d409e90c8" />
+<img width="1183" height="1237" alt="image" src="https://github.com/user-attachments/assets/e8a871bf-f025-4981-999e-3a3c1a4375b0" />
+
 
 ### Step 5
 Start the app by running 
