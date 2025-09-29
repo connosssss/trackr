@@ -25,7 +25,7 @@ Darkest
 bg-[#141318]  background
 bg-[#1B1A1F] 
 bg-[#2A292E]
-
+#4b4b51ff
 Lightest
 
 calendar part

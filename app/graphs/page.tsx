@@ -355,7 +355,7 @@ export default function LoginPage() {
 
                                     <Bar 
                                         dataKey="hours" 
-                                        fill="#4b4b51ff"
+                                        fill="#65656E"
                                         radius={[4, 4, 0, 0]}
                                     />
                                 </BarChart>
@@ -387,9 +387,9 @@ export default function LoginPage() {
                                     <Line 
                                         type="monotone" 
                                         dataKey="hours" 
-                                        stroke="#4b4b51ff" 
+                                        stroke="#65656E" 
                                         strokeWidth={3}
-                                        dot={{ fill: '#4b4b51ff', strokeWidth: 2, r: 4 }}
+                                        dot={{ fill: '#65656E', strokeWidth: 2, r: 4 }}
                                     />
                                 </LineChart>
 
@@ -421,8 +421,8 @@ export default function LoginPage() {
                                     <Area 
                                         type="monotone" 
                                         dataKey="hours" 
-                                        stroke="#4b4b51ff" 
-                                        fill="#4b4b51ff"
+                                        stroke="#65656E" 
+                                        fill="#65656E"
                                         fillOpacity={0.6}
                                     />
                                 </AreaChart>

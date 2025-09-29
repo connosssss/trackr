@@ -357,7 +357,7 @@ export default function stats() {
 
                             
                             <div className="grid grid-cols-1 gap-12 text-xl font-semibold mt-4 ">
-                                <div className="p-2 flex justify-between items-center text-green-300/85 hover:text-green-300 hover:scale-110
+                                <div className="p-2 flex justify-between items-center text-white hover:scale-110
                                 transform transition-all duration-300">
                                     
                                         <span >Last Week</span>
@@ -365,7 +365,7 @@ export default function stats() {
                                     
                                 </div>
 
-                                <div className="p-2 flex justify-between items-center text-[#4ef3d5]/80 hover:text-[#4ef3d5] hover:scale-110
+                                <div className="p-2 flex justify-between items-center text-white hover:scale-110
                                 transform transition-all duration-300">
                                     
                                         <span >Last Month</span>
@@ -373,7 +373,7 @@ export default function stats() {
                                     
                                 </div>
 
-                                <div className="p-2 flex justify-between items-center text-sky-400/80 hover:text-sky-400 hover:scale-110
+                                <div className="p-2 flex justify-between items-center text-white hover:scale-110
                                 transform transition-all duration-300">
                                     
                                         <span >Last Year</span>
