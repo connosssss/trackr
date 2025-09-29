@@ -30,6 +30,8 @@ export default function HistoryPage() {
 
     const [editingSession, setEditingSession] = useState<TimeSession | null>(null);
     const [isEditing, setIsEditing] = useState(false);
+    const [optionsOpen, setOptionsOpen] = useState(false);
+
 
     useEffect(() => {
         if (user) {
@@ -143,7 +145,7 @@ export default function HistoryPage() {
     }
 
   return ( 
-<div className=" bg-[#141318] min-h-screen h-full pb-20" >
+<div className=" bg-[#141318] min-h-screen h-full pb-20 pt-4" >
 <Navbar />
 
                 {isLoadingSessions ? (
@@ -158,11 +160,21 @@ export default function HistoryPage() {
                   <p className="w-full text-center pt-10 text-xl font-semibold">No sessions recorded yet</p>
 
                 ) : (
-                  <div>
+                  <div className="bg-[#141318] h-full">
                     
                     
-
-                  <div className=" w-10/12 mx-auto overflow-hidden -translate-x-8 ">
+                    
+                  <div className="w-10/12 mx-auto flex items-center justify-start -translate-x-8 gap-5 ">
+                      <button onClick={() => {setOptionsOpen(!optionsOpen)}}
+                      className="px-6 py-2 rounded-md bg-[#0c0b10] hover:bg-[#2A292E] text-md"> Options </button>
+                      {optionsOpen ? (
+                        <div className="flex flex-row gap-5"><button onClick={exportToSheet}
+                      className="px-6 py-2 rounded-md bg-[#0c0b10] hover:bg-[#2A292E] text-md"> Export As .xlsx (SpreadSheet)</button>
+                      <button onClick={newSession}
+                      className="px-6 py-2 rounded-md bg-[#0c0b10] hover:bg-[#2A292E] text-md"> Create New Session</button>
+                      </div>) : <div/>}
+                    </div>
+                  <div className=" w-10/12 mx-auto overflow-hidden -translate-x-8 "> 
                     
                     <table className="w-full divide-y-2 divide-gray-200  text-md ">
                       <thead className=" rounded-t-2xl ">
@@ -234,13 +246,7 @@ export default function HistoryPage() {
                     
                     
                   </div>
-                  <div className="w-10/12 mx-auto flex items-center justify-start -translate-x-8 mt-4 gap-5">
-                      <button onClick={exportToSheet}
-                      className="px-6 py-2 rounded-md bg-[#0c0b10] hover:bg-[#2A292E] text-md"> Export As .xlsx (SpreadSheet)</button>
-                      <button onClick={newSession}
-                      className="px-6 py-2 rounded-md bg-[#0c0b10] hover:bg-[#2A292E] text-md"> Create New Session</button>
-                      
-                    </div>
+                  
                 </div>)}
 
       {isEditing && editingSession && (
