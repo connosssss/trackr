@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/context/AuthContext";
 import { useState, useEffect } from "react";
-import { fetchTimeSessions, deleteTimeSession } from "@/utils/timeSessionsDB";
+import { fetchTimeSessions, deleteTimeSession, createTimeSession } from "@/utils/timeSessionsDB";
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import Edit from "@/components/Edit";
@@ -125,6 +125,23 @@ export default function HistoryPage() {
       saveAs(blob, 'history.xlsx');
     };
 
+    const newSession = async () => {
+      if(!user) return;
+
+      let session = await createTimeSession({
+        user_id: user.id,
+        start_time: new Date(),
+        end_time: null,
+        duration: null,
+        group: null
+      })
+      
+      
+      handleEdit(session);
+
+
+    }
+
   return ( 
 <div className=" bg-[#141318] min-h-screen h-full pb-20" >
 <Navbar />
@@ -217,9 +234,12 @@ export default function HistoryPage() {
                     
                     
                   </div>
-                  <div className="w-10/12 mx-auto flex items-center justify-start -translate-x-8 mt-4">
+                  <div className="w-10/12 mx-auto flex items-center justify-start -translate-x-8 mt-4 gap-5">
                       <button onClick={exportToSheet}
                       className="px-6 py-2 rounded-md bg-[#0c0b10] hover:bg-[#2A292E] text-md"> Export As .xlsx (SpreadSheet)</button>
+                      <button onClick={newSession}
+                      className="px-6 py-2 rounded-md bg-[#0c0b10] hover:bg-[#2A292E] text-md"> Create New Session</button>
+                      
                     </div>
                 </div>)}
 
