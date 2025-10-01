@@ -126,7 +126,7 @@ export default function Edit({
 
 
   return (
-    <div className="bg-gray-700 p-8 rounded-lg w-full max-w-lg mx-4 z-50" onClick={(e) => e.stopPropagation()}>
+    <div className="bg-[#1B1A1F] p-8 rounded-lg w-full max-w-lg mx-4 z-50" onClick={(e) => e.stopPropagation()}>
 
 
       <h2 className="text-xl font-semibold mb-4">Edit Time Entry</h2>
@@ -139,7 +139,7 @@ export default function Edit({
             value={startDateTime}
             onChange={(e) => handleStartTimeChange(e.target.value)}
             step="1"
-            className="w-full p-2 rounded bg-gray-800 text-white"
+            className="w-full p-2 rounded bg-[#2A292E] text-white"
           />
         </div>
 
@@ -153,13 +153,13 @@ export default function Edit({
               value={endDateTime}
               onChange={(e) => handleEndTimeChange(e.target.value)}
               step="1"
-              className="flex-1 p-2 rounded bg-gray-800 text-white disabled:opacity-50"
+              className="flex-1 p-2 rounded bg-[#2A292E] text-white disabled:opacity-50"
             />
 
           </div>
         </div>
 
-        <div className="bg-gray-800 p-3 rounded">
+        <div className="bg-[#2A292E] p-3 rounded">
           <div className="text-sm text-gray-300 mb-1">Duration</div>
           <div className="text-lg font-mono text-white">
             {formatDuration(calculateDuration())}
@@ -174,7 +174,7 @@ export default function Edit({
             type="text"
             value={editGroup}
             onChange={(e) => setEditGroup(e.target.value)}
-            className="w-full p-2 rounded bg-gray-800 text-white"
+            className="w-full p-2 rounded bg-[#2A292E] text-white"
             placeholder="Group name"
           />
         </div>
@@ -185,7 +185,7 @@ export default function Edit({
 
         <button
           onClick={onCancel}
-          className="px-4 py-2 bg-gray-600 text-white rounded  hover:bg-gray-500  
+          className="px-4 py-2  text-white rounded  bg-[#0c0b10] hover:bg-[#2A292E]
              "
         >
           Cancel
@@ -199,7 +199,7 @@ export default function Edit({
         </button>
         <button
           onClick={handleSaveEdit}
-          className="px-4 py-2 bg-gray-600 text-white rounded  hover:bg-gray-500  
+          className="px-4 py-2  text-white rounded  bg-[#0c0b10] hover:bg-[#2A292E]
              "
         >
           Save Changes
