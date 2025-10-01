@@ -145,7 +145,7 @@ export default function HistoryPage() {
     }
 
   return ( 
-<div className=" bg-[#141318] min-h-screen h-full pb-20 pt-4" >
+<div className=" bg-[#141318] min-h-screen h-full pb-20 " >
 <Navbar />
 
                 {isLoadingSessions ? (
@@ -157,7 +157,7 @@ export default function HistoryPage() {
 
                 ) : sessions.length === 0 ? (
 
-                  <p className="w-full text-center pt-10 text-xl font-semibold">No sessions recorded yet</p>
+                  <p className="w-full text-center pt-7 text-xl font-semibold">No sessions recorded yet</p>
 
                 ) : (
                   <div className="bg-[#141318] h-full">
@@ -166,13 +166,13 @@ export default function HistoryPage() {
                     
                   <div className="w-10/12 mx-auto flex items-center justify-start -translate-x-8 gap-5 ">
                       <button onClick={() => {setOptionsOpen(!optionsOpen)}}
-                      className="px-6 py-2 rounded-md bg-[#0c0b10] hover:bg-[#2A292E] text-md"> Options </button>
-                      {optionsOpen ? (
-                        <div className="flex flex-row gap-5"><button onClick={exportToSheet}
-                      className="px-6 py-2 rounded-md bg-[#0c0b10] hover:bg-[#2A292E] text-md"> Export As .xlsx (SpreadSheet)</button>
+                      className="px-6 py-2 rounded-md bg-[#0c0b10] hover:bg-[#2A292E] text-md mt-5"> Options </button>
+                      {/*width changing isnt working rn os got to do this for now */}
+                        <div className={`flex flex-row items-center gap-5 transform origin-left transition-all duration-300 ease-in-out ${optionsOpen ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0'}`}><button onClick={exportToSheet}
+                      className={`px-6 py-2 rounded-md bg-[#0c0b10] hover:bg-[#2A292E] text-md whitespace-nowrap mt-5`}> Export As .xlsx (SpreadSheet)</button>
                       <button onClick={newSession}
-                      className="px-6 py-2 rounded-md bg-[#0c0b10] hover:bg-[#2A292E] text-md"> Create New Session</button>
-                      </div>) : <div/>}
+                      className={`px-6 py-2 rounded-md bg-[#0c0b10] hover:bg-[#2A292E] text-md whitespace-nowrap mt-5`}> Create New Session</button>
+                      </div>
                     </div>
                   <div className=" w-10/12 mx-auto overflow-hidden -translate-x-8 "> 
                     
@@ -180,19 +180,19 @@ export default function HistoryPage() {
                       <thead className=" rounded-t-2xl ">
                         <tr>
 
-                        <th scope="col" className="pt-10 pb-3 text-lg text-shadow-md ">Date</th>
+                        <th scope="col" className="pt-7 pb-3 text-lg text-shadow-md ">Date</th>
 
-                          <th scope="col" className="pt-10 pb-3 text-lg text-shadow-md ">Start Time</th>
+                          <th scope="col" className="pt-7 pb-3 text-lg text-shadow-md ">Start Time</th>
 
-                          <th scope="col" className="pt-10 pb-3 text-lg text-shadow-md ">End Time</th>
+                          <th scope="col" className="pt-7 pb-3 text-lg text-shadow-md ">End Time</th>
 
-                          <th scope="col" className="pt-10 pb-3 text-lg text-shadow-md ">Duration</th>
+                          <th scope="col" className="pt-7 pb-3 text-lg text-shadow-md ">Duration</th>
 
-                          <th scope="col" className="pt-10 pb-3 text-lg text-shadow-md ">Group Name</th>
+                          <th scope="col" className="pt-7 pb-3 text-lg text-shadow-md ">Group Name</th>
                           
-                          <th scope="col" className="pt-10 pb-3 text-lg text-shadow-md ">Edit</th>
+                          <th scope="col" className="pt-7 pb-3 text-lg text-shadow-md ">Edit</th>
                           
-                          <th scope="col" className="pt-10 pb-3 text-lg text-shadow-md ">Delete</th>
+                          <th scope="col" className="pt-7 pb-3 text-lg text-shadow-md ">Delete</th>
 
                         </tr>
                       </thead>

@@ -15,7 +15,7 @@ export default function Navbar() {
 
   return (
     <div className={`fixed right-0 h-screen backdrop-blur-sm z-20 bg-[#07060a]
-    ${isMinimized ? 'w-16' : 'w-1/6'} transition-all duration-500 ease-in-out`}>
+    ${isMinimized ? 'w-16' : 'w-1/6'} transition-all duration-500 ease-in-out `}>
       <button 
         onClick={toggleMinimize} 
         className={`absolute top-2 ${isMinimized ? 'left-2' : 'left-5'} bg-[#1B1A1F] hover:hover:bg-[#2A292E]
