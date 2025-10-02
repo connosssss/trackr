@@ -144,6 +144,109 @@ export default function HistoryPage() {
 
     }
 
+
+
+
+    //might make just 1 big handle excel function instead of everything seperate
+    const importFromSheet = async (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (!user) return;
+
+      const file = event.target.files?.[0];
+      if (!file) return;
+  
+      const workbook = new ExcelJS.Workbook();
+      const reader = new FileReader();
+  
+      reader.onload = async (e) => {
+
+        if (e.target?.result) {
+
+          try {
+
+
+
+            const buffer = e.target.result as ArrayBuffer;
+            await workbook.xlsx.load(buffer);
+            const worksheet = workbook.getWorksheet(1);
+
+            if (!worksheet) {
+              console.error("file not found");
+              return;
+            }
+  
+            const preAddSessions: Omit<TimeSession, 'id'>[] = [];
+  
+            worksheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
+
+              if (rowNumber === 1) return; 
+  
+              const dateCell = row.getCell(1).value;
+              const startTimeCell = row.getCell(2).value;
+              const endTimeCell = row.getCell(3).value;
+              const durationCell = row.getCell(4).value;
+              const groupCell = row.getCell(5).value;
+  
+              //formatting everything
+              const date = dateCell?.toString() || '';
+              const startTime = startTimeCell?.toString() || '';
+              const endTime = endTimeCell?.toString() || '-';
+              const duration = durationCell?.toString() || '-';
+              const group = groupCell?.toString() || '-';
+  
+              if (!date || !startTime || !endTime) {
+                alert(`Skipping row ${rowNumber} due to missing time or date`)
+                return;
+              }
+  
+              const startDateTime = new Date(`${date} ${startTime}`);
+              const endDateTime = endTime !== '-' ? new Date(`${date} ${endTime}`) : null;
+              
+              let secondsLength: number | null = null;
+              if (duration && duration !== '-') {
+
+                const parts = duration.split(':').map(Number);
+
+                if (parts.length === 3) {
+                  secondsLength = parts[0] * 3600 + parts[1] * 60 + parts[2];
+                }
+                
+              }
+  
+              preAddSessions.push({
+                user_id: user.id,
+                start_time: startDateTime,
+                end_time: endDateTime,
+                duration: secondsLength,
+                group: group === '-' ? null : group,
+              });
+            });
+  
+            
+            for (const session of preAddSessions) {
+              await createTimeSession(session);
+            }
+            
+            await loadSessions();
+            //might start using alerts instead of console.error
+            alert(`Successfully imported ${preAddSessions.length} sessions`);
+          } 
+          
+          catch (error) {
+
+          
+            alert("Error importing sessions");
+          }
+        }
+
+      };
+  
+      reader.readAsArrayBuffer(file);
+      
+      
+
+      event.target.value = '';
+    };
+
   return ( 
 <div className=" bg-[#141318] min-h-screen h-full pb-20 " >
 <Navbar />
@@ -172,6 +275,11 @@ export default function HistoryPage() {
                       className={`px-6 py-2 rounded-md bg-[#0c0b10] hover:bg-[#2A292E] text-md whitespace-nowrap mt-5`}> Export As .xlsx (SpreadSheet)</button>
                       <button onClick={newSession}
                       className={`px-6 py-2 rounded-md bg-[#0c0b10] hover:bg-[#2A292E] text-md whitespace-nowrap mt-5`}> Create New Session</button>
+                      
+                      <label className="px-6 py-2 rounded-md bg-[#0c0b10] hover:bg-[#2A292E] text-md whitespace-nowrap mt-5 cursor-pointer">
+                            Import From .xlsx (SpreadSheet)
+                      <input type="file" accept=".xlsx" onChange={importFromSheet} className="hidden"/>
+                      </label>
                       </div>
                     </div>
                   <div className=" w-10/12 mx-auto overflow-hidden -translate-x-8 "> 
