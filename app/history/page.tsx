@@ -273,13 +273,16 @@ export default function HistoryPage() {
                       {/*width changing isnt working rn os got to do this for now */}
                         <div className={`flex flex-row items-center gap-5 transform origin-left transition-all duration-300 ease-in-out ${optionsOpen ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0'}`}><button onClick={exportToSheet}
                       className={`px-6 py-2 rounded-md bg-[#0c0b10] hover:bg-[#2A292E] text-md whitespace-nowrap mt-5`}> Export As .xlsx (SpreadSheet)</button>
-                      <button onClick={newSession}
-                      className={`px-6 py-2 rounded-md bg-[#0c0b10] hover:bg-[#2A292E] text-md whitespace-nowrap mt-5`}> Create New Session</button>
                       
                       <label className="px-6 py-2 rounded-md bg-[#0c0b10] hover:bg-[#2A292E] text-md whitespace-nowrap mt-5 cursor-pointer">
                             Import From .xlsx (SpreadSheet)
                       <input type="file" accept=".xlsx" onChange={importFromSheet} className="hidden"/>
                       </label>
+                      
+                      <button onClick={newSession}
+                      className={`px-6 py-2 rounded-md bg-[#0c0b10] hover:bg-[#2A292E] text-md whitespace-nowrap mt-5`}> Create New Session</button>
+                      
+                      
                       </div>
                     </div>
                   <div className=" w-10/12 mx-auto overflow-hidden -translate-x-8 "> 
