@@ -174,7 +174,13 @@ export default function HistoryPage() {
               return;
             }
   
-            const preAddSessions: Omit<TimeSession, 'id'>[] = [];
+            const preAddSessions: Array<{
+              user_id: string;
+              start_time: Date;
+              end_time: Date | null;
+              duration: number | null;
+              group: string | null;
+            }> = [];
   
             worksheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
 
