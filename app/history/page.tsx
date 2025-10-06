@@ -81,11 +81,23 @@ export default function HistoryPage() {
     };
 
     const handleClear = async () =>{
-      if(window.confirm("Do you want to open in new tab?")){
-        console.log("asdfasdf")
-      }
+      if(!user) return
+
+      if(window.confirm("Are you sure you want to clear the data. Unless already exported, the is no way to recover it.")){
+        
+        try{
+          for(let session of sessions){
+            handleDelete(session.id);
+          } 
+          window.location.reload();
+        }
+
+        catch(error){
+          alert("error in clearing sessions")
+        }
 
     }
+  }
 
     const handleEdit = (session: TimeSession) => {
       setEditingSession(session);
