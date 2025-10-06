@@ -80,6 +80,13 @@ export default function HistoryPage() {
       }
     };
 
+    const handleClear = async () =>{
+      if(window.confirm("Do you want to open in new tab?")){
+        console.log("asdfasdf")
+      }
+
+    }
+
     const handleEdit = (session: TimeSession) => {
       setEditingSession(session);
       setIsEditing(true);
@@ -277,16 +284,23 @@ export default function HistoryPage() {
                       <button onClick={() => {setOptionsOpen(!optionsOpen)}}
                       className="px-6 py-2 rounded-md bg-[#0c0b10] hover:bg-[#2A292E] text-md mt-5"> Options </button>
                       {/*width changing isnt working rn os got to do this for now */}
-                        <div className={`flex flex-row items-center gap-5 transform origin-left transition-all duration-300 ease-in-out ${optionsOpen ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0'}`}><button onClick={exportToSheet}
-                      className={`px-6 py-2 rounded-md bg-[#0c0b10] hover:bg-[#2A292E] text-md whitespace-nowrap mt-5`}> Export As .xlsx (SpreadSheet)</button>
+                        <div className={`flex flex-row items-center gap-5 transform origin-left transition-all duration-500 ease-in-out ${optionsOpen ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0'}`}><button onClick={exportToSheet}
+                      className={`px-6 py-2 rounded-md bg-[#0c0b10] hover:bg-[#2A292E] text-md whitespace-nowrap mt-5 
+                      transition-all duration-300`}> Export As .xlsx (SpreadSheet)</button>
                       
-                      <label className="px-6 py-2 rounded-md bg-[#0c0b10] hover:bg-[#2A292E] text-md whitespace-nowrap mt-5 cursor-pointer">
+                      <label className="px-6 py-2 rounded-md bg-[#0c0b10] hover:bg-[#2A292E] text-md whitespace-nowrap mt-5 cursor-pointer 
+                      transition-all duration-300">
                             Import From .xlsx (SpreadSheet)
                       <input type="file" accept=".xlsx" onChange={importFromSheet} className="hidden"/>
                       </label>
                       
                       <button onClick={newSession}
-                      className={`px-6 py-2 rounded-md bg-[#0c0b10] hover:bg-[#2A292E] text-md whitespace-nowrap mt-5`}> Create New Session</button>
+                      className={`px-6 py-2 rounded-md bg-[#0c0b10] hover:bg-[#2A292E] text-md whitespace-nowrap mt-5 
+                      transition-all duration-300`}> Create New Session</button>
+
+                      <button onClick={handleClear}
+                      className={`px-6 py-2 rounded-md bg-[#792d2d] hover:bg-[#ba4747] text-md whitespace-nowrap mt-5 
+                      transition-all duration-300`}> Clear all Session History</button>
                       
                       
                       </div>

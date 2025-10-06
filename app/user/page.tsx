@@ -55,7 +55,7 @@ export default function LoginPage() {
 
                 
             <button onClick={handleSignOut}
-                className='py-2 hover:bg-red-400/30 bg-red-400/50 w-1/3 rounded-md shadow-md shadow-black
+                className='py-2 bg-[#792d2d] hover:bg-[#ba4747] w-1/3 rounded-md shadow-md shadow-black
                 transition-all duration-300 '>Sign Out</button> 
 
 
