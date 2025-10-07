@@ -65,4 +65,3 @@ Photos:
 ![image](https://github.com/user-attachments/assets/cb758ca1-e38f-40f3-9213-1469c8dd7d07)
 ![image](https://github.com/user-attachments/assets/1dae199b-64f8-482a-ae21-367ac4c609be)
 ![image](https://github.com/user-attachments/assets/bb399e9d-37a6-48b6-b7f1-0dd92d31ebe9)
-(photos not able to show everything there is)
