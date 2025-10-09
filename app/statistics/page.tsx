@@ -2,7 +2,7 @@
 
 import { useState, useEffect  } from 'react'; 
 import { useAuth } from "@/context/AuthContext";
-import { fetchTimeSessions, fetchGroupList, GroupStat } from "@/utils/timeSessionsDB";
+import { fetchTimeSessions } from "@/utils/timeSessionsDB";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid,
     LineChart, Line, AreaChart, Area, Tooltip } from 'recharts';
 
