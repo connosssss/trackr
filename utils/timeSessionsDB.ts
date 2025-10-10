@@ -10,14 +10,6 @@ export interface TimeSession {
   group: string | null;
 }
 
-export interface GroupStat {
-  id: string;
-  user_id: string;
-  group_name: string;
-  session_count: number;
-  total_duration: number;
-  last_updated: Date;
-}
 
 export async function fetchTimeSessions(user: User): Promise<TimeSession[]> {
   const { data, error } = await supabase

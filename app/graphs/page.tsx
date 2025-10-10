@@ -9,7 +9,7 @@ import { useAuth } from "@/context/AuthContext";
 
 
 
-export default function LoginPage() {
+export default function Graphs() {
 
     const [selectedPeriod, setSelectedPeriod] = useState<'week' | 'month' | '3months' | 'year' | 'alltime'>('week');
     const [chartType, setChartType] = useState<'bar' | 'line' | 'area'>('bar');

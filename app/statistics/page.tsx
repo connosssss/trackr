@@ -2,7 +2,7 @@
 
 import { useState, useEffect  } from 'react'; 
 import { useAuth } from "@/context/AuthContext";
-import { fetchTimeSessions } from "@/utils/timeSessionsDB";
+import { fetchTimeSessions, TimeSession } from "@/utils/timeSessionsDB";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid,
     LineChart, Line, AreaChart, Area, Tooltip } from 'recharts';
 
@@ -10,14 +10,18 @@ import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid,
 
 import Navbar from "@/components/Navbar";
 
-interface Session {
+
+/*
+interface TimeSession {
     id: string;
     user_id: string;
     start_time: Date;
     end_time: Date | null;
     duration: number | null;
     group: string | null;
-  }
+  } */
+
+
 
 
 export default function stats() {
@@ -31,7 +35,7 @@ export default function stats() {
     const [weekTime, setWeekTime] = useState<number>(0);
     const [monthTime, setMonthTime] = useState<number>(0);
     const [yearTime, setYearTime] = useState<number>(0);
-    const [sessions, setSessions] = useState<Session[]>([]);
+    const [sessions, setSessions] = useState<TimeSession[]>([]);
     const [selectedPeriod, setSelectedPeriod] = useState<'week' | 'month' | '3months' | 'year' | 'alltime'>('week');
     const [chartType, setChartType] = useState<'bar' | 'line' | 'area'>('bar');
     const [hoveredSlice, setHoveredSlice] = useState<number | null>(null);
@@ -202,12 +206,12 @@ export default function stats() {
         }
     };
 
-    const setTotal = (sessions: Session[]) => {
+    const setTotal = (sessions: TimeSession[]) => {
         const total = sessions.reduce((sum, session) => sum + (session.duration || 0), 0);
         setTotalTime(total);
       };
       
-    const calculatePeriodTimes = (sessions: Session[]) => {
+    const calculatePeriodTimes = (sessions: TimeSession[]) => {
         const now = new Date();
         
         const weekStart = new Date(now);

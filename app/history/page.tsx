@@ -2,21 +2,14 @@
 
 import { useAuth } from "@/context/AuthContext";
 import { useState, useEffect } from "react";
-import { fetchTimeSessions, deleteTimeSession, createTimeSession } from "@/utils/timeSessionsDB";
+import { fetchTimeSessions, deleteTimeSession, createTimeSession, TimeSession } from "@/utils/timeSessionsDB";
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import Edit from "@/components/Edit";
 import Navbar from "@/components/Navbar";
 
 
-interface TimeSession {
-  id: string;
-  user_id?: string;
-  start_time: Date;
-  end_time: Date | null;
-  duration: number | null;
-  group: string | null;
-}
+
 
 
 export default function HistoryPage() {
