@@ -29,7 +29,7 @@ export default function stats() {
     const { user } = useAuth();
 
     const [totalTime, setTotalTime] = useState<number>(0);
-    const [groupList, setgroupList] = useState<GroupStat[]>([]);
+    //const [groupList, setgroupList] = useState<GroupStat[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isUpdatingStats, setIsUpdatingStats] = useState(false);
     const [weekTime, setWeekTime] = useState<number>(0);
@@ -188,7 +188,7 @@ export default function stats() {
             setIsLoading(false);
            }
       };
-
+/*
     const loadGroupList = async () => {
         if (!user) return;
 
@@ -204,7 +204,7 @@ export default function stats() {
         finally {
             setIsUpdatingStats(false);
         }
-    };
+    };  */
 
     const setTotal = (sessions: TimeSession[]) => {
         const total = sessions.reduce((sum, session) => sum + (session.duration || 0), 0);
@@ -258,7 +258,7 @@ export default function stats() {
       useEffect(() => {
         if (user) {
           loadSessions();
-            loadGroupList();
+           // loadGroupList();
         }
       }, [user]);
     const pieSlices = createPieSlices();
@@ -310,7 +310,7 @@ export default function stats() {
                 <div className='text-2xl font-semibold mt-5 border-b border-white'>
                     Top Groups
                 </div>
-                {
+                {/*
                     isUpdatingStats ? (
                         <div>Loading...</div>
                     ) : groupList.length === 0 ? (
@@ -323,7 +323,7 @@ export default function stats() {
                         <div className="p-6">
                             <div className="grid grid-cols-1 gap-4">
 
-                                {groupList.slice(0,3).map((stat, index) => (
+                                { groupList.slice(0,3).map((stat, index) => (
                                     <div key={stat.id} 
                                          className={`p-4 rounded-lg transition-all duration-300 bg-[#141318]  hover:shadow-lg
                                          ${index == 0 ? 'text-amber-400 hover:shadow-amber-400/30 ' : index == 1 ? 'text-slate-300 hover:shadow-slate-300/30' : 'text-orange-600 hover:shadow-orange-600/30'}`}>
@@ -342,11 +342,11 @@ export default function stats() {
 
                                         </div>
                                     </div>
-                                ))}
+                                )) }
                             </div>
                         </div>
                     )
-                }
+                */}
             </div>
             
             <div className='w-1/4 bg-[#0c0b10] text-center rounded-md shadow-sm   '>
