@@ -7,31 +7,22 @@ import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid,
     LineChart, Line, AreaChart, Area, Tooltip } from 'recharts';
 
 
-
 import Navbar from "@/components/Navbar";
 
-
-/*
-interface TimeSession {
-    id: string;
-    user_id: string;
-    start_time: Date;
-    end_time: Date | null;
-    duration: number | null;
-    group: string | null;
-  } */
-
-
-
+interface GroupStat {
+    group_name: string;
+    total_duration: number;
+    session_count: number;
+}
 
 export default function stats() {
 
     const { user } = useAuth();
 
     const [totalTime, setTotalTime] = useState<number>(0);
-    //const [groupList, setgroupList] = useState<GroupStat[]>([]);
+    const [groupList, setgroupList] = useState<GroupStat[]>([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [isUpdatingStats, setIsUpdatingStats] = useState(false);
+    
     const [weekTime, setWeekTime] = useState<number>(0);
     const [monthTime, setMonthTime] = useState<number>(0);
     const [yearTime, setYearTime] = useState<number>(0);
@@ -170,6 +161,40 @@ export default function stats() {
         });
     };
 
+    const loadGroups = (sessions: TimeSession[]) => {
+
+        const groupMap = new Map<string, { total_duration: number; session_count: number }>();
+        
+
+        for (let session of sessions) {
+            const groupName = session.group || 'No Group';
+            const duration = session.duration || 0;
+            
+            if (groupMap.has(groupName)) {
+                const existing = groupMap.get(groupName)!;
+                existing.total_duration += duration;
+                existing.session_count += 1;
+            } 
+            
+            else {
+                groupMap.set(groupName, {
+                    total_duration: duration,
+                    session_count: 1
+                });
+            }
+        }
+        
+        const groupStats: GroupStat[] = Array.from(groupMap.entries())
+            .map(([group_name, stats]) => ({
+                group_name,
+                total_duration: stats.total_duration,
+                session_count: stats.session_count
+            }))
+            .sort((a, b) => b.total_duration - a.total_duration);
+        
+        setgroupList(groupStats);
+    };
+
 
       const loadSessions = async () => {
         setIsLoading(true);
@@ -180,6 +205,7 @@ export default function stats() {
             setSessions(temp);
             setTotal(temp);
             calculatePeriodTimes(temp);
+            loadGroups(temp);
            }
            catch (error) {
             console.error('Error loading sessions:', error);
@@ -188,23 +214,6 @@ export default function stats() {
             setIsLoading(false);
            }
       };
-/*
-    const loadGroupList = async () => {
-        if (!user) return;
-
-        try {
-            setIsUpdatingStats(true);
-            
-            const stats = await fetchGroupList(user);
-            setgroupList(stats);
-        }
-        catch (error) {
-            console.error('Error loading group statistics:', error);
-        }
-        finally {
-            setIsUpdatingStats(false);
-        }
-    };  */
 
     const setTotal = (sessions: TimeSession[]) => {
         const total = sessions.reduce((sum, session) => sum + (session.duration || 0), 0);
@@ -258,9 +267,9 @@ export default function stats() {
       useEffect(() => {
         if (user) {
           loadSessions();
-           // loadGroupList();
         }
       }, [user]);
+
     const pieSlices = createPieSlices();
     const heatmapArray = createActivityHeatmap();
 
@@ -310,8 +319,8 @@ export default function stats() {
                 <div className='text-2xl font-semibold mt-5 border-b border-white'>
                     Top Groups
                 </div>
-                {/*
-                    isUpdatingStats ? (
+                {
+                    isLoading ? (
                         <div>Loading...</div>
                     ) : groupList.length === 0 ? (
                         <div className="h-full w-full flex items-center justify-center">
@@ -324,7 +333,7 @@ export default function stats() {
                             <div className="grid grid-cols-1 gap-4">
 
                                 { groupList.slice(0,3).map((stat, index) => (
-                                    <div key={stat.id} 
+                                    <div key={stat.group_name} 
                                          className={`p-4 rounded-lg transition-all duration-300 bg-[#141318]  hover:shadow-lg
                                          ${index == 0 ? 'text-amber-400 hover:shadow-amber-400/30 ' : index == 1 ? 'text-slate-300 hover:shadow-slate-300/30' : 'text-orange-600 hover:shadow-orange-600/30'}`}>
 
@@ -346,7 +355,7 @@ export default function stats() {
                             </div>
                         </div>
                     )
-                */}
+                }
             </div>
             
             <div className='w-1/4 bg-[#0c0b10] text-center rounded-md shadow-sm   '>
