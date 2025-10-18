@@ -1,23 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { updateTimeSession, deleteTimeSession } from "@/utils/timeSessionsDB";
+import { updateTimeSession, deleteTimeSession, TimeSession } from "@/utils/timeSessionsDB";
 import { User } from '@supabase/supabase-js';
-
-interface TimeSession {
-  id: string;
-  user_id?: string;
-  start_time: Date;
-  end_time: Date | null;
-  duration: number | null;
-  group: string | null;
-}
 
 interface EditProps {
 
   editingSession: TimeSession;
   onCancel: () => void;
-  onSave: (updatedSession: TimeSession) => void;
+  onSave: (updatedSession: TimeSession) => void | Promise<void>;
   onDelete: () => void;
   user: User | null;
 }

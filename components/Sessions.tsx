@@ -2,17 +2,10 @@
 
 import { useAuth } from "@/context/AuthContext";
 import { useState, useEffect } from "react";
-import { fetchTimeSessions } from "@/utils/timeSessionsDB";
+import { fetchTimeSessions, TimeSession } from "@/utils/timeSessionsDB";
 import { useRouter } from "next/navigation";
 
 
-interface TimeSession {
-  id: string;
-  user_id?: string;
-  start_time: Date;
-  end_time: Date | null;
-  duration: number | null;
-}
 
 export default function Sessions() {
 

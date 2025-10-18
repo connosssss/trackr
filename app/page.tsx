@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/context/AuthContext";
 import React, { useState, useEffect } from "react";
-import { fetchTimeSessions, createTimeSession, updateTimeSession } from "@/utils/timeSessionsDB";
+import { fetchTimeSessions, createTimeSession, updateTimeSession, TimeSession } from "@/utils/timeSessionsDB";
 import { useRouter } from "next/navigation";
 
 
@@ -10,14 +10,6 @@ import Sessions from "@/components/Sessions";
 import Navbar from "@/components/Navbar";
 import Edit from "@/components/Edit";
 
-interface TimeSession {
-  id: string;
-  user_id?: string;
-  start_time: Date;
-  end_time: Date | null;
-  duration: number | null;
-  group: string | null;
-}
 
 /*
 Darkest
