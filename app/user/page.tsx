@@ -4,7 +4,7 @@ import { useAuth } from '@/context/AuthContext';
 import Navbar from "@/components/Navbar";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from 'react';
-import { getUserTheme, updateUserTheme } from '@/utils/userSettings';
+import { fetchUserTheme, updateUserTheme } from '@/utils/userSettings';
 
 
 export default function LoginPage() {
@@ -17,7 +17,7 @@ export default function LoginPage() {
 
     useEffect(() => {
         if (user) {
-            getUserTheme(user.id).then(theme => {
+            fetchUserTheme(user.id).then(theme => {
                 if (theme) setCurrentTheme(theme);
             });
         }

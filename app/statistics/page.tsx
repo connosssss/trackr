@@ -3,6 +3,8 @@
 import { useState, useEffect  } from 'react'; 
 import { useAuth } from "@/context/AuthContext";
 import { fetchTimeSessions, TimeSession } from "@/utils/timeSessionsDB";
+import {fetchUserTheme } from "@/utils/userSettings"
+
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid,
     LineChart, Line, AreaChart, Area, Tooltip } from 'recharts';
 
@@ -32,6 +34,9 @@ export default function stats() {
     const [hoveredSlice, setHoveredSlice] = useState<number | null>(null);
     const [hoveredCell, setHoveredCell] = useState<{row: number, col: number} | null>(null);
     const [mousePosition, setMousePosition] = useState<{x: number, y: number}>({x: 0, y: 0});
+
+
+    const [theme, setTheme] = useState("");
 
     const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const hourLabels = Array.from({length: 24}, (_, i) => i.toString().padStart(2, '0'));
@@ -201,11 +206,7 @@ export default function stats() {
         if (!user) return;
 
         try {
-            const temp = await fetchTimeSessions(user);
-            setSessions(temp);
-            setTotal(temp);
-            calculatePeriodTimes(temp);
-            loadGroups(temp);
+            
            }
            catch (error) {
             console.error('Error loading sessions:', error);
@@ -214,6 +215,31 @@ export default function stats() {
             setIsLoading(false);
            }
       };
+
+      const loadData = async () => {
+              if (!user) return;
+              setIsLoading(true);
+              try {
+                const temp = await fetchTimeSessions(user);
+                setSessions(temp);
+                setTotal(temp);
+                calculatePeriodTimes(temp);
+                loadGroups(temp);
+                
+                const tempTheme = await fetchUserTheme(user.id);
+      
+                //console.log("theme " + theme);
+      
+                setTheme(tempTheme);
+              } 
+              
+              catch (error) {
+                console.error("Error loading sessions or Settings:", error);
+              } 
+              finally {
+                setIsLoading(false);
+              }
+            };
 
     const setTotal = (sessions: TimeSession[]) => {
         const total = sessions.reduce((sum, session) => sum + (session.duration || 0), 0);

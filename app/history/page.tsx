@@ -3,6 +3,8 @@
 import { useAuth } from "@/context/AuthContext";
 import { useState, useEffect } from "react";
 import { fetchTimeSessions, deleteTimeSession, createTimeSession, TimeSession } from "@/utils/timeSessionsDB";
+import {fetchUserTheme } from "@/utils/userSettings"
+
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import Edit from "@/components/Edit";
@@ -17,7 +19,7 @@ export default function HistoryPage() {
 
     const { user, isLoading, signOut } = useAuth();
 
-    const [isLoadingSessions, setIsLoadingSessions] = useState(false);
+    const [isLoadingData, setisLoadingData] = useState(false);
     const [sessions, setSessions] = useState<TimeSession[]>([]);
 
 
@@ -25,30 +27,37 @@ export default function HistoryPage() {
     const [isEditing, setIsEditing] = useState(false);
     const [optionsOpen, setOptionsOpen] = useState(false);
 
+    const [theme, setTheme] = useState("");
+
 
     useEffect(() => {
         if (user) {
-          loadSessions();
+          loadData();
         }
       }, [user]);
 
-    const loadSessions = async () => {
-      if (!user) return;
-      
-      setIsLoadingSessions(true);
-      try {
-        const data = await fetchTimeSessions(user);
-        setSessions(data);
-      } 
-      
-      catch (error) {
-        console.error("Error loading sessions:", error);
-      } 
-      
-      finally {
-        setIsLoadingSessions(false);
-      }
-    };
+    const loadData = async () => {
+            if (!user) return;
+            setisLoadingData(true);
+            try {
+              const data = await fetchTimeSessions(user);
+              setSessions(data);
+              
+              
+              const tempTheme = await fetchUserTheme(user.id);
+    
+              //console.log("theme " + theme);
+    
+              setTheme(tempTheme);
+            } 
+            
+            catch (error) {
+              console.error("Error loading sessions or Settings:", error);
+            } 
+            finally {
+              setisLoadingData(false);
+            }
+          };
 
     const formatTime = (seconds: number) => {
       const hours = Math.floor(seconds / 3600);
@@ -103,13 +112,13 @@ export default function HistoryPage() {
     };
 
     const handleSaveComplete = async (updatedSession: TimeSession) => {
-      await loadSessions();
+      await loadData();
       setIsEditing(false);
       setEditingSession(null);
     };
 
     const handleDeleteFromEdit = async () => {
-      await loadSessions();
+      await loadData();
       setIsEditing(false);
       setEditingSession(null);
     };
@@ -244,7 +253,7 @@ export default function HistoryPage() {
               await createTimeSession(session);
             }
             
-            await loadSessions();
+            await loadData();
             //might start using alerts instead of console.error
             alert(`Successfully imported ${preAddSessions.length} sessions`);
           } 
@@ -269,7 +278,7 @@ export default function HistoryPage() {
 <div className=" bg-[#141318] min-h-screen h-full pb-20 " >
 <Navbar />
 
-                {isLoadingSessions ? (
+                {isLoadingData ? (
 
                   <div className="w-screen h-screen flex justify-center items-center flex-col gap-20">
                     <p className="text-4xl font-bold">Loading sessions...</p>

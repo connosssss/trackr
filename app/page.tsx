@@ -3,6 +3,7 @@
 import { useAuth } from "@/context/AuthContext";
 import React, { useState, useEffect } from "react";
 import { fetchTimeSessions, createTimeSession, updateTimeSession, TimeSession } from "@/utils/timeSessionsDB";
+import {fetchUserTheme } from "@/utils/userSettings"
 import { useRouter } from "next/navigation";
 
 
@@ -39,8 +40,10 @@ export default function Home() {
 
 
 
-  const [isLoadingSessions, setIsLoadingSessions] = useState(false);
+  const [isLoadingData, setisLoadingData] = useState(false);
   const[hasLoaded, setHasLoaded] = useState(false);
+
+  const[theme, setTheme] = useState("Dark");
 
 
   const [groupInput, setGroupInput] = useState<string>('');
@@ -62,9 +65,9 @@ export default function Home() {
     return monday;
   });
 
-  const loadSessions = async () => {
+  const loadData = async () => {
         if (!user) return;
-        setIsLoadingSessions(true);
+        setisLoadingData(true);
         try {
           const data = await fetchTimeSessions(user);
           setSessions(data);
@@ -75,12 +78,19 @@ export default function Home() {
             setCurrentSession(activeSession);
             setIsTracking(true);
           }
+          
+          const tempTheme = await fetchUserTheme(user.id);
+
+          //console.log("theme " + theme);
+
+          setTheme(tempTheme);
         } 
         
         catch (error) {
-          console.error("Error loading sessions:", error);
-        } finally {
-          setIsLoadingSessions(false);
+          console.error("Error loading sessions or Settings:", error);
+        } 
+        finally {
+          setisLoadingData(false);
         }
       };
 
@@ -92,7 +102,7 @@ export default function Home() {
 
   useEffect(() => {
     if (user) {
-      loadSessions();
+      loadData();
     }
   }, [user]);
 
@@ -244,13 +254,13 @@ export default function Home() {
 
 
   const handleSaveComplete = async (updatedSession: TimeSession) => {
-      await loadSessions();
+      await loadData();
       setIsEditing(false);
       setEditingSession(null);
     };
 
   const handleDeleteComplete = async () => {
-      await loadSessions();
+      await loadData();
       setIsEditing(false);
       setEditingSession(null);
     };

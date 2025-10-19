@@ -16,7 +16,7 @@ export async function setUpSettings(user: User) {
     }
 }
 
-export async function getUserTheme(userId: string): Promise<string> {
+export async function fetchUserTheme(userId: string): Promise<string> {
     const { data, error } = await supabase
         .from('user_settings')
         .select('theme')
