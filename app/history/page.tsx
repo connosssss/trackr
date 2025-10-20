@@ -11,7 +11,26 @@ import Edit from "@/components/Edit";
 import Navbar from "@/components/Navbar";
 
 
+/*
+Darkest
+ bg-[#0B0A0E] -> bg-[#0c0b10]
+bg-[#141318]  background
+bg-[#1B1A1F] 
+bg-[#2A292E]
+#4b4b51ff
+Lightest
 
+calendar part
+bg-[#2A292E]/80 hover:hover:bg-[#313136]/80
+
+
+LIGHT THEME:
+bit bit darker  #8a94a1
+a bit darker: bg-[#aab3bf]
+base : bg-[#f2f6fc]
+
+white #fcfafa
+*/
 
 
 export default function HistoryPage() {
@@ -275,7 +294,7 @@ export default function HistoryPage() {
     };
 
   return ( 
-<div className=" bg-[#141318] min-h-screen h-full pb-20 " >
+<div className={`${theme == "default" ? "bg-[#141318]" : "bg-[#f2f6fc] text-black"} min-h-screen h-full pb-20`} >
 <Navbar />
 
                 {isLoadingData ? (
@@ -290,30 +309,30 @@ export default function HistoryPage() {
                   <p className="w-full text-center pt-7 text-xl font-semibold">No sessions recorded yet</p>
 
                 ) : (
-                  <div className="bg-[#141318] h-full">
+                  <div className="h-full">
                     
                     
                     
                   <div className="w-10/12 mx-auto flex items-center justify-start -translate-x-8 gap-5 ">
                       <button onClick={() => {setOptionsOpen(!optionsOpen)}}
-                      className="px-6 py-2 rounded-md bg-[#0c0b10] hover:bg-[#2A292E] text-md mt-5"> Options </button>
+                      className={`px-6 py-2 rounded-md ${theme == "default" ? "bg-[#0c0b10] hover:bg-[#2A292E]" : "bg-[#aab3bf] hover:bg-[#8a94a1]"} text-md mt-5`}> Options </button>
                       {/*width changing isnt working rn os got to do this for now */}
                         <div className={`flex flex-row items-center gap-5 overflow-hidden transition-all duration-700 ease-in-out ${optionsOpen ? 'max-w-[80rem] opacity-100' : 'max-w-0 opacity-0'}`}><button onClick={exportToSheet}
-                      className={`px-6 py-2 rounded-md bg-[#0c0b10] hover:bg-[#2A292E] text-md whitespace-nowrap mt-5 
+                      className={`px-6 py-2 rounded-md ${theme == "default" ? "bg-[#0c0b10] hover:bg-[#2A292E]" : "bg-[#aab3bf] hover:bg-[#8a94a1]"} text-md whitespace-nowrap mt-5 
                       transition-all duration-300`}> Export As .xlsx (SpreadSheet)</button>
                       
-                      <label className="px-6 py-2 rounded-md bg-[#0c0b10] hover:bg-[#2A292E] text-md whitespace-nowrap mt-5 cursor-pointer 
-                      transition-all duration-300">
+                      <label className={`px-6 py-2 rounded-md ${theme == "default" ? "bg-[#0c0b10] hover:bg-[#2A292E]" : "bg-[#aab3bf] hover:bg-[#8a94a1]"} text-md whitespace-nowrap mt-5 cursor-pointer 
+                      transition-all duration-300`}>
                             Import From .xlsx (SpreadSheet)
                       <input type="file" accept=".xlsx" onChange={importFromSheet} className="hidden"/>
                       </label>
                       
                       <button onClick={newSession}
-                      className={`px-6 py-2 rounded-md bg-[#0c0b10] hover:bg-[#2A292E] text-md whitespace-nowrap mt-5 
+                      className={`px-6 py-2 rounded-md ${theme == "default" ? "bg-[#0c0b10] hover:bg-[#2A292E]" : "bg-[#aab3bf] hover:bg-[#8a94a1]"} text-md whitespace-nowrap mt-5 
                       transition-all duration-300`}> Create New Session</button>
 
                       <button onClick={handleClear}
-                      className={`px-6 py-2 rounded-md bg-[#792d2d] hover:bg-[#ba4747] text-md whitespace-nowrap mt-5 
+                      className={`px-6 py-2 rounded-md ${theme == "default" ? " hover:bg-[#ba4747]" : "hover:bg-[#792d2d] bg-[#ba4747]"} text-md whitespace-nowrap mt-5 
                       transition-all duration-300`}> Clear all Session History</button>
                       
                       
@@ -321,62 +340,62 @@ export default function HistoryPage() {
                     </div>
                   <div className=" w-10/12 mx-auto overflow-hidden -translate-x-8 "> 
                     
-                    <table className="w-full divide-y-2 divide-gray-200  text-md ">
+                    <table className={`w-full divide-y-2 ${theme == "default" ? "divide-gray-200" : "divide-gray-900"}  text-md `}>
                       <thead className=" rounded-t-2xl ">
                         <tr>
 
-                        <th scope="col" className="pt-7 pb-3 text-lg text-shadow-md ">Date</th>
+                        <th scope="col" className="pt-7 pb-3 text-lg   ">Date</th>
 
-                          <th scope="col" className="pt-7 pb-3 text-lg text-shadow-md ">Start Time</th>
+                          <th scope="col" className="pt-7 pb-3 text-lg   ">Start Time</th>
 
-                          <th scope="col" className="pt-7 pb-3 text-lg text-shadow-md ">End Time</th>
+                          <th scope="col" className="pt-7 pb-3 text-lg   ">End Time</th>
 
-                          <th scope="col" className="pt-7 pb-3 text-lg text-shadow-md ">Duration</th>
+                          <th scope="col" className="pt-7 pb-3 text-lg   ">Duration</th>
 
-                          <th scope="col" className="pt-7 pb-3 text-lg text-shadow-md ">Group Name</th>
+                          <th scope="col" className="pt-7 pb-3 text-lg   ">Group Name</th>
                           
-                          <th scope="col" className="pt-7 pb-3 text-lg text-shadow-md ">Edit</th>
+                          <th scope="col" className="pt-7 pb-3 text-lg   ">Edit</th>
                           
-                          <th scope="col" className="pt-7 pb-3 text-lg text-shadow-md ">Delete</th>
+                          <th scope="col" className="pt-7 pb-3 text-lg   ">Delete</th>
 
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-white/20">
+                      <tbody className={`divide-y  ${theme == "default" ? "divide-white/20" : "divide-gray-900"} `}>
 
                         {
 
                           
                         sessions.map((session) => (
                           <tr key={session.id} className="">
-                            <td className="text-center py-2 text-gray-300 text-sm">
+                            <td className={`${theme == "default" ? "text-gray-300" : " text-black"} text-center py-2 text-sm`}>
                               {session.start_time.toLocaleDateString()}
                             </td>
-                            <td className="text-center py-2 text-gray-300 text-sm">
+                            <td className={`${theme == "default" ? "text-gray-300" : " text-black"} text-center py-2 text-sm`}>
                               {session.start_time.toLocaleTimeString()}
                             </td>
-                            <td className="text-center py-2 text-gray-300 text-sm">
+                            <td className={`${theme == "default" ? "text-gray-300" : " text-black"} text-center py-2 text-sm`}>
                               {session.end_time ? session.end_time.toLocaleTimeString() : '-'}
                             </td>
-                            <td className="text-center py-2 text-gray-300 text-sm">
+                            <td className={`${theme == "default" ? "text-gray-300" : " text-black"} text-center py-2 text-sm`}>
                               {session.duration ? formatTime(session.duration) : '-'}
                             </td>
-                            <td className="text-center py-2 text-gray-300 text-sm">
+                            <td className={`${theme == "default" ? "text-gray-300" : " text-black"} text-center py-2 text-sm`}>
                               {session.group}
                             </td>
-                            <td className="text-center py-2 text-gray-300 text-sm">
+                            <td className={`${theme == "default" ? "text-gray-300" : " text-black"} text-center py-2 text-sm`}>
                               <button 
                                 onClick={() => handleEdit(session)}
-                                className="bg-[#0c0b10] hover:bg-[#2A292E] py-1 px-6
-                                rounded transition duration-300"
+                                className={`${theme == "default" ? "bg-[#0c0b10] hover:bg-[#2A292E]" : "bg-[#aab3bf] hover:bg-[#8a94a1]"} py-1 px-6
+                                rounded transition duration-300`}
                               >
                                 Edit
                               </button>
                             </td>
-                            <td className="text-center py-2 text-gray-300 text-sm">
+                            <td className={`${theme == "default" ? "text-gray-300" : " text-black"} text-center py-2 text-sm`}>
                               <button 
                                 onClick={() => handleDelete(session.id)}
-                                className=" bg-[#0c0b10] hover:bg-[#2A292E] py-1 px-6
-                                rounded transition duration-300"
+                                className={`${theme == "default" ? "bg-[#0c0b10] hover:bg-[#2A292E]" : "bg-[#aab3bf]  hover:bg-[#8a94a1]"} py-1 px-6
+                                rounded transition duration-300`}
                               >
                                 X
                               </button>
