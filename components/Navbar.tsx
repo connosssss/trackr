@@ -2,7 +2,7 @@
 
 // import { useRouter } from "next/navigation";
 import Link from 'next/link';
-import { useState } from 'react'; 
+import { useState, useEffect } from 'react'; 
 import {fetchUserTheme } from "@/utils/userSettings"
 import { useAuth } from "@/context/AuthContext";
 
@@ -10,22 +10,30 @@ import { useAuth } from "@/context/AuthContext";
 export default function Navbar() {
 
   const [isMinimized, setIsMinimized] = useState(true);
-  const [theme, setTheme] = useState("");
+  const [theme, setTheme] = useState("default");
   const { user} = useAuth();
 
 
   const getTheme = async () => {
-    if(!user) throw "userError";
+    if(!user) {
+      setTheme('default');
+      return;
+    }
 
     try{
       let data = await fetchUserTheme(user.id);
-      setTheme(data);
+      if (data) setTheme(data);
     }
     catch(err){
-      alert("Error in loading theme / user for navbar: " +err)
+      console.error("Error in loading theme / user for navbar:", err)
     }
 
   }
+
+  useEffect(() => {
+    
+    getTheme();
+  }, [user]);
 
   const toggleMinimize = () => {
     setIsMinimized(!isMinimized);
@@ -37,7 +45,7 @@ export default function Navbar() {
       <button 
         onClick={toggleMinimize} 
         className={`absolute top-2 ${isMinimized ? 'left-2' : 'left-5'} 
-         text-white rounded-md z-30 px-4 ${!isMinimized ? 'w-[80%]' : 'w-12'} mr-2
+         ${theme == "default" ? 'text-white' : 'text-gray-800'} rounded-md z-30 px-4 ${!isMinimized ? 'w-[80%]' : 'w-12'} mr-2
          ${theme == "default" ? "bg-[#1B1A1F] hover:hover:bg-[#2A292E]" : "bg-[#8a94a1] hover:bg-[#6a7685]"}
          transition-all duration-500 ease-in-out`}
       >

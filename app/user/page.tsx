@@ -59,22 +59,21 @@ export default function LoginPage() {
         
     };
 
-  return (
-    <div className="flex  bg-[#141318] w-full items-center justify-center h-screen ">
-        <Navbar/>
-        <div className='min-w-1/3 min-h-1/2 bg-[#0c0b10] rounded-md p-12
-        flex flex-col justify-start items-center gap-6 shadow-md shadow-black'>
+    return (
+        <div className={`${currentTheme === 'default' ? 'bg-[#141318] text-white' : 'bg-[#f2f6fc] text-black'} flex w-full items-center justify-center h-screen`}>
+                <Navbar/>
+                <div className={`min-w-1/3 min-h-1/2 rounded-md p-12 flex flex-col justify-start items-center gap-6 shadow-md ${currentTheme === 'default' ? 'bg-[#0c0b10] shadow-black' : 'bg-[#f2f6fc] shadow-gray-300'}`}>
             <h2 className='text-xl font-bold text-shadow-2'>
                 Email: {user?.email}
             </h2>
              
              <div className="w-full flex flex-col items-center gap-4 mb-4">
                 <h3 className="text-lg font-semibold">Theme Settings</h3>
-                <p className='text-xs'> FEATURE NOT FINISHED (DOESNT DO ANYTHING)</p>
+                <p className='text-xs'>{currentTheme === 'default' ? 'Using Default theme' : 'Using Light theme'}</p>
                 <select 
                     value={currentTheme}
                     onChange={handleTheme}
-                    className="bg-[#141318] text-white px-4 py-2 rounded-md w-1/3"
+                    className={`${currentTheme === 'default' ? 'bg-[#141318] text-white' : 'bg-[#f2f6fc] text-black border'} px-4 py-2 rounded-md w-1/3`}
                 >
 
                     <option value="default">Default</option>
@@ -83,15 +82,17 @@ export default function LoginPage() {
             </div>
 
             <button onClick={handleForgotPassword}
-                className='py-2 bg-[#141318] hover:bg-[#2A292E] w-1/3 rounded-md shadow-md shadow-black
-                transition-all duration-300 '>Reset Password</button>
+                className={`py-2 w-1/3 rounded-md transition-all duration-300 ${currentTheme === 'default' ? 'bg-[#141318] hover:bg-[#2A292E] shadow-md shadow-black text-white' : 'bg-[#aab3bf] hover:bg-[#8a94a1] text-black'}`}>
+                Reset Password
+            </button>
 
                 
           
 
             <button onClick={handleSignOut}
-                className='py-2 bg-[#792d2d] hover:bg-[#ba4747] w-1/3 rounded-md shadow-md shadow-black
-                transition-all duration-300 '>Sign Out</button> 
+                className={`py-2 w-1/3 rounded-md transition-all duration-300 ${currentTheme === 'default' ? 'bg-[#792d2d] hover:bg-[#ba4747] shadow-md shadow-black text-white' : 'bg-[#ba4747] hover:bg-[#792d2d] text-black'}`}>
+                Sign Out
+            </button> 
 
 
             
