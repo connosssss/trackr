@@ -64,7 +64,6 @@ export default function stats() {
     };
 
     const createActivityHeatmap = () => {
-        // hopefully works right
         const heatmapArray: number[][] = Array(7).fill(null).map(() => Array(24).fill(0));
         
         sessions.forEach(session => {
@@ -228,8 +227,6 @@ export default function stats() {
                 
                 const tempTheme = await fetchUserTheme(user.id);
       
-                //console.log("theme " + theme);
-      
                 setTheme(tempTheme);
               } 
               
@@ -304,15 +301,15 @@ export default function stats() {
     };
 
   return (<><Navbar/>
-    <div className="min-h-screen w-full bg-[#141318] pb-16 pt-10">
+    <div className={`${theme == "default" ? "bg-[#141318]" : "bg-[#f2f6fc]"} min-h-screen w-full pb-16 pt-10`}>
       
         
 
         
         <div className="w-5/6 mx-auto min-h-72 rounded-md  
         flex flex-row gap-8">
-            <div className='w-1/4 bg-[#0c0b10] text-center rounded-md shadow-sm   '>
-                <div className='text-2xl font-semibold mt-5 border-b border-white'>
+            <div className={`${theme == "default" ? "bg-[#0c0b10] text-white border-white" : "bg-[#aab3bf] text-black border-black"} w-1/4 text-center rounded-md shadow-sm`}>
+                <div className={`${theme == "default" ? "border-white" : "border-black"} text-2xl font-semibold mt-5 border-b`}>
                     Total Time
                 </div>
                 {
@@ -341,8 +338,8 @@ export default function stats() {
                 }
             </div>
 
-            <div className='w-1/2 bg-[#0c0b10] text-center rounded-md shadow-sm   '>
-                <div className='text-2xl font-semibold mt-5 border-b border-white'>
+            <div className={`${theme == "default" ? "bg-[#0c0b10] text-white border-white" : "bg-[#aab3bf] text-black border-black"} w-1/2 text-center rounded-md shadow-sm`}>
+                <div className={`${theme == "default" ? "border-white" : "border-black"} text-2xl font-semibold mt-5 border-b`}>
                     Top Groups
                 </div>
                 {
@@ -360,7 +357,7 @@ export default function stats() {
 
                                 { groupList.slice(0,3).map((stat, index) => (
                                     <div key={stat.group_name} 
-                                         className={`p-4 rounded-lg transition-all duration-300 bg-[#141318]  hover:shadow-lg
+                                         className={`p-4 rounded-lg transition-all duration-300 ${theme == "default" ? "bg-[#141318]" : "bg-[#8a94a1]"} hover:shadow-lg
                                          ${index == 0 ? 'text-amber-400 hover:shadow-amber-400/30 ' : index == 1 ? 'text-slate-300 hover:shadow-slate-300/30' : 'text-orange-600 hover:shadow-orange-600/30'}`}>
 
                                         <div className="flex justify-between items-center">
@@ -384,8 +381,8 @@ export default function stats() {
                 }
             </div>
             
-            <div className='w-1/4 bg-[#0c0b10] text-center rounded-md shadow-sm   '>
-                <div className='text-2xl font-semibold mt-5 border-b border-white'>
+            <div className={`${theme == "default" ? "bg-[#0c0b10] text-white border-white" : "bg-[#aab3bf] text-black border-black"} w-1/4 text-center rounded-md shadow-sm`}>
+                <div className={`${theme == "default" ? "border-white" : "border-black"} text-2xl font-semibold mt-5 border-b`}>
                     Recent Activity
                 </div>
                 {
@@ -396,7 +393,7 @@ export default function stats() {
 
                             
                             <div className="grid grid-cols-1 gap-12 text-xl font-semibold mt-4 ">
-                                <div className="p-2 flex justify-between items-center text-white hover:scale-110
+                                <div className="p-2 flex justify-between items-center hover:scale-110
                                 transform transition-all duration-300">
                                     
                                         <span >Last Week</span>
@@ -404,7 +401,7 @@ export default function stats() {
                                     
                                 </div>
 
-                                <div className="p-2 flex justify-between items-center text-white hover:scale-110
+                                <div className="p-2 flex justify-between items-center hover:scale-110
                                 transform transition-all duration-300">
                                     
                                         <span >Last Month</span>
@@ -412,7 +409,7 @@ export default function stats() {
                                     
                                 </div>
 
-                                <div className="p-2 flex justify-between items-center text-white hover:scale-110
+                                <div className="p-2 flex justify-between items-center hover:scale-110
                                 transform transition-all duration-300">
                                     
                                         <span >Last Year</span>
@@ -431,7 +428,7 @@ export default function stats() {
         <div className="w-5/6 mx-auto  min-h-96 rounded-md  mt-12 
         flex flex-row gap-12">
 
-            <div className='w-1/2 bg-[#0c0b10] rounded-md shadow-sm    p-6'>
+            <div className={`${theme == "default" ? "bg-[#0c0b10]" : "bg-[#aab3bf] text-black"} w-1/2 rounded-md shadow-sm p-6`}>
 
                 {isLoading ? (
                     <div className="flex items-center justify-center h-80">
@@ -475,7 +472,7 @@ export default function stats() {
                 )}
             </div>
 
-            <div className='w-1/2 bg-[#0c0b10] rounded-md shadow-sm    p-6 flex flex-col items-center justify-center gap-6'>
+            <div className={`${theme == "default" ? "bg-[#0c0b10]" : "bg-[#aab3bf] text-black"} w-1/2 rounded-md shadow-sm p-6 flex flex-col items-center justify-center gap-6`}>
             <div className='flex flex-row w-full text-center items-center '>
                 
                                 
@@ -495,7 +492,7 @@ export default function stats() {
                     <div className='w-full h-full flex flex-col items-center' onMouseMove={handleMouseMove}>
 
                         
-                        <div className='grid grid-cols-24 gap-1 w-[92%] ml-10  mb-2 text-xs text-gray-400'>
+                        <div className={`${theme == "default" ? "text-gray-400" : "text-gray-700"} grid grid-cols-24 gap-1 w-[92%] ml-10  mb-2 text-xs`}>
                             {hourLabels.map((hour, index) => (
                                 <div key={hour} className={`text-center ${index % 3 == 0 ? 'opacity-100' : 'opacity-0'}`}>
                                     {hour}
@@ -508,7 +505,7 @@ export default function stats() {
                             {heatmapArray.map((dayData, dayIndex) => (
                                 <div key={dayIndex} className='flex gap-1 items-center'>
                                  
-                                    <div className='w-8 text-xs text-gray-400 text-right mr-2'>
+                                    <div className={`${theme == "default" ? "text-gray-400" : "text-gray-700"} w-8 text-xs text-right mr-2`}>
 
                                         {dayLabels[dayIndex] }
                                         
@@ -531,7 +528,7 @@ export default function stats() {
                         </div>
                         
                         
-                        <div className='flex items-center gap-2 mt-4 text-xs text-gray-400'>
+                        <div className={`${theme == "default" ? "text-gray-400" : "text-gray-700"} flex items-center gap-2 mt-4 text-xs`}>
                             <div>Less</div>
 
                             <div className='flex gap-1'>
