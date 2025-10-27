@@ -201,42 +201,28 @@ export default function stats() {
 
 
       const loadSessions = async () => {
-        setIsLoading(true);
         if (!user) return;
-
+        setIsLoading(true);
+        
         try {
+            const temp = await fetchTimeSessions(user);
+            setSessions(temp);
+            setTotal(temp);
+            calculatePeriodTimes(temp);
+            loadGroups(temp);
             
-           }
-           catch (error) {
+            const tempTheme = await fetchUserTheme(user.id);
+            setTheme(tempTheme);
+        } 
+        
+        catch (error) {
             console.error('Error loading sessions:', error);
-           }
-           finally {
-            setIsLoading(false);
-           }
-      };
+        }
 
-      const loadData = async () => {
-              if (!user) return;
-              setIsLoading(true);
-              try {
-                const temp = await fetchTimeSessions(user);
-                setSessions(temp);
-                setTotal(temp);
-                calculatePeriodTimes(temp);
-                loadGroups(temp);
-                
-                const tempTheme = await fetchUserTheme(user.id);
-      
-                setTheme(tempTheme);
-              } 
-              
-              catch (error) {
-                console.error("Error loading sessions or Settings:", error);
-              } 
-              finally {
-                setIsLoading(false);
-              }
-            };
+        finally {
+            setIsLoading(false);
+        }
+      };
 
     const setTotal = (sessions: TimeSession[]) => {
         const total = sessions.reduce((sum, session) => sum + (session.duration || 0), 0);
