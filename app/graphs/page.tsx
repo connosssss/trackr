@@ -5,6 +5,7 @@ import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid,
     LineChart, Line, AreaChart, Area, Tooltip } from 'recharts';
 import {useState, useEffect} from "react"; 
 import { fetchTimeSessions, TimeSession} from "@/utils/timeSessionsDB";
+import { fetchUserTheme } from '@/utils/userSettings';
 import { useAuth } from "@/context/AuthContext";
 
 
@@ -15,6 +16,8 @@ export default function Graphs() {
     const [chartType, setChartType] = useState<'bar' | 'line' | 'area'>('bar');
     const [sessions, setSessions] = useState<TimeSession[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+    // default to dark until user preference loads
+    const [theme, setTheme] = useState("default");
     const { user } = useAuth();
 
 
@@ -37,13 +40,19 @@ export default function Graphs() {
 
     
     useEffect(() => {
-        const loadSessions = async () => {
+                const loadSessions = async () => {
             if (!user) return;
 
             setIsLoading(true);
             try {
-                const fetchedSessions = await fetchTimeSessions(user);
-                setSessions(fetchedSessions);
+                                const fetchedSessions = await fetchTimeSessions(user);
+                                setSessions(fetchedSessions);
+                                try {
+                                    const tempTheme = await fetchUserTheme(user.id);
+                                    if (tempTheme) setTheme(tempTheme);
+                                } catch (err) {
+                                    console.error('Error fetching user theme for graphs:', err);
+                                }
             } catch (error) {
                 console.error('Error loading sessions:', error);
             } finally {
@@ -248,18 +257,17 @@ export default function Graphs() {
     const barChartData = prepareChartData();
 
 
-  return (
-    <div className="bg-[#141318] w-full">
-    <div className="flex flex-col  w-[95%] items-center  min-h-screen   ">
-        <Navbar/>
+    return (
+        <div className={`${theme == "default" ? "bg-[#141318] text-white" : "bg-[#f2f6fc] text-black"} w-full`}>
+        <div className="flex flex-col  w-[95%] items-center  min-h-screen   ">
+                <Navbar/>
 
             
                 <div className="flex  mb-4 flex-row w-full justify-between">
                     <select
                         value={selectedPeriod}
                         onChange={(e) => setSelectedPeriod(e.target.value as 'week' | 'month' | '3months' | 'year' | 'alltime')}
-                        className="bg-[#0c0b10] text-white rounded px-9 py-3 border border-gray-500 text-md mt-5 ml-5
-                        focus:outline-none focus:border-gray-400"
+                        className={`rounded px-9 py-3 border text-md mt-5 ml-5 focus:outline-none focus:border-gray-400 ${theme == "default" ? 'bg-[#0c0b10] text-white border-gray-500' : 'bg-[#f2f6fc] text-black border-gray-300'}`}
                     >
 
                         <option value="week">Week</option>
@@ -274,8 +282,7 @@ export default function Graphs() {
                     <select
                         value={chartType}
                         onChange={(e) => setChartType(e.target.value as 'bar' | 'line' | 'area')}
-                        className="bg-[#0c0b10] text-white rounded px-9 py-3 border border-gray-500 text-md mt-5 
-                        focus:outline-none focus:border-gray-400"
+                        className={`rounded px-9 py-3 border text-md mt-5 focus:outline-none focus:border-gray-400 ${theme == "default" ? 'bg-[#0c0b10] text-white border-gray-500' : 'bg-[#f2f6fc] text-black border-gray-300'}`}
                         >
                         <option value="bar">Bar Chart</option>
                         <option value="line">Line Chart</option>
@@ -290,18 +297,18 @@ export default function Graphs() {
                     <div className="flex justify-center gap-3 items-center py-3 w-full  mb-4 ml-9">
                         <button 
                             onClick={() => selectedPeriod === 'week' ? changeWeek('before') : changeMonth('before')}
-                            className="text-white bg-[#0c0b10] px-3 py-1 rounded-md hover:bg-gray-500 transition-all duration-300"
+                            className={`${theme == "default" ? 'text-white bg-[#0c0b10] hover:bg-gray-500' : 'text-black bg-[#aab3bf] hover:bg-[#8a94a1]'} px-3 py-1 rounded-md transition-all duration-300`}
                         >
                             ← 
                         </button>
 
-                        <div className="text-white text-lg font-medium  w-auto">
+                        <div className={`${theme == "default" ? 'text-white' : 'text-black'} text-lg font-medium  w-auto`}>
                             {selectedPeriod === 'week' ? formatWeekRange() : formatMonthRange()}
                         </div>
                         
                         <button 
                             onClick={() => selectedPeriod === 'week' ? changeWeek('later') : changeMonth('later')}
-                            className="text-white bg-[#0c0b10] px-3 py-1 rounded-md hover:bg-gray-500 transition-all duration-300"
+                            className={`${theme == "default" ? 'text-white bg-[#0c0b10] hover:bg-gray-500' : 'text-black bg-[#aab3bf] hover:bg-[#8a94a1]'} px-3 py-1 rounded-md transition-all duration-300`}
                         >
                             →
                         </button>
@@ -330,25 +337,28 @@ export default function Graphs() {
                         <ResponsiveContainer width="100%" height="100%">
                             {chartType === 'bar' ? (
                                 <BarChart data={barChartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                                    <CartesianGrid strokeDasharray="3 3" stroke={theme == "default" ? "#374151" : "#e5e7eb"} />
                                     <XAxis 
                                         dataKey="name" 
-                                        stroke="#9ca3af"
+                                        stroke={theme == "default" ? "#9ca3af" : "#374151"}
                                         fontSize={12}
                                         interval={0}
                                         tick={{ fontSize: 10 }}
-                                        
                                     />
                                     <YAxis 
-                                        stroke="#9ca3af"
+                                        stroke={theme == "default" ? "#9ca3af" : "#374151"}
                                         fontSize={12}
                                     />
                                     <Tooltip 
                                         formatter={(value: number) => [`${value} hours`, 'Hours Worked']}
-                                        labelStyle={{ color: '#d1d5db' }}
-                                        contentStyle={{
+                                        labelStyle={{ color: theme == "default" ? '#d1d5db' : '#111827' }}
+                                        contentStyle={ theme == "default" ? {
                                             backgroundColor: '#1f2937',
                                             border: '1px solid #374151',
+                                            borderRadius: '8px',
+                                        } : {
+                                            backgroundColor: '#ffffff',
+                                            border: '1px solid #e5e7eb',
                                             borderRadius: '8px',
                                         }}
                                     />
