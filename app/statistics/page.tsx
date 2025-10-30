@@ -99,10 +99,12 @@ export default function stats() {
     };
 
     const getColorIntensity = (intensity: number) => {
-        if (intensity === 0) return 'rgba(34, 197, 94, 0.1)'; 
+        if (intensity === 0) {
+            return theme === "default" ? 'rgba(34, 197, 94, 0.1)' : 'rgba(20, 94, 47, 0.1)'; 
+        }
 
         const opacity = Math.max(0.25, intensity); 
-        return `rgba(34, 197, 94, ${opacity})`;
+        return theme === "default" ? `rgba(34, 197, 94, ${opacity})` : `rgba(20, 94, 47, ${opacity})`;
     };
 
     const createPieSlices = () => {
@@ -294,7 +296,7 @@ export default function stats() {
         
         <div className="w-5/6 mx-auto min-h-72 rounded-md  
         flex flex-row gap-8">
-            <div className={`${theme == "default" ? "bg-[#0c0b10] text-white border-white" : "bg-[#aab3bf] text-black border-black"} w-1/4 text-center rounded-md shadow-sm`}>
+            <div className={`${theme == "default" ? "bg-[#0c0b10] text-white border-white" : "bg-[#aab3bf] text-[#1e252d] border-black"} w-1/4 text-center rounded-md shadow-sm`}>
                 <div className={`${theme == "default" ? "border-white" : "border-black"} text-2xl font-semibold mt-5 border-b`}>
                     Total Time
                 </div>
@@ -324,7 +326,7 @@ export default function stats() {
                 }
             </div>
 
-            <div className={`${theme == "default" ? "bg-[#0c0b10] text-white border-white" : "bg-[#aab3bf] text-black border-black"} w-1/2 text-center rounded-md shadow-sm`}>
+            <div className={`${theme == "default" ? "bg-[#0c0b10] text-white border-white" : "bg-[#aab3bf] text-[#1e252d] border-black"} w-1/2 text-center rounded-md shadow-sm`}>
                 <div className={`${theme == "default" ? "border-white" : "border-black"} text-2xl font-semibold mt-5 border-b`}>
                     Top Groups
                 </div>
@@ -367,7 +369,7 @@ export default function stats() {
                 }
             </div>
             
-            <div className={`${theme == "default" ? "bg-[#0c0b10] text-white border-white" : "bg-[#aab3bf] text-black border-black"} w-1/4 text-center rounded-md shadow-sm`}>
+            <div className={`${theme == "default" ? "bg-[#0c0b10] text-white border-white" : "bg-[#aab3bf] text-[#1e252d] border-black"} w-1/4 text-center rounded-md shadow-sm`}>
                 <div className={`${theme == "default" ? "border-white" : "border-black"} text-2xl font-semibold mt-5 border-b`}>
                     Recent Activity
                 </div>
@@ -414,7 +416,7 @@ export default function stats() {
         <div className="w-5/6 mx-auto  min-h-96 rounded-md  mt-12 
         flex flex-row gap-12">
 
-            <div className={`${theme == "default" ? "bg-[#0c0b10]" : "bg-[#aab3bf] text-black"} w-1/2 rounded-md shadow-sm p-6`}>
+            <div className={`${theme == "default" ? "bg-[#0c0b10]" : "bg-[#aab3bf] text-[#1e252d]"} w-1/2 rounded-md shadow-sm p-6`}>
 
                 {isLoading ? (
                     <div className="flex items-center justify-center h-80">
@@ -458,7 +460,7 @@ export default function stats() {
                 )}
             </div>
 
-            <div className={`${theme == "default" ? "bg-[#0c0b10]" : "bg-[#aab3bf] text-black"} w-1/2 rounded-md shadow-sm p-6 flex flex-col items-center justify-center gap-6`}>
+            <div className={`${theme == "default" ? "bg-[#0c0b10]" : "bg-[#aab3bf] text-[#1e252d]"} w-1/2 rounded-md shadow-sm p-6 flex flex-col items-center justify-center gap-6`}>
             <div className='flex flex-row w-full text-center items-center '>
                 
                                 
