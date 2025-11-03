@@ -1,39 +1,14 @@
 'use client';
 
-// import { useRouter } from "next/navigation";
-import Link from 'next/link';
-import { useState, useEffect } from 'react'; 
-import {fetchUserTheme } from "@/utils/userSettings"
-import { useAuth } from "@/context/AuthContext";
 
+import Link from 'next/link';
+import { useState } from 'react'; 
+import { useTheme } from "@/context/ThemeContext";
 
 export default function Navbar() {
 
   const [isMinimized, setIsMinimized] = useState(true);
-  const [theme, setTheme] = useState("default");
-  const { user} = useAuth();
-
-
-  const getTheme = async () => {
-    if(!user) {
-      setTheme('default');
-      return;
-    }
-
-    try{
-      let data = await fetchUserTheme(user.id);
-      if (data) setTheme(data);
-    }
-    catch(err){
-      console.error("Error in loading theme / user for navbar:", err)
-    }
-
-  }
-
-  useEffect(() => {
-    
-    getTheme();
-  }, [user]);
+  const { theme } = useTheme();
 
   const toggleMinimize = () => {
     setIsMinimized(!isMinimized);

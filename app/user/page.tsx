@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from 'react';
 import { fetchUserTheme, updateUserTheme } from '@/utils/userSettings';
+import { useTheme } from '@/context/ThemeContext';
 
 
 export default function LoginPage() {
@@ -49,6 +50,8 @@ export default function LoginPage() {
       }
     };
 
+    const { updateTheme } = useTheme();
+
     const handleTheme = async (e: React.ChangeEvent<HTMLSelectElement>) => {
         if (!user) return;
     
@@ -56,7 +59,7 @@ export default function LoginPage() {
         setCurrentTheme(newTheme); 
         
         await updateUserTheme(user.id, newTheme);
-        
+        await updateTheme(); // Update theme context to trigger navbar update
     };
 
     return (
