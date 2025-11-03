@@ -3,6 +3,8 @@
 import Navbar from "@/components/Navbar";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid,
     LineChart, Line, AreaChart, Area, Tooltip } from 'recharts';
+import { useTheme } from "@/context/ThemeContext";
+
 import {useState, useEffect} from "react"; 
 import { fetchTimeSessions, TimeSession} from "@/utils/timeSessionsDB";
 import { fetchUserTheme } from '@/utils/userSettings';
@@ -17,7 +19,8 @@ export default function Graphs() {
     const [sessions, setSessions] = useState<TimeSession[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     // default to dark until user preference loads
-    const [theme, setTheme] = useState("default");
+      const { theme} = useTheme();
+    
     const { user } = useAuth();
 
 
@@ -45,17 +48,16 @@ export default function Graphs() {
 
             setIsLoading(true);
             try {
-                                const fetchedSessions = await fetchTimeSessions(user);
-                                setSessions(fetchedSessions);
-                                try {
-                                    const tempTheme = await fetchUserTheme(user.id);
-                                    if (tempTheme) setTheme(tempTheme);
-                                } catch (err) {
-                                    console.error('Error fetching user theme for graphs:', err);
-                                }
-            } catch (error) {
+                const fetchedSessions = await fetchTimeSessions(user);
+                setSessions(fetchedSessions);
+                                
+            } 
+            
+            catch (error) {
                 console.error('Error loading sessions:', error);
-            } finally {
+            } 
+            
+            finally {
                 setIsLoading(false);
             }
         };

@@ -3,7 +3,8 @@
 import { useAuth } from "@/context/AuthContext";
 import { useState, useEffect } from "react";
 import { fetchTimeSessions, deleteTimeSession, createTimeSession, TimeSession } from "@/utils/timeSessionsDB";
-import {fetchUserTheme } from "@/utils/userSettings"
+//import {fetchUserTheme } from "@/utils/userSettings"
+import { useTheme } from "@/context/ThemeContext";
 
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
@@ -46,7 +47,7 @@ export default function HistoryPage() {
     const [isEditing, setIsEditing] = useState(false);
     const [optionsOpen, setOptionsOpen] = useState(false);
 
-    const [theme, setTheme] = useState("");
+    const {theme} = useTheme();
 
 
     useEffect(() => {
@@ -62,12 +63,7 @@ export default function HistoryPage() {
               const data = await fetchTimeSessions(user);
               setSessions(data);
               
-              
-              const tempTheme = await fetchUserTheme(user.id);
-    
-              //console.log("theme " + theme);
-    
-              setTheme(tempTheme);
+             
             } 
             
             catch (error) {

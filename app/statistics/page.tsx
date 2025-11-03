@@ -3,7 +3,9 @@
 import { useState, useEffect  } from 'react'; 
 import { useAuth } from "@/context/AuthContext";
 import { fetchTimeSessions, TimeSession } from "@/utils/timeSessionsDB";
-import {fetchUserTheme } from "@/utils/userSettings"
+//import {fetchUserTheme } from "@/utils/userSettings"
+import { useTheme } from "@/context/ThemeContext";
+
 
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid,
     LineChart, Line, AreaChart, Area, Tooltip } from 'recharts';
@@ -36,7 +38,8 @@ export default function stats() {
     const [mousePosition, setMousePosition] = useState<{x: number, y: number}>({x: 0, y: 0});
 
 
-    const [theme, setTheme] = useState("");
+     const { theme} = useTheme();
+
 
     const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const hourLabels = Array.from({length: 24}, (_, i) => i.toString().padStart(2, '0'));
@@ -213,8 +216,7 @@ export default function stats() {
             calculatePeriodTimes(temp);
             loadGroups(temp);
             
-            const tempTheme = await fetchUserTheme(user.id);
-            setTheme(tempTheme);
+           
         } 
         
         catch (error) {
