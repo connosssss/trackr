@@ -348,7 +348,7 @@ export default function stats() {
                                 { groupList.slice(0,3).map((stat, index) => (
                                     <div key={stat.group_name} 
                                          className={`p-4 rounded-lg transition-all duration-300 ${theme == "default" ? "bg-[#141318]" : "bg-[#8a94a1]"} hover:shadow-lg
-                                         ${index == 0 ? 'text-amber-400 hover:shadow-amber-400/30 ' : index == 1 ? 'text-slate-300 hover:shadow-slate-300/30' : 'text-orange-600 hover:shadow-orange-600/30'}`}>
+                                         ${index == 0 ? 'text-amber-400 hover:shadow-amber-400/30 ' : index == 1 ? 'text-slate-300 hover:shadow-slate-300/30' : 'text-orange-800 hover:shadow-orange-800/30'}`}>
 
                                         <div className="flex justify-between items-center">
                                             <div className="flex items-center gap-3">
