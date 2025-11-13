@@ -1,4 +1,5 @@
-![image](https://github.com/user-attachments/assets/8fd3d11e-1d17-4583-aa7f-a66310df86c9)
+<img width="2839" height="1702" alt="image" src="https://github.com/user-attachments/assets/dc6e86d2-ac23-4436-b3fd-690944aecdfb" />
+
 
 
 trackr is a bare bones time tracking app made to be simple and without the bloat that many others have with it. Its main focus is making personal time tracking simple while still being able to show stats/analytics that most other lock behind a pay wall, but for free. It was made using Supabase as a database along Next js for user auth, made with next js for the front end and back end, used tailwind css and a bit of manual css for the styling, and was deployed on vercel.
@@ -62,6 +63,6 @@ npm run dev
 ### Link: https://trackr-nu.vercel.app
 
 Photos:
-![image](https://github.com/user-attachments/assets/cb758ca1-e38f-40f3-9213-1469c8dd7d07)
-![image](https://github.com/user-attachments/assets/1dae199b-64f8-482a-ae21-367ac4c609be)
-![image](https://github.com/user-attachments/assets/bb399e9d-37a6-48b6-b7f1-0dd92d31ebe9)
+<img width="2836" height="1442" alt="image" src="https://github.com/user-attachments/assets/2e278f56-d057-466b-bb65-bfa91d0815ce" />
+<img width="2450" height="1299" alt="image" src="https://github.com/user-attachments/assets/19553c0c-c9dc-43c1-a076-7d26339187a0" />
+
