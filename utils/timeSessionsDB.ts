@@ -1,6 +1,9 @@
 import { supabase } from './supabase';
 import { User } from '@supabase/supabase-js';
 
+
+
+
 export interface TimeSession {
   id: string;
   user_id: string; 
@@ -12,6 +15,7 @@ export interface TimeSession {
 
 
 export async function fetchTimeSessions(user: User): Promise<TimeSession[]> {
+
   const { data, error } = await supabase
     .from('time_sessions')
     .select('*')
@@ -32,6 +36,8 @@ export async function fetchTimeSessions(user: User): Promise<TimeSession[]> {
 
 
 export async function createTimeSession(session: Omit<TimeSession, 'id'>): Promise<TimeSession> {
+
+  
   const { data, error } = await supabase
     .from('time_sessions')
     .insert([session])

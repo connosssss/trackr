@@ -31,7 +31,8 @@ export default function stats() {
     const [monthTime, setMonthTime] = useState<number>(0);
     const [yearTime, setYearTime] = useState<number>(0);
     const [sessions, setSessions] = useState<TimeSession[]>([]);
-    const [selectedPeriod, setSelectedPeriod] = useState<'week' | 'month' | '3months' | 'year' | 'alltime'>('week');
+    const [allSessions, setAllSessions] = useState<TimeSession[]>([]);
+    const [selectedPeriod, setSelectedPeriod] = useState<'week' | 'month' | '3months' | 'year' | 'alltime'>('alltime');
     const [chartType, setChartType] = useState<'bar' | 'line' | 'area'>('bar');
     const [hoveredSlice, setHoveredSlice] = useState<number | null>(null);
     const [hoveredCell, setHoveredCell] = useState<{row: number, col: number} | null>(null);
@@ -64,6 +65,36 @@ export default function stats() {
         const lightness = 45 + (Math.abs(hash) % 20);
         
         return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+    };
+
+    const filterSessionsByPeriod = (allSessions: TimeSession[], period: string) => {
+        const now = new Date();
+        let startDate: Date;
+
+        switch (period) {
+            case 'week':
+                startDate = new Date(now);
+                startDate.setDate(now.getDate() - 7);
+                break;
+
+            case 'month':
+                startDate = new Date(now);
+                startDate.setMonth(now.getMonth() - 1);
+                break;
+
+            case 'year':
+                startDate = new Date(now);
+                startDate.setFullYear(now.getFullYear() - 1);
+                break;
+                
+            case 'alltime':
+            default:
+                return allSessions;
+        }
+
+        return allSessions.filter(session => 
+            new Date(session.start_time) >= startDate
+        );
     };
 
     const createActivityHeatmap = () => {
@@ -211,10 +242,12 @@ export default function stats() {
         
         try {
             const temp = await fetchTimeSessions(user);
-            setSessions(temp);
-            setTotal(temp);
+            setAllSessions(temp);
+            const filteredSessions = filterSessionsByPeriod(temp, selectedPeriod);
+            setSessions(filteredSessions);
+            setTotal(filteredSessions);
             calculatePeriodTimes(temp);
-            loadGroups(temp);
+            loadGroups(filteredSessions);
             
            
         } 
@@ -283,6 +316,15 @@ export default function stats() {
         }
       }, [user]);
 
+      useEffect(() => {
+        if (allSessions.length > 0) {
+            const filteredSessions = filterSessionsByPeriod(allSessions, selectedPeriod);
+            setSessions(filteredSessions);
+            setTotal(filteredSessions);
+            loadGroups(filteredSessions);
+        }
+      }, [selectedPeriod, allSessions]);
+
     const pieSlices = createPieSlices();
     const heatmapArray = createActivityHeatmap();
 
@@ -293,7 +335,18 @@ export default function stats() {
   return (<><Navbar/>
     <div className={`${theme == "default" ? "bg-[#141318]" : "bg-[#f2f6fc]"} min-h-screen w-full pb-16 pt-10`}>
       
-        
+        <div className="w-5/6 mx-auto mb-6">
+            <select
+                value={selectedPeriod}
+                onChange={(e) => setSelectedPeriod(e.target.value as 'week' | 'month' | '3months' | 'year' | 'alltime')}
+                className={`rounded px-9 py-3 border text-md focus:outline-none focus:border-gray-400 ${theme == "default" ? 'bg-[#0c0b10] text-white border-gray-500' : 'bg-[#f2f6fc] text-black border-gray-300'}`}
+            >
+                <option value="week">Last Week</option>
+                <option value="month">Last Month</option>
+                <option value="year">Last Year</option>
+                <option value="alltime">All Time</option>
+            </select>
+        </div>
 
         
         <div className="w-5/6 mx-auto min-h-72 rounded-md  
