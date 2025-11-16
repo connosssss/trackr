@@ -33,6 +33,8 @@ export default function stats() {
     const [sessions, setSessions] = useState<TimeSession[]>([]);
     const [allSessions, setAllSessions] = useState<TimeSession[]>([]);
     const [selectedPeriod, setSelectedPeriod] = useState<'week' | 'month' | '3months' | 'year' | 'alltime'>('alltime');
+    const [optionsOpen, setOptionsOpen] = useState(false);
+
     const [chartType, setChartType] = useState<'bar' | 'line' | 'area'>('bar');
     const [hoveredSlice, setHoveredSlice] = useState<number | null>(null);
     const [hoveredCell, setHoveredCell] = useState<{row: number, col: number} | null>(null);
@@ -332,11 +334,15 @@ export default function stats() {
         setMousePosition({ x: e.clientX, y: e.clientY });
     };
 
-  return (<><Navbar/>
+  return (
+  
+  
+  
+  <><Navbar/>
     <div className={`${theme == "default" ? "bg-[#141318]" : "bg-[#f2f6fc]"} min-h-screen w-full pb-16 pt-10`}>
       
-        <div className="w-5/6 mx-auto mb-6">
-            <select
+        <div className="w-5/6 mx-auto mb-6 flex flex-row gap-5 justify-start items-center">
+          { /* <select
                 value={selectedPeriod}
                 onChange={(e) => setSelectedPeriod(e.target.value as 'week' | 'month' | '3months' | 'year' | 'alltime')}
                 className={`rounded px-9 py-3 border text-md focus:outline-none focus:border-gray-400 ${theme == "default" ? 'bg-[#0c0b10] text-white border-gray-500' : 'bg-[#f2f6fc] text-black border-gray-300'}`}
@@ -345,7 +351,54 @@ export default function stats() {
                 <option value="month">Last Month</option>
                 <option value="year">Last Year</option>
                 <option value="alltime">All Time</option>
-            </select>
+            </select> */}
+
+        <div className="w-10/12  flex items-center justify-start gap-5 ">
+                      <button 
+                      className={`px-6 py-2 rounded-md ${theme == "default" ? "bg-[#0c0b10] hover:bg-[#2A292E]" : "bg-[#aab3bf] hover:bg-[#8a94a1]"} text-md mt-5`}
+                      onClick={() => {setOptionsOpen(!optionsOpen)}}> Options </button>
+                      
+                      {/* */ } 
+
+                        <div className={`flex flex-row items-center gap-5 overflow-hidden transition-all duration-700 ease-in-out 
+                            ${optionsOpen ? 'max-w-[80rem] opacity-100' : 'max-w-0 opacity-0'}`}>
+                            
+                            <button 
+                      className={`px-6 py-2 rounded-md ${theme == "default" ? "bg-[#0c0b10] hover:bg-[#2A292E]" : "bg-[#aab3bf] hover:bg-[#8a94a1]"} text-md whitespace-nowrap mt-5 
+                      transition-all duration-300
+                      ${selectedPeriod == "week" ? "bg-[#4c4b51]" : ""}`}
+                      onClick={() => {setSelectedPeriod("week")}}> Week</button>
+                      
+                      <button 
+                      className={`px-6 py-2 rounded-md ${theme == "default" ? "bg-[#0c0b10] hover:bg-[#2A292E]" : "bg-[#aab3bf] hover:bg-[#8a94a1]"} text-md whitespace-nowrap mt-5 
+                      transition-all duration-300
+                      ${selectedPeriod == "month" ? "bg-[#4c4b51]" : ""}`}
+                      onClick={() => {setSelectedPeriod("month")}}> Month</button>
+                      <button 
+                      className={`px-6 py-2 rounded-md ${theme == "default" ? "bg-[#0c0b10] hover:bg-[#2A292E]" : "bg-[#aab3bf] hover:bg-[#8a94a1]"} text-md whitespace-nowrap mt-5 
+                      transition-all duration-300
+                      ${selectedPeriod == "3months" ? "bg-[#4c4b51]" : ""}`}
+                      onClick={() => {setSelectedPeriod("3months")}}>3 Months</button>
+                      <button 
+                      className={`px-6 py-2 rounded-md ${theme == "default" ? "bg-[#0c0b10] hover:bg-[#2A292E]" : "bg-[#aab3bf] hover:bg-[#8a94a1]"} text-md whitespace-nowrap mt-5 
+                      transition-all duration-300
+                      ${selectedPeriod == "year" ? "bg-[#4c4b51]" : ""}`}
+                      onClick={() => {setSelectedPeriod("year")}}>Year</button>
+                      <button 
+                      className={`px-6 py-2 rounded-md ${theme == "default" ? "bg-[#0c0b10] hover:bg-[#2A292E]" : "bg-[#aab3bf] hover:bg-[#8a94a1]"} text-md whitespace-nowrap mt-5 
+                      transition-all duration-300
+                      ${selectedPeriod == "alltime" ? "bg-[#4c4b51]" : ""}`}
+                      onClick={() => {setSelectedPeriod("alltime")}}>All time</button>
+                      
+                      
+                     
+
+                      
+                      
+                      
+                      </div>
+                    </div>
+
         </div>
 
         
