@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { updateTimeSession, deleteTimeSession, TimeSession } from "@/utils/timeSessionsDB";
 import { User } from '@supabase/supabase-js';
+import { useTheme } from "@/context/ThemeContext";
 
 interface EditProps {
 
@@ -21,6 +22,7 @@ export default function Edit({
   user
 }: EditProps) {
 
+  const { theme } = useTheme();
   const [startDateTime, setStartDateTime] = useState<string>('');
   const [endDateTime, setEndDateTime] = useState<string>('');
   const [editGroup, setEditGroup] = useState<string>('');
@@ -117,7 +119,7 @@ export default function Edit({
 
 
   return (
-    <div className="bg-[#1B1A1F] p-8 rounded-lg w-full max-w-lg mx-4 z-50" onClick={(e) => e.stopPropagation()}>
+    <div className={`${theme == "default" ? "bg-[#1B1A1F] text-white" : "bg-[#ffffff] text-black"} p-8 rounded-lg w-full max-w-lg mx-4 z-50`} onClick={(e) => e.stopPropagation()}>
 
 
       <h2 className="text-xl font-semibold mb-4">Edit Time Entry</h2>
@@ -130,7 +132,7 @@ export default function Edit({
             value={startDateTime}
             onChange={(e) => handleStartTimeChange(e.target.value)}
             step="1"
-            className="w-full p-2 rounded bg-[#2A292E] text-white"
+            className={`w-full p-2 rounded ${theme == "default" ? "bg-[#2A292E] text-white" : "bg-[#aab3bf] text-black"}`}
           />
         </div>
 
@@ -144,15 +146,15 @@ export default function Edit({
               value={endDateTime}
               onChange={(e) => handleEndTimeChange(e.target.value)}
               step="1"
-              className="flex-1 p-2 rounded bg-[#2A292E] text-white disabled:opacity-50"
+              className={`flex-1 p-2 rounded ${theme == "default" ? "bg-[#2A292E] text-white" : "bg-[#aab3bf] text-black"} disabled:opacity-50`}
             />
 
           </div>
         </div>
 
-        <div className="bg-[#2A292E] p-3 rounded">
-          <div className="text-sm text-gray-300 mb-1">Duration</div>
-          <div className="text-lg font-mono text-white">
+        <div className={`${theme == "default" ? "bg-[#2A292E]" : "bg-[#aab3bf]"} p-3 rounded`}>
+          <div className={`text-sm ${theme == "default" ? "text-gray-300" : "text-black/70"} mb-1`}>Duration</div>
+          <div className={`text-lg font-mono ${theme == "default" ? "text-white" : "text-black"}`}>
             {formatDuration(calculateDuration())}
           </div>
         </div>
@@ -165,7 +167,7 @@ export default function Edit({
             type="text"
             value={editGroup}
             onChange={(e) => setEditGroup(e.target.value)}
-            className="w-full p-2 rounded bg-[#2A292E] text-white"
+            className={`w-full p-2 rounded ${theme == "default" ? "bg-[#2A292E] text-white" : "bg-[#aab3bf] text-black"}`}
             placeholder="Group name"
           />
         </div>
@@ -176,22 +178,19 @@ export default function Edit({
 
         <button
           onClick={onCancel}
-          className="px-4 py-2  text-white rounded  bg-[#0c0b10] hover:bg-[#2A292E]
-             "
+          className={`px-4 py-2 rounded ${theme == "default" ? "bg-[#0c0b10] hover:bg-[#2A292E] text-white" : "bg-[#aab3bf] hover:bg-[#798391] text-black"}`}
         >
           Cancel
         </button>
         <button
           onClick={handleDelete}
-          className="px-4 py-2 bg-red-600/30 text-white rounded  hover:bg-red-500/30
-             "
+          className={`px-4 py-2 rounded ${theme == "default" ? "bg-red-600/30 hover:bg-red-500/30 text-white" : "bg-red-600/20 hover:bg-red-500/20 text-black"}`}
         >
           Delete
         </button>
         <button
           onClick={handleSaveEdit}
-          className="px-4 py-2  text-white rounded  bg-[#0c0b10] hover:bg-[#2A292E]
-             "
+          className={`px-4 py-2 rounded ${theme == "default" ? "bg-[#0c0b10] hover:bg-[#2A292E] text-white" : "bg-[#aab3bf] hover:bg-[#798391] text-black"}`}
         >
           Save Changes
         </button>
