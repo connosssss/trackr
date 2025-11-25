@@ -16,6 +16,8 @@ export default function LoginPage() {
     const [hasSent, setHasSent] = useState(false);
     const [currentTheme, setCurrentTheme] = useState('default');
 
+    const [deletePopup, setDeletePopup] = useState(false);
+
     useEffect(() => {
         if (user) {
             fetchUserTheme(user.id).then(theme => {
@@ -98,10 +100,32 @@ export default function LoginPage() {
             </button> 
 
 
-            
+            <button onClick={() => {setDeletePopup(true)}}
+                className={`py-2 w-1/3 rounded-md transition-all duration-300 font-bold ${currentTheme === 'default' ? 'bg-[#792d2d] hover:bg-[#ba4747] shadow-md shadow-black text-white' : 'bg-[#ba4747] hover:bg-[#792d2d] text-black'}`}>
+                Delete Account
+            </button> 
 
+            
+            
             {hasSent && <div>Reset email sent!</div>}
 
+
+            {deletePopup && (
+            
+                <div className="fixed mx-auto top-10 h-[85%] aspect-square p-20
+                flex flex-col items-center gap-10
+                bg-[#1B1A1F]/80 rounded-xl backdrop-blur-sm">
+                    <h1 className='w-3/4 min-h-1/2 overflow-auto text-xl text-center font-bold mt-20'>This is irreversible, once you delete your account it is gone for good. Make sure that you export and save any data that you want to keep now before deleting it. If you want to, you can make a new account after
+                    deleting this one, though it won't have any of the data unless you import a backup after creating it</h1>
+
+                    <button onClick={() => {setDeletePopup(false)}} className={`py-2 w-1/3 rounded-md transition-all duration-300 font-bold ${currentTheme === 'default' ? 'bg-[#141318] hover:bg-[#2A292E] shadow-md shadow-black text-white' : 'bg-[#aab3bf] hover:bg-[#8a94a1] text-black'}`}>Go Back</button>
+
+                    <button 
+                        className={`py-2 w-1/3 rounded-md transition-all duration-300 font-bold ${currentTheme === 'default' ? 'bg-[#792d2d] hover:bg-[#ba4747] shadow-md shadow-black text-white' : 'bg-[#ba4747] hover:bg-[#792d2d] text-black'}`}>
+                        Delete Account
+                    </button> 
+                </div>
+            )}
         </div>
         
   </div>
