@@ -6,10 +6,11 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from 'react';
 import { fetchUserTheme, updateUserTheme } from '@/utils/userSettings';
 import { useTheme } from '@/context/ThemeContext';
+import { deleteUserAccount } from '@/app/actions/userActions';
 
 
 export default function LoginPage() {
-    
+
     const { user, resetPassword, signOut } = useAuth();
     const router = useRouter();
 
@@ -120,14 +121,27 @@ export default function LoginPage() {
 
                     <button onClick={() => {setDeletePopup(false)}} className={`py-2 w-1/3 rounded-md transition-all duration-300 font-bold ${currentTheme === 'default' ? 'bg-[#141318] hover:bg-[#2A292E] shadow-md shadow-black text-white' : 'bg-[#aab3bf] hover:bg-[#8a94a1] text-black'}`}>Go Back</button>
 
-                    <button 
-                        className={`py-2 w-1/3 rounded-md transition-all duration-300 font-bold ${currentTheme === 'default' ? 'bg-[#792d2d] hover:bg-[#ba4747] shadow-md shadow-black text-white' : 'bg-[#ba4747] hover:bg-[#792d2d] text-black'}`}>
-                        Delete Account
-                    </button> 
-                </div>
-            )}
+                        <button
+                            onClick={async () => {
+                                if (!user) return;
+                                try {
+                                    await deleteUserAccount(user.id);
+                                    await signOut();
+                                    router.push('/start');
+                                } 
+                                
+                                catch (error) {
+                                    console.error('Error deleting account:', error);
+                                    alert('Failed to delete account. Please try again.');
+                                }
+                            }}
+                            className={`py-2 w-1/3 rounded-md transition-all duration-300 font-bold ${currentTheme === 'default' ? 'bg-[#792d2d] hover:bg-[#ba4747] shadow-md shadow-black text-white' : 'bg-[#ba4747] hover:bg-[#792d2d] text-black'}`}>
+                            Delete Account
+                        </button>
+                    </div>
+                )}
+            </div>
+
         </div>
-        
-  </div>
-  );
+    );
 }
