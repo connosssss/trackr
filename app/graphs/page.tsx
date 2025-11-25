@@ -282,7 +282,7 @@ export default function Graphs() {
                 <Navbar />
 
 
-                <div className="flex mb-4 flex-row w-full justify-between items-center">
+                <div className="flex mb-4 flex-row w-full justify-between items-center p-5 ">
                     <select
                         value={selectedPeriod}
                         onChange={(e) => setSelectedPeriod(e.target.value as 'week' | 'month' | '3months' | 'year' | 'alltime')}
@@ -324,13 +324,13 @@ export default function Graphs() {
 
                         )}
 
-                    <div className="flex items-center gap-2 min-w-40 justify-center mr-5">
+                    <div className={`flex items-center gap-2 min-w-40 justify-center px-9 py-3 rounded ${theme == "default" ? 'bg-[#0c0b10] text-white border-gray-500' : 'bg-[#f2f6fc] text-black border-gray-300'}`}>
                         <input
                             type="checkbox"
                             id="showGroupsCheckbox"
                             checked={showGroups}
                             onChange={(e) => setShowGroups(e.target.checked)}
-                            className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                            className={`w-4 h-4 rounded border-gray-300  cursor-pointer`}
                         />
                         <label htmlFor="showGroupsCheckbox" className="text-md font-medium cursor-pointer">Show Groups</label>
                     </div>
@@ -354,7 +354,7 @@ export default function Graphs() {
 
                 ) : (
 
-                    <div className="h-[42rem] w-full p-4">
+                    <div className="h-[42rem] w-full p-10">
                         <BarChart
                             data={barChartData}
                             height={600}
