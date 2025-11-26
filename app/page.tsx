@@ -281,6 +281,41 @@ export default function Home() {
     return dates;
   };
 
+  const getDailyTotal = (date: Date) => {
+    const dayStart = new Date(date);
+    dayStart.setHours(0, 0, 0, 0);
+    const dayEnd = new Date(date);
+    dayEnd.setHours(23, 59, 59, 999);
+
+    let totalSeconds = 0;
+
+    sessions.forEach(session => {
+      if (!session.end_time) return;
+      
+      const sessionStart = new Date(session.start_time);
+      const sessionEnd = new Date(session.end_time);
+      
+      if (sessionStart <= dayEnd && sessionEnd >= dayStart) {
+        const segmentStart = sessionStart > dayStart ? sessionStart : dayStart;
+        const segmentEnd = sessionEnd < dayEnd ? sessionEnd : dayEnd;
+        totalSeconds += Math.floor((segmentEnd.getTime() - segmentStart.getTime()) / 1000);
+      }
+    });
+
+    if (currentSession) {
+      const sessionStart = new Date(currentSession.start_time);
+      const sessionEnd = new Date();
+      
+      if (sessionStart <= dayEnd && sessionEnd >= dayStart) {
+        const segmentStart = sessionStart > dayStart ? sessionStart : dayStart;
+        const segmentEnd = sessionEnd < dayEnd ? sessionEnd : dayEnd;
+        totalSeconds += Math.floor((segmentEnd.getTime() - segmentStart.getTime()) / 1000);
+      }
+    }
+
+    return totalSeconds;
+  };
+
   const changeWeek = (direction: 'before' | 'later') => {
     const newWeekStart = new Date(currentWeekStart);
     newWeekStart.setDate(currentWeekStart.getDate() + (direction === 'later' ? 7 : -7));
@@ -519,9 +554,9 @@ export default function Home() {
 
                   {getWeek().map((date, index) => (
                     <div key={index} className={`${theme == "default" ? "border-white/50" : "border-black/50"} border-b h-12 
-                    text-center flex items-end justify-center`}>
+                    text-center flex flex-col items-center justify-end pb-1`}>
                         <div>{formatDateHeader(date)}</div>
-                      
+                        <div className="text-xs opacity-70">{formatTime(getDailyTotal(date))}</div>
                     </div>
                     
                   )) }
