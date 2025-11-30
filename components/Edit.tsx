@@ -26,6 +26,7 @@ export default function Edit({
   const [startDateTime, setStartDateTime] = useState<string>('');
   const [endDateTime, setEndDateTime] = useState<string>('');
   const [editGroup, setEditGroup] = useState<string>('');
+  const [beInHeatmap, setBeInHeatmap] = useState<boolean>(true);
 
   useEffect(() => {
     if (editingSession) {
@@ -45,6 +46,7 @@ export default function Edit({
       setStartDateTime(startt);
       setEndDateTime(endt);
       setEditGroup(editingSession.group || '');
+      setBeInHeatmap(editingSession.be_in_heatmap ?? true);
     }
   }, [editingSession]);
 
@@ -93,10 +95,11 @@ export default function Edit({
         start_time: startTime,
         end_time: endTime,
         duration: duration,
-        group: editGroup || null
+        group: editGroup || null,
+        be_in_heatmap: beInHeatmap
       };
 
-      await updateTimeSession(updatedSession as any);
+      await updateTimeSession(updatedSession);
       onSave(updatedSession);
     } catch (error) {
       console.error("Error updating session:", error);
@@ -170,6 +173,17 @@ export default function Edit({
             className={`w-full p-2 rounded ${theme == "default" ? "bg-[#2A292E] text-white" : "bg-[#aab3bf] text-black"}`}
             placeholder="Group name"
           />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-1">Heatmap Visibility</label>
+          <button
+            onClick={() => setBeInHeatmap(!beInHeatmap)}
+            className={`w-full p-2 rounded text-left ${theme == "default" ? "bg-[#2A292E] text-white" : "bg-[#aab3bf] text-black"} flex justify-between items-center`}
+          >
+            <span>{beInHeatmap ? "Included in Heatmap" : "Excluded from Heatmap"}</span>
+            <span className={beInHeatmap ? "text-green-500" : "text-red-500"}>●</span>
+          </button>
         </div>
       </div>
 

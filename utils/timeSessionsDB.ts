@@ -6,11 +6,12 @@ import { User } from '@supabase/supabase-js';
 
 export interface TimeSession {
   id: string;
-  user_id: string; 
+  user_id: string;
   start_time: Date;
   end_time: Date | null;
   duration: number | null;
   group: string | null;
+  be_in_heatmap: boolean;
 }
 
 
@@ -21,7 +22,7 @@ export async function fetchTimeSessions(user: User): Promise<TimeSession[]> {
     .select('*')
     .eq('user_id', user.id)
     .order('start_time', { ascending: false });
-  
+
   if (error) {
     console.error('Error fetching time sessions:', error);
     throw error;
@@ -30,47 +31,55 @@ export async function fetchTimeSessions(user: User): Promise<TimeSession[]> {
   return data.map(session => ({
     ...session,
     start_time: new Date(session.start_time),
-    end_time: session.end_time ? new Date(session.end_time) : null
+    end_time: session.end_time ? new Date(session.end_time) : null,
+    be_in_heatmap: session.be_in_heatmap ?? true
   }));
 }
 
 
 export async function createTimeSession(session: Omit<TimeSession, 'id'>): Promise<TimeSession> {
 
-  
+
   const { data, error } = await supabase
     .from('time_sessions')
     .insert([session])
     .select()
     .single();
-  
+
   if (error) {
     console.error('Error creating time session:', error);
     console.error('Error details:', JSON.stringify(error));
     console.error('Session data:', JSON.stringify(session));
     throw error;
   }
-  
+
   return {
     ...data,
     start_time: new Date(data.start_time),
-    end_time: data.end_time ? new Date(data.end_time) : null
+    end_time: data.end_time ? new Date(data.end_time) : null,
+    be_in_heatmap: data.be_in_heatmap ?? true
   };
 }
 
 export async function updateTimeSession(session: TimeSession): Promise<TimeSession> {
   const { data, error } = await supabase
     .from('time_sessions')
-    .update({start_time: session.start_time, end_time: session.end_time, duration: session.duration, group: session.group})
+    .update({
+      start_time: session.start_time,
+      end_time: session.end_time,
+      duration: session.duration,
+      group: session.group,
+      be_in_heatmap: session.be_in_heatmap
+    })
     .eq('id', session.id)
     .select()
     .single();
-  
+
   if (error) {
     console.error('Error updating time session:', error);
     throw error;
   }
-  
+
   return {
 
     ...data,
@@ -82,7 +91,7 @@ export async function updateTimeSession(session: TimeSession): Promise<TimeSessi
 
 export async function deleteTimeSession(sessionId: string): Promise<void> {
   const { data, error } = await supabase.from('time_sessions').delete().eq('id', sessionId).select();
-  
+
   if (error) {
     console.error('Error deleting time session:', error);
     throw error;
