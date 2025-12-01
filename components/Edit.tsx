@@ -179,10 +179,9 @@ export default function Edit({
           <label className="block text-sm font-medium mb-1">Heatmap Visibility</label>
           <button
             onClick={() => setBeInHeatmap(!beInHeatmap)}
-            className={`w-full p-2 rounded text-left ${theme == "default" ? "bg-[#2A292E] text-white" : "bg-[#aab3bf] text-black"} flex justify-between items-center`}
+            className={`w-full p-2 rounded text-left ${theme == "default" ? " text-white" : " text-black"}  ${beInHeatmap ? ` ${theme ? "bg-[#2A292E]" : "bg-[#aab3bf]"}` : "bg-red-400/10"} flex justify-between items-center transition-all duration-300`}
           >
-            <span>{beInHeatmap ? "Included in Heatmap" : "Excluded from Heatmap"}</span>
-            <span className={beInHeatmap ? "text-green-500" : "text-red-500"}>●</span>
+            <div >{beInHeatmap ? "Included in Heatmap" : "Excluded from Heatmap"}</div>
           </button>
         </div>
       </div>

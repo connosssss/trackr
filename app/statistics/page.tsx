@@ -102,7 +102,10 @@ export default function stats() {
     const createActivityHeatmap = () => {
         const heatmapArray: number[][] = Array(7).fill(null).map(() => Array(24).fill(0));
         
-        sessions.forEach(session => {
+        
+        const heatmapSessions = sessions.filter(session => session.be_in_heatmap !== false);
+        
+        heatmapSessions.forEach(session => {
             if (!session.start_time || !session.duration) return;
             
             const startTime = new Date(session.start_time);
