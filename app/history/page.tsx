@@ -217,6 +217,7 @@ export default function HistoryPage() {
               end_time: Date | null;
               duration: number | null;
               group: string | null;
+              be_in_heatmap: boolean;
             }> = [];
   
             worksheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
