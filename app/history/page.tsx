@@ -171,7 +171,8 @@ export default function HistoryPage() {
         start_time: new Date(),
         end_time: null,
         duration: null,
-        group: null
+        group: null,
+        be_in_heatmap: true
       })
       
       
@@ -260,6 +261,7 @@ export default function HistoryPage() {
                 end_time: endDateTime,
                 duration: secondsLength,
                 group: group === '-' ? null : group,
+                be_in_heatmap: true
               });
             });
   
