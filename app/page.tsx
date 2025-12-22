@@ -159,7 +159,8 @@ export default function Home() {
         start_time: new Date(),
         end_time: null,
         duration: null,
-        group: groupInput || null
+        group: groupInput || null,
+        be_in_heatmap: true
       });
     
       setCurrentSession(newSession);
