@@ -64,5 +64,6 @@ npm run dev
 
 Photos:
 <img width="2836" height="1442" alt="image" src="https://github.com/user-attachments/assets/2e278f56-d057-466b-bb65-bfa91d0815ce" />
-<img width="2450" height="1299" alt="image" src="https://github.com/user-attachments/assets/19553c0c-c9dc-43c1-a076-7d26339187a0" />
+<img width="2872" height="1796" alt="image" src="https://github.com/user-attachments/assets/e202433f-084e-40ff-9794-a2806fef04b2" />
+
 
