@@ -390,8 +390,12 @@ export default function Home() {
         const endHour = segmentEnd.getHours();
         const endMinute = segmentEnd.getMinutes();
         
-        const startPosition = (startHour + startMinute / 60) * 64;
-        const endPosition = (endHour + endMinute / 60) * 64;
+
+        const offsetStart = (startHour - 8 + 24) % 24;
+        const offsetEnd = (endHour - 8 + 24) % 24;
+
+        const startPosition = (offsetStart + startMinute / 60) * 64;
+        const endPosition = (offsetEnd + endMinute / 60) * 64;
         
         sessions.push({
           dayIndex: i,
@@ -551,7 +555,7 @@ export default function Home() {
 
             <div className='h-full flex flex-col pb-20 mx-5 '>
                 <div className={`grid grid-flow-col grid-cols-8 w-[95%] ${theme == "default" ? "border-white/50" : "border-black/50"} mr-16`}>
-                  <div className=" text-xs border-b flex justify-center items-end "> 12:00 AM</div>
+                  <div className=" text-xs border-b flex justify-center items-end "> 8:00 AM</div>
 
                   {getWeek().map((date, index) => (
                     <div key={index} className={`${theme == "default" ? "border-white/50" : "border-black/50"} border-b h-12 
@@ -564,17 +568,15 @@ export default function Home() {
                   </div>
                   
                   <div className='grid grid-cols-8 w-[95%] relative'>
-                    {Array.from({ length: 24 }, (_, hour) => (
-                     
+                    {Array.from({ length: 24 }, (_, hour) => {
+                      const nextHour = (hour + 9) % 24;
+                      const label = nextHour === 0 ? '12:00 AM' : nextHour < 12 ? `${nextHour}:00 AM` : nextHour === 12 ? '12:00 PM' : `${nextHour - 12}:00 PM`;
+                      
+                      return (
                      <React.Fragment key={hour}>
 
                         <div  className={`${theme == "default" ? "border-white/50" : "border-black/50"} border-b border-r h-16 flex justify-center items-end`}>
-                          <div className=" text-xs mb-1 ">{
-                          hour === 0 ? '1:00 AM' :
-                          hour < 11 ? `${hour + 1}:00 AM` : 
-                          hour === 11 ? '12:00 PM' : 
-                          hour === 23 ? '12:00 AM' :
-                          `${hour + 1 - 12}:00 PM`}
+                          <div className=" text-xs mb-1 ">{label}
                           </div>
                         </div>
 
@@ -591,7 +593,8 @@ export default function Home() {
                           </div>
                         ))}
                         </React.Fragment>
-                      ))}
+                      );
+                    })}
 
                       {getSessionsForWeek().map((session) => {
                         const sessions = getSessionsC(session);
