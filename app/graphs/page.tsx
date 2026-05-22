@@ -20,6 +20,11 @@ export default function Graphs() {
     const { theme } = useTheme();
 
     const { user } = useAuth();
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
 
     const [currentWeekStart, setCurrentWeekStart] = useState(() => {
@@ -340,7 +345,7 @@ export default function Graphs() {
 
 
 
-                {isLoading ? (
+                {!isMounted || isLoading ? (
 
                     <div className="flex items-center justify-center h-80">
                         Loading...

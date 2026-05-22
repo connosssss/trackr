@@ -146,15 +146,25 @@ export default function HistoryPage() {
       const workbook = new ExcelJS.Workbook();
       const sheet = workbook.addWorksheet('history');
   
-      sheet.columns = [{ header: 'Date', key: 'date', width: 15 }, { header: 'Start Time', key: 'startTime', width: 15 },
-        { header: 'End Time', key: 'endTime', width: 15 }, { header: 'Duration', key: 'duration', width: 15 },
+      sheet.columns = [
+        { header: 'Date', key: 'date', width: 15 },
+        { header: 'Start Time', key: 'startTime', width: 15 },
+        { header: 'End Time', key: 'endTime', width: 15 },
+        { header: 'Duration', key: 'duration', width: 15 },
         { header: 'Group Name', key: 'group', width: 20 },
+        { header: 'Start Time (ISO)', key: 'startTimeIso', width: 30 },
+        { header: 'End Time (ISO)', key: 'endTimeIso', width: 30 },
       ];
 
       sessions.forEach(session => {
-        sheet.addRow({date: session.start_time.toLocaleDateString(), startTime: session.start_time.toLocaleTimeString(),
-          endTime: session.end_time ? session.end_time.toLocaleTimeString() : '-', duration: session.duration ? formatTime(session.duration) : '-',
+        sheet.addRow({
+          date: session.start_time.toLocaleDateString(),
+          startTime: session.start_time.toLocaleTimeString(),
+          endTime: session.end_time ? session.end_time.toLocaleTimeString() : '-',
+          duration: session.duration ? formatTime(session.duration) : '-',
           group: session.group || '-',
+          startTimeIso: session.start_time.toISOString(),
+          endTimeIso: session.end_time ? session.end_time.toISOString() : '-',
         });
       });
 
@@ -229,21 +239,35 @@ export default function HistoryPage() {
               const endTimeCell = row.getCell(3).value;
               const durationCell = row.getCell(4).value;
               const groupCell = row.getCell(5).value;
+              const startTimeIsoCell = row.getCell(6).value;
+              const endTimeIsoCell = row.getCell(7).value;
   
-              //formatting everything
-              const date = dateCell?.toString() || '';
-              const startTime = startTimeCell?.toString() || '';
-              const endTime = endTimeCell?.toString() || '-';
+              let startDateTime: Date;
+              let endDateTime: Date | null = null;
+  
+              if (startTimeIsoCell) {
+                startDateTime = new Date(startTimeIsoCell.toString());
+                const endVal = endTimeIsoCell?.toString();
+                endDateTime = (endVal && endVal !== '-') ? new Date(endVal) : null;
+              }
+              // For formatting legacy sheets 
+              else {
+                
+                const date = dateCell?.toString() || '';
+                const startTime = startTimeCell?.toString() || '';
+                const endTime = endTimeCell?.toString() || '-';
+                
+                if (!date || !startTime || !endTime) {
+                  alert(`Skipping row ${rowNumber} due to missing time or date`);
+                  return;
+                }
+                
+                startDateTime = new Date(`${date} ${startTime}`);
+                endDateTime = endTime !== '-' ? new Date(`${date} ${endTime}`) : null;
+              }
+              
               const duration = durationCell?.toString() || '-';
               const group = groupCell?.toString() || '-';
-  
-              if (!date || !startTime || !endTime) {
-                alert(`Skipping row ${rowNumber} due to missing time or date`)
-                return;
-              }
-  
-              const startDateTime = new Date(`${date} ${startTime}`);
-              const endDateTime = endTime !== '-' ? new Date(`${date} ${endTime}`) : null;
               
               let secondsLength: number | null = null;
               if (duration && duration !== '-') {

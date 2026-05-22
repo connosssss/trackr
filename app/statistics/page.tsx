@@ -111,13 +111,13 @@ export default function stats() {
             const startTime = new Date(session.start_time);
             const endTime = session.end_time ? new Date(session.end_time) : new Date(startTime.getTime() + (session.duration * 1000));
            
-            const dayOfWeek = startTime.getDay();
             let time = new Date(startTime);
             const sessionEndTime = new Date(endTime);
     
 
             while (time < sessionEndTime) {
                 const hour = time.getHours();
+                const dayOfWeek = time.getDay();
                 const nextHour = new Date(time);
                 nextHour.setHours(hour + 1, 0, 0, 0);
                 

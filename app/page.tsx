@@ -40,6 +40,10 @@ export default function Home() {
   const { user, isLoading, signOut } = useAuth();
   
   const router = useRouter();
+  const [isMounted, setIsMounted] = React.useState(false);
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
   
   const [isTracking, setIsTracking] = useState(false);
   const [currentSession, setCurrentSession] = useState<TimeSession | null>(null);
@@ -424,7 +428,7 @@ export default function Home() {
         
         <Navbar />
 
-        {isLoading ? (
+        {!isMounted || isLoading ? (
           <div className="w-screen h-screen flex justify-center items-center flex-col gap-20">
           <p className="text-4xl font-bold">Loading sessions...</p>
           <div className=" animate-spin w-16 h-16 rounded-full border-8 border-white/50 border-b-transparent"/>
