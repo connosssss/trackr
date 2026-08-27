@@ -46,6 +46,7 @@ export default function HistoryPage() {
     const [editingSession, setEditingSession] = useState<TimeSession | null>(null);
     const [isEditing, setIsEditing] = useState(false);
     const [optionsOpen, setOptionsOpen] = useState(false);
+    const [groupSort, setGroupSort] = useState<'none' | 'asc' | 'desc'>('none');
 
     const {theme} = useTheme();
 
@@ -316,6 +317,21 @@ export default function HistoryPage() {
       event.target.value = '';
     };
 
+    const toggleGroupSort = () => {
+      setGroupSort(prev => prev === 'none' ? 'asc' : prev === 'asc' ? 'desc' : 'none');
+    };
+
+    const sortedSessions = (() => {
+      if (groupSort === 'none') return sessions;
+      return [...sessions].sort((a, b) => {
+        const groupA = (a.group || '').toLowerCase();
+        const groupB = (b.group || '').toLowerCase();
+        if (groupA < groupB) return groupSort === 'asc' ? -1 : 1;
+        if (groupA > groupB) return groupSort === 'asc' ? 1 : -1;
+        return 0;
+      });
+    })();
+
   return ( 
 <div className={`${theme == "default" ? "bg-[#141318]" : "bg-[#f2f6fc] text-black"} min-h-screen h-full pb-20`} >
 <Navbar />
@@ -375,7 +391,9 @@ export default function HistoryPage() {
 
                           <th scope="col" className="pt-7 pb-3 text-lg   ">Duration</th>
 
-                          <th scope="col" className="pt-7 pb-3 text-lg   ">Group Name</th>
+                          <th scope="col" className="pt-7 pb-3 text-lg cursor-pointer select-none hover:text-blue-400 transition-colors" onClick={toggleGroupSort}>
+                            Group Name {groupSort === 'asc' ? '▲' : groupSort === 'desc' ? '▼' : ''}
+                          </th>
                           
                           <th scope="col" className="pt-7 pb-3 text-lg   ">Edit</th>
                           
@@ -388,7 +406,7 @@ export default function HistoryPage() {
                         {
 
                           
-                        sessions.map((session) => (
+                        sortedSessions.map((session) => (
                           <tr key={session.id} className="">
                             <td className={`${theme == "default" ? "text-gray-300" : " text-black"} text-center py-2 text-sm`}>
                               {session.start_time.toLocaleDateString()}
