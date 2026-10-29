@@ -25,6 +25,7 @@ export default function Edit({
   const { theme } = useTheme();
   const [startDateTime, setStartDateTime] = useState<string>('');
   const [endDateTime, setEndDateTime] = useState<string>('');
+  const [durationInput, setDurationInput] = useState<string>('00:00:00');
   const [editGroup, setEditGroup] = useState<string>('');
   const [beInHeatmap, setBeInHeatmap] = useState<boolean>(true);
 
@@ -45,6 +46,9 @@ export default function Edit({
 
       setStartDateTime(startt);
       setEndDateTime(endt);
+      const duration = editingSession.duration ?? (editingSession.end_time ? Math.max(0, Math.floor((editingSession.end_time.getTime() - editingSession.start_time.getTime()) / 1000)) : 0);
+      
+      setDurationInput(formatDuration(duration));
       setEditGroup(editingSession.group || '');
       setBeInHeatmap(editingSession.be_in_heatmap ?? true);
     }
@@ -52,22 +56,13 @@ export default function Edit({
 
   const handleStartTimeChange = (value: string) => {
     setStartDateTime(value);
+    setDurationInput(formatDuration(getDurationSeconds(value, endDateTime)));
   };
 
   const handleEndTimeChange = (value: string) => {
     setEndDateTime(value);
+    setDurationInput(formatDuration(getDurationSeconds(startDateTime, value)));
   };
-
-  const calculateDuration = () => {
-    if (!startDateTime) return 0;
-
-    const start = new Date(startDateTime);
-    let end = new Date(endDateTime);
-
-    return Math.max(0, Math.floor((end.getTime() - start.getTime()) / 1000));
-
-  };
-
 
   const formatDuration = (seconds: number) => {
 
@@ -77,17 +72,46 @@ export default function Edit({
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const getDurationSeconds = (startValue: string, endValue: string) => {
+    if (!startValue || !endValue) return 0;
+    const difference = (new Date(endValue).getTime() - new Date(startValue).getTime()) / 1000;
+
+    return Number.isFinite(difference) ? Math.max(0, Math.floor(difference)) : 0;
+  };
+
+  const parseDuration = (value: string) => {
+    const match = /^(\d+):([0-5]\d):([0-5]\d)$/.exec(value);
+    if (!match) return null;
+
+    return Number(match[1]) * 3600 + Number(match[2]) * 60 + Number(match[3]);
+  };
+
+  const formatLocalDateTime = (date: Date) => {
+    const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+
+    return localDate.toISOString().slice(0, 19);
+  };
+
+  const handleDurationChange = (value: string) => {
+    setDurationInput(value);
+    const duration = parseDuration(value);
+
+    if (duration === null || !startDateTime) return;
+
+    const endTime = new Date(new Date(startDateTime).getTime() + duration * 1000);
+
+    setEndDateTime(formatLocalDateTime(endTime));
+  };
+
   const handleSaveEdit = async () => {
     if (!editingSession || !user) return;
 
+    const duration = parseDuration(durationInput);
+    if (!startDateTime || duration === null) return;
+
     try {
       const startTime = new Date(startDateTime);
-
-      let endTime = null;
-      let duration = null;
-
-      endTime = new Date(endDateTime);
-      duration = Math.floor((endTime.getTime() - startTime.getTime()) / 1000);
+      const endTime = new Date(startTime.getTime() + duration * 1000);
 
       const updatedSession: TimeSession = {
         ...editingSession,
@@ -156,10 +180,22 @@ export default function Edit({
         </div>
 
         <div className={`${theme == "default" ? "bg-[#2A292E]" : "bg-[#aab3bf]"} p-3 rounded`}>
-          <div className={`text-sm ${theme == "default" ? "text-gray-300" : "text-black/70"} mb-1`}>Duration</div>
-          <div className={`text-lg font-mono ${theme == "default" ? "text-white" : "text-black"}`}>
-            {formatDuration(calculateDuration())}
-          </div>
+          <label htmlFor="edit-duration" className={`block text-sm ${theme == "default" ? "text-gray-300" : "text-black/70"} mb-1`}>Duration (HH:MM:SS)</label>
+          <input
+            id="edit-duration"
+            type="text"
+            inputMode="numeric"
+            value={durationInput}
+            onChange={(e) => handleDurationChange(e.target.value)}
+            onBlur={() => {
+              const duration = parseDuration(durationInput);
+
+              if (duration !== null) setDurationInput(formatDuration(duration));
+              else setDurationInput(formatDuration(getDurationSeconds(startDateTime, endDateTime)));
+            }}
+            aria-describedby="edit-duration-help"
+            className={`w-full p-2 rounded font-mono ${theme == "default" ? "bg-[#2A292E] text-white" : "bg-[#aab3bf] text-black"}`}
+          />
         </div>
 
 
@@ -203,7 +239,8 @@ export default function Edit({
         </button>
         <button
           onClick={handleSaveEdit}
-          className={`px-4 py-2 rounded ${theme == "default" ? "bg-[#0c0b10] hover:bg-[#2A292E] text-white" : "bg-[#aab3bf] hover:bg-[#798391] text-black"}`}
+          disabled={!startDateTime || !endDateTime || parseDuration(durationInput) === null}
+          className={`px-4 py-2 rounded disabled:opacity-50 disabled:cursor-not-allowed ${theme == "default" ? "bg-[#0c0b10] hover:bg-[#2A292E] text-white" : "bg-[#aab3bf] hover:bg-[#798391] text-black"}`}
         >
           Save Changes
         </button>
